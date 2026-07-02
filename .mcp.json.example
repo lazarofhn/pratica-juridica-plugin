@@ -1,0 +1,14 @@
+{
+  "_comentario": "EXEMPLO. Renomeie para .mcp.json se quiser que o plugin declare estes MCP no Claude Code. ATENÇÃO: os conectores costumam ser REMOTOS do claude.ai (com OAuth) — declará-los aqui pode duplicar ou exigir autenticação diferente. Teste antes. Confirme o formato exato (type http/sse e wrapper) em https://code.claude.com/docs/en/plugins-reference.md",
+  "_know_how": "'Know-How Jurídico' é o conector de lei comentada + doutrina (organizado por área do Direito); um único servidor cobre lei E doutrina. Substitua a URL abaixo pela do seu próprio conector.",
+  "mcpServers": {
+    "juris_br": {
+      "type": "http",
+      "url": "https://juris.jurisbrmcp.org/mcp"
+    },
+    "know_how": {
+      "type": "http",
+      "url": "https://<URL-DO-SEU-CONECTOR-KNOW-HOW>/mcp"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "pratica-juridica",
+  "owner": {
+    "name": "José Lázaro"
+  },
+  "plugins": [
+    {
+      "name": "pratica-juridica",
+      "source": "./",
+      "description": "Pipeline de análise processual e produção de peças/relatórios jurídicos: adquire o processo, analisa seletivamente e produz o output guiado pelo objetivo do usuário.",
+      "version": "1.0.2"
+    }
+  ]
+}

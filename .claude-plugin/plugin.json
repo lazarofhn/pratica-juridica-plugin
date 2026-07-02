@@ -1,0 +1,8 @@
+{
+  "name": "pratica-juridica",
+  "description": "Pipeline de análise processual e produção de peças/relatórios jurídicos: adquire o processo, analisa seletivamente e produz o output guiado pelo objetivo do usuário.",
+  "version": "1.0.2",
+  "author": {
+    "name": "José Lázaro"
+  }
+}

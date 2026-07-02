@@ -1,0 +1,16 @@
+# Artefatos de runtime / dados de processos (não versionar)
+outputs/
+processos/
+dados-juridicos/
+__pycache__/
+*.pyc
+.w_test
+.t_del
+
+# Config local de MCP (só o .example é versionado)
+.mcp.json
+
+# SO / editores
+.DS_Store
+Thumbs.db
+*.tmp
