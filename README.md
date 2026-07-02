@@ -149,3 +149,4 @@ Plugin em uso real, evoluindo a cada caso. *Issues* e sugestões são bem-vindos
 Consulte o [CHANGELOG](./CHANGELOG.md) para o histórico de versões.
 
 Autoria e manutenção: **José Lázaro**.
+Licença: **MIT** — ver [LICENSE](./LICENSE).
