@@ -3,6 +3,14 @@ name: peca-processual-base
 description: (camada E — compartilhada) Orientações COMUNS às peças protocoladas (recurso, específica, simples; em parte o memorial): endereçamento conforme o juízo/tribunal, estrutura padrão (Fatos → Admissibilidade/Cabimento → Fundamentos → Pedidos) e como conduzir a pesquisa processual (profundidade variável, conferir no know-how) e a material (segmentada por assunto). As skills de peça a puxam para não repetir a mesma orientação; cada uma acrescenta só a ênfase própria do seu tipo.
 ---
 
+> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
+> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
+> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
+> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
+> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
+> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
+> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+
 # Peça Processual — Base Comum (camada E)
 
 Base compartilhada. **Não é chamada direto pelo usuário** — as skills de peça

@@ -3,6 +3,14 @@ name: memorial
 description: (camada D) Produz MEMORIAL — peça híbrida entregue ao(s) julgador(es) com o processo pendente de julgamento (1º grau ou instância recursal). Resume as alegações e fundamentos da peça-base em julgamento (inicial, recurso…), com ênfase nos precedentes decisivos. REGRA DE OURO: não inova a argumentação — pode mudar a ênfase, mas não introduz ratio que não esteja nos autos. Skill fina que puxa (em parte) a camada E.
 ---
 
+> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
+> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
+> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
+> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
+> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
+> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
+> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+
 # Memorial (camada D)
 
 Skill de output fina. Puxa **parcialmente** a `peca-processual-base` (endereçamento

@@ -3,6 +3,14 @@ name: analise-estrategia
 description: (camada D) Modo reconhecimento/planejamento — quando o usuário quer ENTENDER o processo ou PLANEJAR estratégia, SEM redigir peça. Pode ser fase preliminar antes de confeccionar algo. Produz panorama do processo, questões-chave, cenários/riscos, recomendação e próximos passos. Skill fina; não é peça, então não puxa peca-processual-base nem formatacao-entrega.
 ---
 
+> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
+> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
+> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
+> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
+> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
+> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
+> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+
 # Análise / Estratégia (camada D)
 
 Skill de output fina. **Não é peça** → não puxa `peca-processual-base` nem

@@ -3,6 +3,14 @@ name: obter-processo
 description: (OPCIONAL / camada B) Baixa a íntegra de um processo automatizando a navegação no sistema processual via extensão do Claude no Chrome. Use SOMENTE quando o usuário pedir explicitamente o download automático e o sistema-alvo estiver mapeado. Para o caso comum, o download manual é mais rápido — prefira apontar o PDF já baixado.
 ---
 
+> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
+> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
+> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
+> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
+> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
+> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
+> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+
 # Obter Processo (aquisição automatizada)
 
 **Camada B — opcional.** O default do plugin é o usuário fornecer o PDF baixado manualmente. Só use isto quando compensar (ver trade-off).

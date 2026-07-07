@@ -3,6 +3,14 @@ name: relatorio
 description: (camada D) Produz RELATÓRIO sobre o processo, em modo interno (para o escritório — franco, "raw", com riscos, probabilidade de êxito e estratégia) ou externo (para o cliente — acessível, institucional). O modo externo FILTRA conteúdo (sem probabilidade crua nem estratégia interna) e equilibra a situação negativa com a solução, sem omitir. Use quando o objetivo é informar sobre o processo, não redigir peça.
 ---
 
+> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
+> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
+> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
+> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
+> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
+> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
+> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+
 # Relatório (camada D, modo interno|externo)
 
 Skill de output fina. **Não é peça protocolada** → **não puxa** `peca-processual-base`

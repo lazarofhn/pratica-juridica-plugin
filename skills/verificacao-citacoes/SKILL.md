@@ -3,6 +3,14 @@ name: verificacao-citacoes
 description: (camada E — compartilhada, CRÍTICA) Confere TODA asserção verificável de um output jurídico contra a fonte real, antes de fechar — jurisprudência (juris_br), legislação e doutrina (Know-How), referências aos autos (workspace do processo) e números/datas. É a defesa contra citação alucinada, mal atribuída ou superada em documento que leva a assinatura do advogado. Obrigatória em peças; nos relatórios, sempre que houver citação.
 ---
 
+> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
+> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
+> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
+> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
+> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
+> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
+> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+
 # Verificação de Citações (camada E — o maior risco do plugin)
 
 Numa peça assinada, citação errada não é bug: é risco ético e reputacional. Toda

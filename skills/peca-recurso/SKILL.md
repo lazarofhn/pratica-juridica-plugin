@@ -3,6 +3,14 @@ name: peca-recurso
 description: (camada D) Produz RECURSOS — apelação, agravo (de instrumento/interno), embargos de declaração, recurso ordinário, RE, REsp, contrarrazões. Skill fina: define a ESTRUTURA e a FINALIDADE do recurso e puxa a camada E (peca-processual-base, pesquisa-juridica, escrita-juridica, plano-de-respostas, formatacao-entrega, verificacao-citacoes). Use após a análise quando o objetivo é recorrer.
 ---
 
+> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
+> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
+> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
+> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
+> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
+> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
+> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+
 # Peça: Recurso (camada D)
 
 Skill de output fina. A lógica comum às peças protocoladas está em

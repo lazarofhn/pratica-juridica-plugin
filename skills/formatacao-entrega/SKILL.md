@@ -3,6 +3,14 @@ name: formatacao-entrega
 description: (camada E — compartilhada) Converte a peça/relatório externo em documento de ENTREGA no padrão da casa — gera um .docx (Cambria, margens em cm, recuos, entrelinha 1,15, separação por parágrafo em branco) a partir da peça marcada com diretivas @tag. Usada pelas skills de output EXTERNAS (peças protocoladas e relatório para cliente). Relatórios internos dispensam.
 ---
 
+> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
+> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
+> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
+> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
+> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
+> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
+> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+
 # Formatação de Entrega (camada E)
 
 Produz o **.docx final** com fidelidade ao padrão da casa. Não altera conteúdo —

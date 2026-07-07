@@ -3,6 +3,14 @@ name: escrita-juridica
 description: (camada E — compartilhada) Define COMO escrever texto jurídico natural, humano e preciso, com REGISTROS parametrizáveis (peça | interno | externo). Não é chamada direto pelo usuário — as skills de output (camada D) a invocam com o registro certo. Centraliza as regras de ouro (conectores, proibição do traço aditivo, proibição do padrão "dois pontos + explicação"), a calibragem de latim/bajulação, e o contrato de saída @tag para peças que viram .docx.
 ---
 
+> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
+> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
+> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
+> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
+> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
+> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
+> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+
 # Escrita Jurídica (camada E — parametrizada por registro)
 
 Você atua como editor que transforma texto jurídico e gerado por IA em escrita

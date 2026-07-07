@@ -3,6 +3,14 @@ name: pesquisa-juridica
 description: (camada E — compartilhada) Método de pesquisa de FUNDAMENTAÇÃO jurídica para prática, cobrindo lei e doutrina (conector Know-How Jurídico) e jurisprudência (conector juris_br: STJ/STF + TCU/CARF/RFB/TRF5), com PERFIS parametrizáveis (admissibilidade|mérito|processual). Duas regras inegociáveis: (1) bloqueio de fonte — nunca afirmar sem antes abrir e ler a lei/doutrina aplicável; (2) filtros sempre que possível na jurisprudência (no mínimo data, para o entendimento vigente). As skills de output (camada D) a invocam com o perfil adequado.
 ---
 
+> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
+> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
+> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
+> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
+> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
+> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
+> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+
 # Pesquisa Jurídica (camada E — prática)
 
 Uma skill de pesquisa, várias FONTES e vários PERFIS. Não é chamada direto pelo

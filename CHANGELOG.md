@@ -1,5 +1,16 @@
 # Changelog — pratica-juridica
 
+## v1.0.3 (2026-07-07)
+
+Nota de **"regra de uso"** no topo de cada skill (pipeline vs. avulso).
+
+- Todas as skills **exceto** o orquestrador `analise-processual` ganharam um bloco no topo
+  informando que a orquestração geral do plugin (fluxo de ponta a ponta) está definida em
+  `analise-processual`, e instruindo o Claude a **perguntar**, quando a skill for acionada
+  isoladamente, se o usuário quer **(a) seguir o pipeline do plugin** ou **(b) usar a skill
+  de forma avulsa**. Evita rodar uma etapa isolada por engano quando o usuário esperava o
+  fluxo completo (e vice-versa).
+
 ## v1.0.2 (2026-07-02)
 
 Persistência **automática** do workspace no Cowork, sem configuração manual.

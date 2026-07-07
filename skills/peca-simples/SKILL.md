@@ -3,6 +3,14 @@ name: peca-simples
 description: (camada D) Produz petições SEM nomenclatura ou requisitos próprios no CPC — manifestações, juntada de documentos, requerimento/especificação de provas, ciência, cumprimento de despacho, pedidos incidentais. Guiada pelo COMANDO (do usuário ou do despacho/decisão que intimou a parte). "Simples" = sem previsão específica, NÃO = rasa: pode ser tão densa quanto um recurso. Skill fina que puxa a camada E.
 ---
 
+> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
+> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
+> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
+> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
+> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
+> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
+> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+
 # Peça: Simples (camada D)
 
 Skill de output fina. O comum às peças protocoladas está em `peca-processual-base`

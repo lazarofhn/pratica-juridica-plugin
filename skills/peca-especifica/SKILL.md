@@ -3,6 +3,14 @@ name: peca-especifica
 description: (camada D) Produz peças com previsão e nomenclatura próprias no CPC — contestação, réplica, impugnação ao cumprimento de sentença, embargos à execução, embargos de terceiro, exceções e afins. Skill fina: define a estrutura própria da peça e puxa a camada E. Use após a análise quando o objetivo é uma dessas peças. NÃO cobre embargos de declaração (é recurso → peca-recurso).
 ---
 
+> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
+> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
+> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
+> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
+> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
+> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
+> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+
 # Peça: Específica (camada D)
 
 Skill de output fina. O comum às peças protocoladas está em `peca-processual-base`
