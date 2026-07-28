@@ -23,7 +23,7 @@ conciso, claro, simples e vigoroso, com o foco do leitor na mensagem.
 ## Registros
 | Registro | Finalidade / tom |
 |---|---|
-| `peça` | Persuasivo, técnico, dirigido ao juízo. Assertivo e fundamentado. Sai no formato `@tag` (vira `.docx`). |
+| `peça` | Persuasivo, técnico, dirigido ao juízo. Assertivo e fundamentado — na dose da seção **"Persuasão calibrada"**. Sai no formato `@tag` (vira `.docx`). |
 | `interno` | Franco e técnico, para colegas. Pode expor fraquezas, dúvidas, probabilidade e estratégia. Formato simples (markdown). |
 | `externo` | Acessível e institucional, para o cliente. Traduz o jurídico, comunica risco com prudência. **Filtra conteúdo** (sem probabilidade crua nem estratégia interna). Sai no formato `@tag` (vira `.docx`). |
 
@@ -80,6 +80,26 @@ em elementos/consequências". Repetida, ela robotiza o texto.
 O uso **pontual** dos dois pontos é legítimo e pode ser elegante; proíbe-se a
 repetição como fórmula automática. Identifique ativamente esse padrão e substitua.
 
+### GO-4 — Parágrafos curtos e respiráveis (QUEBRAR, nunca resumir)
+Parágrafo longo é onde a peça perde o leitor. Assessores, juízes e as próprias
+ferramentas de IA dos tribunais **param de ler no meio de blocos densos** — o
+argumento morre pela forma, não pelo mérito. Regra operacional:
+- **Um parágrafo = um passo do raciocínio.** Alvo: **2 a 4 períodos** (~4–7 linhas
+  no Word). Passou disso, encontre a costura lógica e **quebre em dois**.
+- **Quebrar ≠ resumir (inviolável).** É proibido cortar conteúdo para encurtar: o
+  desenvolvimento completo permanece, apenas **distribuído em mais parágrafos**,
+  encadeados pelos conectivos do GO-1 ("nessa linha", "por consequência", "não
+  bastasse isso"). O argumento denso vira uma escada de degraus curtos, não um bloco.
+- **Costuras naturais de quebra:** premissa normativa ¦ aplicação aos fatos ¦
+  consequência jurídica — cada movimento pode (e normalmente deve) ser parágrafo
+  próprio. Outro corte natural: cada fundamento autônomo, seu parágrafo.
+- **Anti-mecanicidade:** varie o comprimento (um período curto depois de dois longos
+  dá ritmo e ênfase) e a **abertura** dos parágrafos — nunca três seguidos começando
+  com o mesmo conectivo ou a mesma estrutura sintática.
+- **Teste de revisão (obrigatório antes de fechar a seção):** releia só olhando o
+  tamanho dos blocos; qualquer parágrafo com mais de ~7 linhas ou com mais de um
+  movimento argumentativo dentro, quebre.
+
 ---
 
 ## Latim e cortesia forense — calibragem (não é proibição absoluta)
@@ -92,6 +112,37 @@ O problema é o **excesso e a repetição**, não o uso em si.
   magistrado", "brilhante decisão" repetidos), latim ornamental como enfeite
   constante ("in casu", "a priori" o tempo todo). Corte o que vira vício, mantenha o
   que soa natural em dose pontual.
+
+## Persuasão calibrada (registro `peça`) — nem morno, nem espalhafatoso
+A peça existe para **convencer**; neutralidade total é defeito, não virtude. Um texto
+que apenas "constata" lê-se como parecer, e parecer não ganha causa. Mas o excesso
+(indignação adjetivada, ataque ao pronunciamento judicial) queima credibilidade. O
+alvo é o meio-termo assertivo:
+
+- **Defenda com verbo e arquitetura, não com adjetivo.** A ênfase legítima vem de
+  verbos assertivos e da força do encadeamento: "impõe-se", "não se sustenta",
+  "é o que basta para", "não resiste ao confronto com", "a conclusão é inafastável"
+  (este, com parcimônia). **Banidos** os adjetivos de indignação ("absurda",
+  "teratológica", "inaceitável"), salvo teratologia real e decisão estratégica
+  expressa do usuário.
+- **Critique a decisão, jamais o julgador.** Impessoalize o alvo: "o acórdão não
+  enfrentou a questão", "a premissa adotada não se concilia com o critério do
+  repetitivo", "a conclusão destoa do que decide esta Corte" — nunca "o magistrado
+  ignorou/equivocou-se gravemente". O rechaço a pronunciamento judicial é **firme no
+  conteúdo e respeitoso na forma** (uma "devida vênia" pontual; sem saturar).
+- **Tome partido nas conclusões.** Fecho de tópico não é relatório: conclui **em
+  favor da tese**. Teste: se o parágrafo final do tópico pudesse constar de um
+  parecer neutro, falta ênfase. A assertividade **cresce** nos fechos de tópico e nos
+  pedidos; na narrativa fática, mantém-se a sobriedade (fato bem contado persuade
+  sozinho).
+- **Escala de referência (calibre pelo exemplo do meio):**
+  - *Morno (falta ênfase):* "Verifica-se que o acórdão possivelmente não abordou
+    todos os pontos suscitados nos embargos."
+  - *Calibrado (alvo):* "O acórdão não enfrentou a questão, embora expressamente
+    suscitada nos embargos. A omissão, por incidir sobre fundamento capaz de alterar
+    o resultado do julgamento, impõe a anulação."
+  - *Espalhafatoso (excesso):* "É teratológica e absolutamente inaceitável a postura
+    do juízo, que ignorou por completo os embargos opostos."
 
 ## Demais princípios (todos os registros)
 
@@ -128,8 +179,8 @@ processo sobre o mesmo tema, falta ancoragem.
   do texto para dar destaque; a formatação estrutural do padrão da casa (negrito de
   título/seção/citação) é aplicada pela `formatacao-entrega`, não conta como "ênfase
   tipográfica" aqui.
-- Parágrafos predominantemente curtos, cada um com unidade de pensamento (tópico
-  frasal → desenvolvimento → fecho).
+- Parágrafos: regra completa no **GO-4** (curtos, um passo do raciocínio cada,
+  quebrar sem resumir).
 
 ---
 

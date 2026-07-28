@@ -1,5 +1,24 @@
 # Changelog — pratica-juridica
 
+## v1.0.4 (2026-07-28)
+
+Calibragem da `escrita-juridica` a partir do uso real do plugin em vários modelos
+(feedback do usuário: parágrafos longos/mecânicos e tom persuasivo aquém do ideal).
+
+- **Nova regra de ouro GO-4 — parágrafos curtos e respiráveis.** Um parágrafo = um
+  passo do raciocínio (2–4 períodos, ~4–7 linhas no Word); **quebrar nunca é
+  resumir** (o desenvolvimento completo permanece, distribuído em mais parágrafos
+  encadeados por conectivos); costuras naturais de quebra (premissa ¦ aplicação ¦
+  consequência); anti-mecanicidade (variar comprimento e abertura dos parágrafos);
+  teste obrigatório de revisão por tamanho de bloco. Motivo: assessores, juízes e as
+  IAs dos tribunais param de ler no meio de blocos densos.
+- **Nova seção "Persuasão calibrada" (registro `peça`).** Nem morno, nem
+  espalhafatoso: ênfase por verbos assertivos e arquitetura do argumento (não por
+  adjetivos de indignação, banidos); criticar a decisão, jamais o julgador (rechaço
+  firme no conteúdo, respeitoso na forma); tomar partido nos fechos de tópico e
+  pedidos (fecho que caberia em parecer neutro = falta ênfase); escala de referência
+  com exemplo morno / calibrado / espalhafatoso para ancorar o tom.
+
 ## v1.0.3 (2026-07-07)
 
 Nota de **"regra de uso"** no topo de cada skill (pipeline vs. avulso).
