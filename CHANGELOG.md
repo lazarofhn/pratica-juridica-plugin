@@ -1,5 +1,21 @@
 # Changelog — pratica-juridica
 
+## v1.0.5 (2026-07-28)
+
+`escrita-juridica` ganha a seção **"Padrões da casa"** — padrões extraídos de peça
+REAL do usuário (REsp manual de 2024, **recurso provido**), que ancoram o GO-4 e a
+"Persuasão calibrada" em exemplo vencedor:
+
+- Métrica-alvo medida na peça: mediana de 2 períodos / ~41 palavras por parágrafo;
+  43% dos parágrafos com um único período.
+- Sete padrões de construção: sanduíche de citação (anúncio → transcrição → leitura
+  dirigida; nenhuma citação órfã); alavanca "Ora, se… (então)" (a premissa do próprio
+  julgado como motor da conclusão); micro-conclusão parcial de 1 período fechando cada
+  tópico; reformulação "Ou seja," (técnico → tradução direta); ênfase mirada no
+  requisito/vício/situação (nunca no julgador); vocativo estratégico pontual nos
+  momentos decisivos; recapitulação enumerada antes do fecho.
+- TODO de exemplos-âncora do registro `peça` concluído (pendem `interno`/`externo`).
+
 ## v1.0.4 (2026-07-28)
 
 Calibragem da `escrita-juridica` a partir do uso real do plugin em vários modelos

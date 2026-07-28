@@ -144,6 +144,44 @@ alvo é o meio-termo assertivo:
   - *Espalhafatoso (excesso):* "É teratológica e absolutamente inaceitável a postura
     do juízo, que ignorou por completo os embargos opostos."
 
+## Padrões da casa (extraídos de peça REAL do usuário — recurso provido)
+Fonte: REsp manual (PIS/COFINS insumos, 2024) que resultou em **recurso provido**.
+Números medidos na peça: mediana de **2 períodos** e **~41 palavras** por parágrafo;
+**43% dos parágrafos têm um único período**. É o alvo concreto do GO-4. Além da
+métrica, sete padrões de construção a REPRODUZIR:
+
+1. **Sanduíche de citação.** Parágrafo curto anuncia a transcrição com fecho de
+   abertura ("vejamos:", "observe-se:", "in verbis:") → citação em bloco → parágrafo
+   de **leitura dirigida** que extrai da citação exatamente o que serve à tese
+   ("Observe-se que as disposições são claras ao delimitar…"). **Nenhuma citação fica
+   órfã**: transcrever sem ler dirigidamente é desperdiçar a prova.
+2. **Alavanca "Ora, se… (então)".** O golpe mais forte: usar a **premissa do próprio
+   julgado** (ou do adversário) como motor da conclusão. Âncora real: *"Ora, se o
+   próprio Acórdão de origem alegou que os gastos impostos por exigência legal devem
+   ser classificados como insumos, a sua omissão quanto às NORMAS que impõem à
+   Recorrente [esses] dispêndios é fato que macula o julgado."* O vício se demonstra
+   **de dentro** da decisão, o que é firme sem ser desrespeitoso.
+3. **Micro-conclusão parcial.** Cada tópico fecha com parágrafo de **1 período** que
+   toma partido: "Dessa feita, inconteste a tempestividade…", "Portanto, inconteste o
+   cabimento…". Trilha de conclusões parciais que desemboca nos pedidos (casa com a
+   "Persuasão calibrada": fecho conclui em favor da tese).
+4. **Reformulação "Ou seja,".** Ponto técnico seguido da tradução em linguagem
+   direta: *"Ou seja, a decisão poderia ser utilizada para o julgamento de embargos
+   de declaração em qualquer ação, independentemente da questão de direito."*
+   Primeiro preciso, depois inescapável. Usar nas ideias-chave, não em todas.
+5. **Ênfase mirada no objeto certo.** Vocabulário enfático legítimo ("inconteste",
+   "não restam dúvidas", "evidente contradição", "afronta direta") **dirigido ao
+   requisito, ao vício ou à situação — nunca ao julgador**. Indignação só contra a
+   SITUAÇÃO objetiva (âncora real: a "teratológica situação" de o contribuinte que
+   não foi a juízo ganhar na RFB enquanto o que foi, não) e mesmo assim rara.
+6. **Vocativo estratégico pontual.** "Importante frisar, Ex.ª, que…" / "Nesse
+   sentido, Exmos. Ministros," **apenas nos 1-2 momentos decisivos** da peça (a
+   virada argumentativa central), como acorde para acordar o leitor. Dose: ainda
+   menos que na peça-fonte (o próprio autor hoje calibra para baixo).
+7. **Recapitulação enumerada antes do fecho.** Seção longa termina com "Com isso, em
+   suma…" listando **um por parágrafo** cada vício/violação demonstrado, e só então
+   vem a conclusão/pedido. O julgador (e a IA do gabinete) encontra o mapa pronto.
+
 ## Demais princípios (todos os registros)
 
 ### Concisão
@@ -222,4 +260,5 @@ e injeta no `.docx`. Dois ganhos: **não gasta output** reescrevendo, e a citaç
 - Não é responsável por verificar citações — isso é da `verificacao-citacoes`.
 
 ## TODO
-- [ ] (Opcional) exemplos-âncora de tom por registro (peça / interno / externo).
+- [x] Exemplos-âncora do registro `peça` — ver "Padrões da casa" (peça real, recurso
+      provido). Pendente: âncoras dos registros `interno` e `externo`.
