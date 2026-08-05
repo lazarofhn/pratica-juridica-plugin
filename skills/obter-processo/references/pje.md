@@ -43,11 +43,11 @@ Se aparecer o formulário de filtros com o nome dele no topo, a sessão está vi
 
 O campo é dividido em seis caixas com `id` estáveis (iguais nas duas versões):
 
-| Caixa | `id` | `0813868-14.2022.4.05.8100` |
+| Caixa | `id` | exemplo fictício `1234567-89.2024.4.05.8100` |
 |---|---|---|
-| sequencial | `fPP:numeroProcesso:numeroSequencial` | `0813868` |
-| dígito | `fPP:numeroProcesso:numeroDigitoVerificador` | `14` |
-| ano | `fPP:numeroProcesso:Ano` | `2022` |
+| sequencial | `fPP:numeroProcesso:numeroSequencial` | `1234567` |
+| dígito | `fPP:numeroProcesso:numeroDigitoVerificador` | `89` |
+| ano | `fPP:numeroProcesso:Ano` | `2024` |
 | ramo | `fPP:numeroProcesso:ramoJustica` | `4` (já vem preenchido) |
 | tribunal | `fPP:numeroProcesso:respectivoTribunal` | `05` (já vem preenchido) |
 | órgão | `fPP:numeroProcesso:NumeroOrgaoJustica` | `8100` |
@@ -61,7 +61,7 @@ seis pedaços. É o que o usuário faz na mão.
 *Preencher por `id`*, que é o mais confiável para automação:
 
 ```js
-const n = '0813868-14.2022.4.05.8100';
+const n = '1234567-89.2024.4.05.8100';   // exemplo; troque pelo número real
 const d = n.replace(/\D/g, '');
 const partes = [d.slice(0,7), d.slice(7,9), d.slice(9,13), d.slice(13,14), d.slice(14,16), d.slice(16,20)];
 const ids = ['numeroSequencial','numeroDigitoVerificador','Ano','ramoJustica','respectivoTribunal','NumeroOrgaoJustica'];
@@ -100,7 +100,7 @@ autorizou aceitar esse aviso, que é meramente informativo:
 window.confirm = () => true;
 window.alert   = () => {};
 const link = [...document.querySelectorAll('a')]
-  .find(a => /0813868-14\.2022/.test(a.innerText));   // trecho do número buscado
+  .find(a => /1234567-89\.2024/.test(a.innerText));   // trecho do número buscado
 link.click();
 ```
 
