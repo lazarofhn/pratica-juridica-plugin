@@ -16,6 +16,8 @@ description: (camada E — compartilhada) Define COMO escrever texto jurídico n
 Você atua como editor que transforma texto jurídico e gerado por IA em escrita
 natural, humana e tecnicamente precisa. O estilo deve ser invisível: texto
 conciso, claro, simples e vigoroso, com o foco do leitor na mensagem.
+**"Natural" = fluida e bem encadeada DENTRO do registro técnico-forense — não é
+licença literária.** Fórmula de crônica/ensaio na peça é defeito grave (ver GO-5).
 
 > **Otimização central do plugin:** uma única skill de escrita, não três. As skills
 > de output passam um **registro**; a lógica mora aqui.
@@ -99,6 +101,40 @@ argumento morre pela forma, não pelo mérito. Regra operacional:
 - **Teste de revisão (obrigatório antes de fechar a seção):** releia só olhando o
   tamanho dos blocos; qualquer parágrafo com mais de ~7 linhas ou com mais de um
   movimento argumentativo dentro, quebre.
+
+### GO-5 — Registro técnico, não narrativo (a peça não é crônica nem ensaio)
+A fluidez que este skill exige vem dos **conectivos e do encadeamento** (GO-1) —
+nunca de fórmulas de crônica/ensaio. É um desvio recorrente dos modelos: a peça sai
+fluida, mas num **padrão de formalidade abaixo** do forense. Exemplos REAIS
+corrigidos pelo usuário, com a conversão:
+
+| ❌ Fórmula de ensaio | ✅ Formulação técnica |
+|---|---|
+| "o segundo requisito **é o que melhor revela o descompasso**" | "quanto ao segundo requisito, a apelação **parte de premissa que não corresponde à tese vinculante**" |
+| "**o problema não está em** X, mas em Y" | "a controvérsia **não diz respeito a** X; **cinge-se a** Y" |
+| "**seria uma coisa**; a União, **porém**…" | afirmar direto: "A União, contudo, [operação jurídica]…" (sem o contraste de suspense) |
+| "não segue esse caminho, **e nunca o seguiu**" | "não adotou essa providência" (sem a dramatização por reforço) |
+
+**Marcadores do registro ensaístico — varrer ativamente:**
+- **Avaliação impressionista do próprio argumento**: "é o que melhor revela", "salta
+  aos olhos", "nada disso se sustenta de pé", "o contraste é eloquente".
+- **Contraste retórico em suspense**: "uma coisa seria…; outra, bem diferente,…".
+- **Dramatização por reforço/repetição**: "e nunca o seguiu", "não uma, mas duas vezes".
+- **Metáfora e imagem**: "caminho", "descompasso", "pano de fundo", "morre na praia" —
+  substituir pelo termo técnico: critério, premissa, incompatibilidade, fundamento.
+- **Narrador comentando a própria peça**: "como se verá, o ponto é mais simples do
+  que parece".
+
+**Regra de conversão:** a frase técnica nomeia **(i) o objeto processual** (o acórdão,
+a apelação, o requisito, a premissa, a tese) e **(ii) a operação jurídica** (não
+corresponde, viola, deixa de enfrentar, parte de premissa equivocada, não se
+concilia com) — sem avaliação impressionista nem imagem. A ênfase legítima é a da
+"Persuasão calibrada" (verbos assertivos, "inconteste", "não restam dúvidas"), que é
+vocabulário **forense tradicional**, não ensaístico.
+
+**Teste de varredura (obrigatório na revisão final):** se a frase caberia numa
+crônica de jornal ou num artigo de opinião, reformule tecnicamente. Varrer a peça
+**inteira**, não só os casos vistosos — o padrão escorrega em frases discretas.
 
 ---
 

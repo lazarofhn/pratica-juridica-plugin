@@ -1,5 +1,25 @@
 # Changelog — pratica-juridica
 
+## v1.1.1 (2026-08-05)
+
+`escrita-juridica`: **nova regra de ouro GO-5 — registro técnico, não narrativo**
+(feedback de uso real: as peças saíam fluidas, mas com fórmulas de crônica/ensaio e
+padrão de formalidade abaixo do forense).
+
+- Tabela de conversão com exemplos reais corrigidos pelo usuário ("é o que melhor
+  revela o descompasso" → "parte de premissa que não corresponde à tese vinculante";
+  "o problema não está em…"; "seria uma coisa; …, porém"; "e nunca o seguiu").
+- Marcadores do registro ensaístico a varrer: avaliação impressionista do próprio
+  argumento, contraste retórico em suspense, dramatização por reforço, metáfora/imagem,
+  narrador comentando a própria peça.
+- Regra de conversão: a frase técnica nomeia o objeto processual + a operação jurídica,
+  sem avaliação impressionista nem imagem. A ênfase legítima segue sendo a da
+  "Persuasão calibrada" (vocabulário forense tradicional, não ensaístico).
+- Teste de varredura obrigatório na revisão final ("caberia numa crônica? reformule"),
+  aplicado à peça inteira.
+- Abertura da skill ajustada: "natural" = fluida no registro técnico-forense, não é
+  licença literária (era a brecha que induzia o desvio).
+
 ## v1.1.0 (2026-08-05)
 
 **`obter-processo` sai do stand-by: download automático dos autos no PJe.** A camada B
