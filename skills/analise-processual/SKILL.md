@@ -30,7 +30,9 @@ Notas de roteamento:
 
 ### 2. Garantir acesso ao processo (camada B)
 - **Default:** o usuário aponta o PDF da íntegra já baixado.
-- Se pedir download automático → `obter-processo` (opcional, por sistema).
+- Se não tiver o PDF em mãos → `obter-processo` baixa a íntegra automatizando o
+  navegador (PJe mapeado ponta a ponta: TRF-5 e TRF-1, 1º e 2º graus; outros sistemas
+  ainda não). O login/certificado é sempre do usuário.
 - Antes de reprocessar, verifique se já existe workspace deste processo (ver
   "Persistência").
 

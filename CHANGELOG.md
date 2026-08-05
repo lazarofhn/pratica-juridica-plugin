@@ -1,5 +1,31 @@
 # Changelog — pratica-juridica
 
+## v1.1.0 (2026-08-05)
+
+**`obter-processo` sai do stand-by: download automático dos autos no PJe.** A camada B
+deixa de ser esqueleto e passa a baixar a íntegra do processo automatizando o navegador
+(extensão do Claude no Chrome), a partir do número CNJ.
+
+- **PJe mapeado ponta a ponta**, verificado ao vivo em duas versões (2.11 e 2.9.1.1):
+  TRF-5 e TRF-1, 1º e 2º graus. Caminho completo em `references/pje.md` — endereços por
+  tribunal/grau, `id` estáveis das seis caixas do número CNJ, disparo da busca, abertura
+  dos autos, painel de filtros do download e conferência final.
+- **Login e certificado digital continuam sendo do usuário** — a skill nunca digita
+  credencial; se cair em tela de login, para e devolve a vez.
+- **Armadilhas documentadas** (as que travam a automação na prática): o `window.confirm`
+  nativo do aviso do CNJ, que congela a aba e a extensão (prevenir sobrescrevendo antes
+  do clique) e **não atravessa abas** — precisa ser reaplicado na aba dos autos, onde o
+  TRF-1 dispara um segundo `confirm` no download; o segundo ícone de download, que baixa
+  só o documento aberto; e o "Índice do PDF", que **não** pode ser desmarcado, porque são
+  esses bookmarks que a `analise-processo-pje` usa para ler autos enormes.
+- **Regras gerais de automação**: não confiar em coordenadas de tela (usar seletor) nem
+  no screenshot logo após AJAX (ler o DOM); em processos gigantes, combinar o recorte com
+  o usuário e baixar seletivamente.
+- Sistemas não mapeados (eproc, Projudi, e-SAJ, PJe de outros tribunais): a skill diz
+  isso na cara e oferece mapear junto, gerando um novo `references/<sistema>.md`.
+- Atualizados README (recursos, arquitetura, requisito do Chrome), `analise-processual`
+  (roteamento) e o guia de construção.
+
 ## v1.0.5 (2026-07-28)
 
 `escrita-juridica` ganha a seção **"Padrões da casa"** — padrões extraídos de peça

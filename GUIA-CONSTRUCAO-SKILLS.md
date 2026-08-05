@@ -203,4 +203,6 @@ processo e números/datas antes de fechar. *(já esboçada)*
 6. `formatacao-entrega`.
 
 **Já prontas:** `analise-processo-pje` (migrada — SKILL.md + scripts/processo.py).
-**Em stand-by:** `obter-processo` (download manual cobre; não construir por ora).
+**Construída (v1.1.0):** `obter-processo` — PJe mapeado ao vivo (TRF-5 e TRF-1, 1º e
+2º graus), com `references/pje.md`. Novos sistemas entram como `references/<sistema>.md`
+no mesmo formato.

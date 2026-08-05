@@ -21,6 +21,10 @@ sem estourar o contexto, ancora cada argumento nos fatos do processo e na fonte
 
 ## O que ele faz
 
+- **Baixa os autos para você.** Dado o número CNJ, automatiza a navegação no **PJe**
+  pela extensão do Claude no Chrome e baixa a íntegra do processo (TRF-5 e TRF-1, 1º e
+  2º graus, mapeados ao vivo). O login e o certificado digital são sempre seus — o
+  plugin nunca digita credencial. Já tem o PDF? Pule esta etapa e aponte o arquivo.
 - **Reconhece autos grandes com eficiência.** Lê o *índice* do PDF (bookmarks do PJe),
   rankeia os documentos que importam para o seu objetivo e **extrai só esses** —
   processos de milhões de tokens cabem no fluxo sem carregar o PDF inteiro.
@@ -56,6 +60,8 @@ sem estourar o contexto, ancora cada argumento nos fatos do processo e na fonte
 
   As URLs de referência estão em [`.mcp.json.example`](./.mcp.json.example). Os conectores
   são do lado da conta (claude.ai/OAuth) — o plugin não empacota servidores MCP.
+- **Extensão do Claude no Chrome** — só para baixar os autos automaticamente
+  (`obter-processo`). Dispensável se você já baixa o PDF manualmente.
 
 ---
 
@@ -108,7 +114,7 @@ tom e método de pesquisa são **parâmetros** de skills compartilhadas.
 
 ```
 A. ORQUESTRADOR    analise-processual         → porta de entrada (roteia por objetivo)
-B. AQUISIÇÃO       obter-processo             → opcional; padrão = PDF baixado manualmente
+B. AQUISIÇÃO       obter-processo             → baixa os autos do PJe pelo Chrome (ou use um PDF já baixado)
 C. ANÁLISE         analise-processo-pje       → extração seletiva do PDF (índice → ranking → extrai)
 D. OUTPUTS         peca-recurso, peca-especifica, peca-simples, memorial,
                    relatorio, analise-estrategia
