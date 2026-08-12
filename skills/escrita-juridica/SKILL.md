@@ -122,8 +122,14 @@ corrigidos pelo usuário, com a conversão:
 - **Dramatização por reforço/repetição**: "e nunca o seguiu", "não uma, mas duas vezes".
 - **Metáfora e imagem**: "caminho", "descompasso", "pano de fundo", "morre na praia" —
   substituir pelo termo técnico: critério, premissa, incompatibilidade, fundamento.
-- **Narrador comentando a própria peça**: "como se verá, o ponto é mais simples do
-  que parece".
+- **Narrador comentando a própria peça** — duas espécies, a segunda mais grave:
+  (i) comentário estilístico: "como se verá, o ponto é mais simples do que parece";
+  (ii) **metadiscurso estratégico**: revelar a arquitetura interna da tese — "este
+  argumento é subsidiário", "o que se admite apenas para argumentar", "o fundamento
+  principal, contudo, é outro", ou contar ao leitor que a estratégia mudou. A peça
+  mostra o **resultado**, nunca o processo de elaboração: o leitor (juiz, Fazenda)
+  deve compreender a mensagem, não como se chegou a ela. Moldura de
+  subsidiariedade sinaliza fragilidade que não existe.
 
 **Regra de conversão:** a frase técnica nomeia **(i) o objeto processual** (o acórdão,
 a apelação, o requisito, a premissa, a tese) e **(ii) a operação jurídica** (não
@@ -135,6 +141,36 @@ vocabulário **forense tradicional**, não ensaístico.
 **Teste de varredura (obrigatório na revisão final):** se a frase caberia numa
 crônica de jornal ou num artigo de opinião, reformule tecnicamente. Varrer a peça
 **inteira**, não só os casos vistosos — o padrão escorrega em frases discretas.
+
+### GO-6 — Definição por negação (afirme direto; negue só quem existe nos autos)
+Para afirmar algo, **não é preciso dizer o que ele "não é"** — a negação gratuita
+inventa um adversário só para dar relevo à afirmação. Exemplo REAL corrigido:
+
+| ❌ Definição por negação | ✅ Afirmação direta |
+|---|---|
+| "a usina **não é projeto anunciado**, mas empreendimento regularmente outorgado" | "a usina **é empreendimento regularmente outorgado** e em operação comercial há mais de uma década" |
+
+**Teste de triagem (o coração da regra):** *alguém nos autos sustentou o que estou
+negando?*
+- **Sim** → negação **legítima**: refutar tese da parte contrária, afastar precedente
+  invocado, responder a fundamento da decisão recorrida. Mantém-se.
+- **Não** → vício: converta em afirmação direta.
+
+A regra **não proíbe negação** — sem o teste, a réplica e as contrarrazões morrem.
+**Varredura (revisão final):** o padrão sempre contém uma negação ("não é X, mas Y",
+"não se trata de", "longe de ser"), então a busca tem recall alto; a triagem pelo
+teste acima é que separa vício de refutação (em peça real: 31 negações, 23 eram o
+vício).
+
+> **Método de revisão (vale para as varreduras dos GO-4 a GO-6):**
+> **(1) Diagnostique antes de reescrever** — separe o que peca na frase: (i) a
+> estrutura lógica, (ii) o registro/vocabulário, (iii) o conteúdo jurídico. Se só o
+> vocábulo peca, troque o vocábulo e **preserve a arquitetura** — não se joga fora
+> um bom argumento por defeito que era só de léxico.
+> **(2) Agente auxiliar é radar, nunca revisor** — modelo externo (DeepSeek etc.)
+> serve para **localizar** ocorrências do padrão; a reescrita é sempre do redator,
+> com o texto à vista. Sugestão automática já inverteu o sentido jurídico de frase
+> nuclear da tese ("nenhum provedor dispõe de meio" → "provedor dispõe de meio").
 
 ---
 
@@ -166,6 +202,13 @@ alvo é o meio-termo assertivo:
   repetitivo", "a conclusão destoa do que decide esta Corte" — nunca "o magistrado
   ignorou/equivocou-se gravemente". O rechaço a pronunciamento judicial é **firme no
   conteúdo e respeitoso na forma** (uma "devida vênia" pontual; sem saturar).
+- **Abra o tópico afirmando a própria tese; a distinção e a objeção vêm depois.**
+  Começar pela refutação (ou pelo instituto vizinho que se quer afastar) obriga o
+  leitor a entender o adversário antes de entender a tese, e ainda enquadra a
+  discussão nos termos dele. O elemento mais forte vai para o começo: primeiro a
+  premissa afirmativa ("os elementos materiais já estão caracterizados na lei e o
+  MS é o remédio cabível"), só então a distinção ("diferente seria a hipótese do
+  MI…"). **Premissa fundamental não fica no meio do capítulo: abre-o.**
 - **Tome partido nas conclusões.** Fecho de tópico não é relatório: conclui **em
   favor da tese**. Teste: se o parágrafo final do tópico pudesse constar de um
   parecer neutro, falta ênfase. A assertividade **cresce** nos fechos de tópico e nos
@@ -191,6 +234,12 @@ métrica, sete padrões de construção a REPRODUZIR:
    de **leitura dirigida** que extrai da citação exatamente o que serve à tese
    ("Observe-se que as disposições são claras ao delimitar…"). **Nenhuma citação fica
    órfã**: transcrever sem ler dirigidamente é desperdiçar a prova.
+   **Vale igualmente para prova documental e enumeração** (estatuto social, CNAE,
+   cláusula contratual, ato regulatório): fonte normativa e documental não se
+   "joga" — transcrever o artigo do estatuto e listar os códigos não demonstra
+   nada. Narra-se a **cadeia**: percorrer o ciclo etapa por etapa (ex.: plantio →
+   colheita → beneficiamento → cogeração → entrega), amarrando cada etapa ao item
+   do objeto social e ao dispositivo legal que se quer aplicar.
 2. **Alavanca "Ora, se… (então)".** O golpe mais forte: usar a **premissa do próprio
    julgado** (ou do adversário) como motor da conclusão. Âncora real: *"Ora, se o
    próprio Acórdão de origem alegou que os gastos impostos por exigência legal devem
@@ -235,6 +284,16 @@ métrica, sete padrões de construção a REPRODUZIR:
 - Sem variação elegante: repita o termo técnico exato se preciso; sinônimo só para
   não repetir gera ambiguidade.
 - Nunca use "o mesmo"/"a mesma" como pronome anafórico.
+- **O léxico não concede a premissa adversária.** Ao relatar ato, decisão ou tese
+  contrária, o verbo e o substantivo escolhidos não podem conceder por descuido a
+  premissa central que se combate. Exemplo REAL: com tese de eficácia plena do
+  dispositivo, escrever que o decreto "reconheceu **depender de providência futura
+  a eficácia**" (ou falar em "dever de **regulamentação**") trai a tese — o correto
+  é "reconheceu que **ainda não editou** o ato". É erro difícil de ver porque a
+  frase costuma estar correta como relato; o vazamento está no léxico. **Teste de
+  varredura (revisão final):** identifique a premissa nuclear da tese e procure, na
+  peça inteira, palavras que a contradigam por descuido.
+- **Léxico da casa:** preferir "ação"/"demanda" a "impetração" (fora de citações).
 
 ### Ancoragem ao caso concreto (sobretudo no registro peça)
 Não disserte sobre o instituto em abstrato. Todo tópico, de admissibilidade ou de
@@ -243,7 +302,9 @@ workspace): o que aconteceu nos autos e por que o requisito está satisfeito aqu
 Ex.: em prequestionamento, não basta explicar o art. 1.025; é preciso dizer QUAIS
 questões foram suscitadas nos embargos e permaneceram omissas, e onde serão
 enfrentadas. **Regra prática:** se o parágrafo pudesse ser colado em qualquer
-processo sobre o mesmo tema, falta ancoragem.
+processo sobre o mesmo tema, falta ancoragem. E nenhuma transcrição ou enumeração
+fica órfã: a leitura dirigida do padrão 1 ("Padrões da casa") vale para prova
+documental tanto quanto para ementa.
 
 ### Vigor e estrutura
 - Verbos de ação, não substantivos zumbis ("decidir revisar", não "tomar a decisão

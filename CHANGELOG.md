@@ -1,5 +1,47 @@
 # Changelog — pratica-juridica
 
+## v1.2.0 (2026-08-12)
+
+Calibragem por feedback de uso real (revisão de peça densa, 8 constatações) +
+correção do viés de inchaço na `peca-simples`. Uma única regra de ouro nova, para
+não banalizar as GO; o resto encaixa em seções existentes.
+
+**`escrita-juridica`:**
+- **Nova GO-6 — definição por negação**: proibido definir/qualificar por negação
+  quando ninguém sustentou o contrário ("não é projeto anunciado, mas…" → afirmar
+  direto). Teste de triagem: *alguém nos autos sustentou o que estou negando?* —
+  negação legítima (refutar tese, afastar precedente) se mantém.
+- **GO-5 ampliado — metadiscurso estratégico**: além do comentário estilístico, é
+  proibido revelar a arquitetura interna da tese ("argumento subsidiário", "o que
+  se admite apenas para argumentar"). A peça mostra o resultado, nunca o processo.
+- **Nota de método de revisão** (GO-4 a GO-6): diagnosticar antes de reescrever
+  (estrutura ≠ vocábulo ≠ conteúdo; se só o léxico peca, preserva-se a arquitetura);
+  agente auxiliar é radar, nunca revisor (localiza o padrão; a reescrita é do
+  redator com o texto à vista).
+- **Persuasão calibrada**: abrir o tópico afirmando a própria tese; distinção e
+  objeção vêm depois; premissa fundamental abre o capítulo, não fica no meio.
+- **Precisão**: o léxico não concede a premissa adversária ao relatar ato/tese
+  contrária ("depender de providência futura a eficácia" → "ainda não editou"),
+  com teste de varredura pela premissa nuclear; léxico da casa ("ação"/"demanda"
+  em vez de "impetração").
+- **Padrão da casa 1 + Ancoragem**: leitura dirigida estendida a prova documental
+  e enumeração (estatuto, CNAE, cláusula) — fonte não se "joga", narra-se a cadeia
+  amarrada ao dispositivo.
+
+**`peca-processual-base`:**
+- **Antecipação de objeção — oportunidade e lugar**: antecipa-se só a objeção
+  provável e específica (nunca o desenho normal da ação); e no corpo da
+  fundamentação, jamais nos pedidos ("pedido que se defende é pedido que se
+  confessa frágil").
+
+**`peca-simples`:**
+- **Régua de duas pontas**: a skill só freava o vício de rasar e induzia o de
+  inflar. Agora o porte é ditado pelo comando, com **bifurcação de porte (passo
+  2.1)**: *protocolar* (só comunica/requer o rotineiro — parágrafos a uma lauda,
+  sem pesquisa, 1 geração, sem plano) × *substancial* (fluxo completo). Teste
+  objetivo: o leitor precisa ser convencido de algo? Na dúvida, perguntar o
+  porte-alvo ao usuário.
+
 ## v1.1.1 (2026-08-05)
 
 `escrita-juridica`: **nova regra de ouro GO-5 — registro técnico, não narrativo**

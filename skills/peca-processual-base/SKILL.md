@@ -85,6 +85,14 @@ Profundidade **variável** — calibre pelo contexto:
 - **Citar a procedência** ao referir os autos: tipo do documento, evento (NUM) e
   páginas (como a `analise-processo-pje` já entrega).
 - **Não reescrever o processo inteiro** na seção de fatos — só o necessário à tese.
+- **Antecipação de objeção — oportunidade e lugar.** Duas regras:
+  - *Oportunidade:* antecipa-se apenas a objeção **provável e específica** do caso
+    concreto; **não** se antecipa o que é o desenho normal da ação. Defender o óbvio
+    "só abre uma suspeita infundada e dá material" à parte contrária — a antecipação
+    sinaliza dúvida onde não havia. Objeção meramente possível fica guardada para a
+    réplica/contrarrazões, se levantada.
+  - *Lugar:* quando couber antecipar, faz-se no corpo da **fundamentação**, nunca no
+    capítulo de pedidos — **pedido que se defende é pedido que se confessa frágil**.
 - Sem juridiquês vazio nem excesso de "data venia" (ver `escrita-juridica`).
 
 ## 7. O que cada skill de peça acrescenta (ênfase própria)
@@ -92,4 +100,4 @@ Profundidade **variável** — calibre pelo contexto:
 |---|---|
 | `peca-recurso` | Admissibilidade média-alta por padrão; **RE/REsp: 1 resposta por requisito**; estrutura do artigo do CPC do recurso. |
 | `peca-especifica` | Previsão/nomenclatura própria no CPC; requisitos daquela peça; sem ênfase-padrão de admissibilidade. |
-| `peca-simples` | Guiada pelo comando (usuário/despacho); atrelada a fatos; **pode ser densa** (não presumir rasa). |
+| `peca-simples` | Guiada pelo comando (usuário/despacho); atrelada a fatos; **porte ditado pelo comando** (bifurcação protocolar × substancial — não presumir em nenhuma direção). |
