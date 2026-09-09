@@ -1,0 +1,20 @@
+{
+  "name": "pratica-juridica-work",
+  "version": "0.1.0",
+  "description": "Prática jurídica com autos, pesquisa rastreável e documentos para ChatGPT Work e Codex.",
+  "author": {
+    "name": "José Lázaro"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Prática Jurídica Work",
+    "shortDescription": "Autos, pesquisa e redação jurídica verificável.",
+    "longDescription": "Variante OpenAI do plugin pratica-juridica, com instruções para Astra e execução adaptada às ferramentas da sessão.",
+    "developerName": "José Lázaro",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Analise estes autos e prepare o documento solicitado."
+  },
+  "license": "MIT",
+  "repository": "https://github.com/lazarofhn/pratica-juridica-plugin"
+}

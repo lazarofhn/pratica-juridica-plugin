@@ -1,5 +1,10 @@
 # pratica-juridica
 
+> **Variante ChatGPT Work / Codex:** a cópia adaptada está em
+> [`plugins/pratica-juridica-work`](plugins/pratica-juridica-work/README.md).
+> Consulte a [análise e organização das variantes](docs/ADAPTACAO-OPENAI.md).
+> As instruções abaixo continuam descrevendo a versão Claude.
+
 Plugin para o **Claude** que transforma um processo judicial em PDF (padrão **PJe**)
 em análise e em **peças/relatórios jurídicos** — do reconhecimento dos autos à entrega
 formatada em `.docx`. Um **orquestrador** entende o seu objetivo (recorrer, contestar,
