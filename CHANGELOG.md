@@ -1,5 +1,31 @@
 # Changelog — pratica-juridica
 
+## v1.3.1 (2026-10-20)
+
+Ligação entre parágrafos. O José pegou o texto robótico em peça pronta, com e sem a
+`escrita-juridica`: a maioria dos parágrafos abria com sujeito nominal seco ("O MPF", "O
+acórdão", "A sentença") e faltava fluidez entre parágrafos e capítulos. Na manifestação e
+no memorial medidos, 73% e 67% dos parágrafos abriam assim, e o radar dava média de 58
+palavras, abaixo da faixa; a peça da equipe de 16/10 tinha 49%, com média de 43. Duas
+regras empurravam para isso: "parágrafos curtos" lido como frase solta e o corte de
+metalinguagem levando junto as frases de transição.
+
+- **GO-1 reescrita:** a abertura do parágrafo faz a ligação, pelo conectivo da relação
+  lógica, por uma circunstância ou pela retomada da ideia anterior. Sujeito nominal seco
+  abrindo parágrafo é exceção: no máximo cerca de 30% e nunca mais de dois seguidos. O
+  capítulo abre retomando o anterior e fecha conduzindo ao próximo.
+- **Ligar não é metalinguagem:** a transição que diz a relação entre as ideias e o
+  parágrafo de síntese que costura capítulos ficam; a revisão ganhou o "cuidado inverso"
+  e nunca propõe cortá-los. O GO-4 passa a nomear o vício oposto ao bloco denso, os
+  parágrafos de uma frase em série.
+- **Radar (`lint_peca.py`):** novo alerta `GO-1/abertura-nominal`, que dispara acima de
+  ~30% de aberturas por sujeito nominal ou com três seguidas, em peça de seis ou mais
+  parágrafos. Locuções ("A partir disso", "Uma vez que", "A meu ver") e retomadas ("O
+  mesmo acórdão") não contam. A linha de estatística mostra a parcela, e há as opções
+  `--max-abertura-nominal` e `--max-nominais-seguidas`. São 7 testes novos.
+- Acompanha o `equipe-juridica` 0.4.1: os executores ganharam a regra com exemplo, e o
+  crítico ganhou a lente de ligação.
+
 ## v1.3.0 (2026-10-20)
 
 Revisão geral: auditoria das 15 skills por quatro revisores em paralelo, contagem de uso

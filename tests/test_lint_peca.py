@@ -154,6 +154,64 @@ class AberturasIguais(unittest.TestCase):
                                       "A decisão omitiu o terceiro.")), ["GO-4/aberturas"])
 
 
+class AberturaNominal(unittest.TestCase):
+    RESTO = " ".join(["prazo"] * 76) + "."   # cerca de 80 palavras: média na faixa
+
+    def par(self, abertura):
+        return f"{abertura} {self.RESTO}"
+
+    def test_sequencia_e_parcela_disparam(self):
+        texto = corpo(self.par("O MPF imputou"), self.par("O acórdão manteve"),
+                      self.par("A sentença acolheu"), self.par("Diante disso, a defesa"),
+                      self.par("Ainda assim, o tribunal"), self.par("Essa conclusão ignora"))
+        alertas = lint.lint_texto(texto)
+        self.assertEqual([(a.regra, a.linha) for a in alertas],
+                         [("GO-1/abertura-nominal", 2), ("GO-1/abertura-nominal", 6)])
+        self.assertIn("3 de 6 parágrafos (50%)", alertas[0].mensagem)
+        self.assertIn("linhas 2, 4, 6", alertas[1].mensagem)
+
+    def test_texto_ligado_nao_dispara(self):
+        texto = corpo(self.par("Na denúncia, o MPF imputou"), self.par("Ainda assim, o acórdão"),
+                      self.par("Essa conclusão ignora"), self.par("O tribunal, contudo,"),
+                      self.par("Quanto ao dolo, a sentença"), self.par("Diante disso, a defesa"))
+        self.assertEqual(regras(texto), [])
+
+    def test_parcela_tolera_arredondamento(self):
+        # 2 de 6 (33%) arredonda para o teto de cerca de 30%; 3 de 6 passa
+        ligadas = ["Diante disso, a defesa", "Ainda assim, o tribunal", "Essa conclusão",
+                   "Quanto ao dolo, a prova"]
+        texto = corpo(self.par("O MPF imputou"), *[self.par(a) for a in ligadas[:2]],
+                      self.par("A sentença acolheu"), *[self.par(a) for a in ligadas[2:]])
+        self.assertEqual(regras(texto), [])
+
+    def test_titulo_reinicia_a_sequencia(self):
+        texto = (corpo(self.par("Na denúncia, o MPF"), self.par("O acórdão manteve"),
+                       self.par("A sentença acolheu"))
+                 + "\n@secao\n2. DO MÉRITO\n\n"
+                 + corpo(self.par("O tribunal negou"), self.par("Diante disso, a parte"),
+                         self.par("Ainda assim, a defesa")))
+        self.assertEqual(regras(texto, max_abertura_nominal=100), [])
+
+    def test_peca_curta_nao_avalia(self):
+        texto = corpo(self.par("O MPF imputou"), self.par("O acórdão manteve"),
+                      self.par("A sentença acolheu"))
+        self.assertEqual(regras(texto), [])
+
+    def test_locucoes_e_retomadas_nao_contam(self):
+        for abertura in ("A partir disso, o acórdão", "Uma vez que a sentença", "A meu ver, o MPF",
+                         "A despeito da prova", "O mesmo acórdão", "O que se discute",
+                         "A essa altura, a defesa", "Diante disso, a sentença"):
+            self.assertFalse(lint.abre_com_sujeito_nominal(abertura), abertura)
+        for abertura in ("O MPF imputou", "A sentença acolheu", "Os autos revelam",
+                         "Uma das premissas", "**O acórdão** manteve"):
+            self.assertTrue(lint.abre_com_sujeito_nominal(abertura), abertura)
+
+    def test_estatisticas_trazem_a_parcela(self):
+        texto = corpo(self.par("O MPF imputou"), self.par("Diante disso, a defesa"),
+                      self.par("A sentença acolheu"), self.par("Ainda assim, o tribunal"))
+        self.assertEqual(lint.estatisticas(lint.segmentar(texto))["aberturas_nominais_pct"], 50)
+
+
 class Lexico(unittest.TestCase):
     def test_registro_ensaistico(self):
         r = regras(corpo("O segundo requisito é o que melhor revela o descompasso da apelação."))
@@ -245,6 +303,7 @@ class LinhaDeComando(unittest.TestCase):
         saida = self.rodar(str(self.peca)).stdout.decode("utf-8")
         self.assertIn(f"{self.peca}:2: [GO-2]", saida)
         self.assertIn("2 alerta(s) em 1 arquivo(s)", saida)
+        self.assertIn("aberturas por sujeito nominal: 100% (teto 30%)", saida)
 
     def test_pasta_e_ignorar(self):
         r = self.rodar(self.dir.name, "--ignorar", "GO-2", "--json")

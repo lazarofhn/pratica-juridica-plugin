@@ -8,6 +8,8 @@ arquivo:linha + regra para os padrões que a casa manda varrer:
   GO-4/paragrafo      parágrafo que passa da referência de palavras ou junta períodos demais
   GO-4/media          média de palavras por parágrafo fora da faixa-alvo (70 a 90)
   GO-4/aberturas      parágrafos seguidos com a mesma abertura (padrão: três)
+  GO-1/abertura-nominal  parágrafos demais abertos por sujeito nominal ("O MPF", "A
+                      sentença"): acima de 30% da peça ou três seguidos
   GO-5/ensaio         fórmula de crônica ou ensaio: avaliação impressionista, imagem,
                       contraste em suspense, dramatização, narrador comentando a peça
   GO-5/metadiscurso   arquitetura da tese exposta ("apenas para argumentar")
@@ -27,7 +29,8 @@ código, tabelas e títulos.
 Uso:
     python lint_peca.py peca.md [outra.md | pasta ...] [--json]
         [--max-palavras 120] [--limite-palavras 130] [--max-periodos 2] [--media 70-90]
-        [--aberturas 3] [--max-cortesia 2] [--ignorar GO-6,cortesia]
+        [--aberturas 3] [--max-abertura-nominal 30] [--max-nominais-seguidas 2]
+        [--max-cortesia 2] [--ignorar GO-6,cortesia]
 
 A régua do parágrafo é de ideia, não de número: um parágrafo diz uma coisa só,
 normalmente em um ou dois períodos curtos. Os números só apontam onde olhar: média de
@@ -62,6 +65,8 @@ class Config:
     media_max: int = 90
     min_pars_media: int = 6     # com menos parágrafos de prosa (peça protocolar), sem média
     aberturas: int = 3
+    max_abertura_nominal: int = 30   # % de parágrafos abertos por sujeito nominal
+    max_nominais_seguidas: int = 2   # a terceira abertura nominal seguida dispara
     max_cortesia: int = 2
     ignorar: tuple = ()
 
@@ -308,12 +313,15 @@ def checar_paragrafo(par, cfg):
 
 def estatisticas(pars):
     """Tamanho dos parágrafos de prosa (sem itens, títulos e citações)."""
-    tamanhos = [len(p.texto.split()) for p in pars if p.tipo == "prosa"]
+    prosa = [p for p in pars if p.tipo == "prosa"]
+    tamanhos = [len(p.texto.split()) for p in prosa]
     if not tamanhos:
-        return {"paragrafos": 0, "media_palavras": 0.0, "maior": 0}
+        return {"paragrafos": 0, "media_palavras": 0.0, "maior": 0, "aberturas_nominais_pct": 0}
+    nominais = sum(1 for p in prosa if abre_com_sujeito_nominal(p.texto))
     return {"paragrafos": len(tamanhos),
             "media_palavras": round(sum(tamanhos) / len(tamanhos), 1),
-            "maior": max(tamanhos)}
+            "maior": max(tamanhos),
+            "aberturas_nominais_pct": round(100 * nominais / len(prosa))}
 
 
 def checar_media(pars, cfg, arquivo):
@@ -386,6 +394,74 @@ def checar_aberturas(pars, cfg, arquivo):
             yield Alerta(arquivo, p.inicio, "GO-4/aberturas",
                          f"{len(run)} parágrafos seguidos abrem com \"{k}\" (linhas {linhas}): "
                          f"varie a abertura", _trecho(p.texto, 0, 50, folga=0))
+
+
+# ------------------------------------------------------------------ GO-1: ligação
+ARTIGOS = {"o", "a", "os", "as", "um", "uma", "uns", "umas"}
+# palavra que, logo depois do artigo, faz da abertura uma locução ("A partir disso", "Uma
+# vez que", "A meu ver"), uma retomada ("A essa altura", "O mesmo acórdão") ou uma relativa
+# ("O que se discute"), e não um sujeito nominal seco
+LOCUCAO_APOS_ARTIGO = {
+    "partir", "despeito", "propósito", "proposito", "respeito", "fim", "par", "teor",
+    "título", "titulo", "seguir", "exemplo", "vez", "rigor", "princípio", "principio",
+    "meu", "nosso", "seu", "cada", "contar", "depender", "todo", "toda", "qualquer", "luz",
+    "esse", "essa", "este", "esta", "isso", "isto", "tal", "tais", "aquele", "aquela",
+    "mesmo", "mesma", "mesmos", "mesmas", "que", "qual", "quem",
+}
+MAX_ALERTAS_SEQUENCIA = 5
+
+
+def abre_com_sujeito_nominal(texto):
+    """True se o parágrafo abre com artigo + substantivo ("O MPF", "A sentença"), sem
+    conectivo, circunstância ou retomada antes."""
+    palavras = re.findall(r"\w+(?:-\w+)*", texto.strip()[:80])
+    if len(palavras) < 2:
+        return False
+    return palavras[0].lower() in ARTIGOS and palavras[1].lower() not in LOCUCAO_APOS_ARTIGO
+
+
+def checar_abertura_nominal(pars, cfg, arquivo):
+    prosa = [p for p in pars if p.tipo == "prosa"]
+    if len(prosa) < cfg.min_pars_media:
+        return
+    sequencias, run = [], []
+    for p in pars:
+        if p.tipo == "titulo":
+            run = []
+            continue
+        if p.tipo != "prosa":
+            continue
+        if abre_com_sujeito_nominal(p.texto):
+            run.append(p)
+            if len(run) == cfg.max_nominais_seguidas + 1:
+                sequencias.append(run)
+        else:
+            run = []
+    for run in sequencias[:MAX_ALERTAS_SEQUENCIA]:
+        p = run[cfg.max_nominais_seguidas]
+        linhas = ", ".join(str(x.inicio) for x in run)
+        yield Alerta(arquivo, p.inicio, "GO-1/abertura-nominal",
+                     f"{len(run)} parágrafos seguidos abertos por sujeito nominal (linhas "
+                     f"{linhas}): ligue cada um ao anterior pelo conectivo, por uma "
+                     f"circunstância ou retomando a ideia", _trecho(p.texto, 0, 50, folga=0))
+    nominais = [p for p in prosa if abre_com_sujeito_nominal(p.texto)]
+    teto = int(cfg.max_abertura_nominal * len(prosa) / 100 + 0.5)   # "cerca de": arredonda
+    if len(nominais) > teto:
+        contagem = {}
+        for p in nominais:
+            k = " ".join(re.findall(r"\w+(?:-\w+)*", p.texto.strip())[:2])
+            contagem[k] = contagem.get(k, 0) + 1
+        repetidas = sorted(contagem.items(), key=lambda kv: -kv[1])[:3]
+        mais = ", ".join(f"\"{k}\" ({n})" for k, n in repetidas)
+        extra = (f"; {len(sequencias)} sequência(s) de {cfg.max_nominais_seguidas + 1} ou mais"
+                 if sequencias else "")
+        pct = 100 * len(nominais) / len(prosa)
+        yield Alerta(arquivo, nominais[0].inicio, "GO-1/abertura-nominal",
+                     f"{len(nominais)} de {len(prosa)} parágrafos ({pct:.0f}%) abrem com sujeito "
+                     f"nominal, acima do teto de cerca de {cfg.max_abertura_nominal}%{extra}: o "
+                     f"texto vira lista, sem ligação. Mais repetidas: {mais}. Reabra pelo "
+                     f"conectivo da relação lógica, por uma circunstância ou retomando a ideia "
+                     f"anterior", _trecho(nominais[0].texto, 0, 50, folga=0))
 
 
 # ------------------------------------------------------------------ léxico
@@ -570,6 +646,7 @@ def lint_texto(texto, arquivo="<texto>", cfg=None, **kw):
                        f"outra é natural; a saturação é vício")
             alertas.append(Alerta(arquivo, linha, regra, msg, trecho))
     alertas.extend(checar_aberturas(pars, cfg, arquivo))
+    alertas.extend(checar_abertura_nominal(pars, cfg, arquivo))
     alertas.extend(checar_media(pars, cfg, arquivo))
     alertas = [a for a in alertas if not _ignorada(a.regra, cfg)]
     alertas.sort(key=lambda a: (a.linha, a.regra))
@@ -621,6 +698,11 @@ def main(argv=None):
                     help="períodos por parágrafo antes do alerta (só em parágrafo acima da média-alvo)")
     ap.add_argument("--media", default=f"{Config.media_min}-{Config.media_max}",
                     help="faixa-alvo da média de palavras por parágrafo (ex.: 70-90)")
+    ap.add_argument("--max-abertura-nominal", type=int, default=Config.max_abertura_nominal,
+                    help="teto, em %%, de parágrafos abertos por sujeito nominal "
+                         "(\"O MPF\", \"A sentença\")")
+    ap.add_argument("--max-nominais-seguidas", type=int, default=Config.max_nominais_seguidas,
+                    help="aberturas nominais seguidas toleradas antes do alerta")
     ap.add_argument("--aberturas", type=int, default=Config.aberturas,
                     help="parágrafos seguidos com a mesma abertura que disparam o alerta")
     ap.add_argument("--max-cortesia", type=int, default=Config.max_cortesia,
@@ -635,6 +717,8 @@ def main(argv=None):
     cfg = Config(max_palavras=args.max_palavras, limite_palavras=args.limite_palavras,
                  max_periodos=args.max_periodos, media_min=media_min, media_max=media_max,
                  aberturas=args.aberturas, max_cortesia=args.max_cortesia,
+                 max_abertura_nominal=args.max_abertura_nominal,
+                 max_nominais_seguidas=args.max_nominais_seguidas,
                  ignorar=tuple(x.strip() for x in args.ignorar.split(",") if x.strip()))
 
     alertas, erros, n_arq, paragrafos = [], 0, 0, {}
@@ -659,7 +743,9 @@ def main(argv=None):
             if est["paragrafos"]:
                 print(f"{caminho}: {est['paragrafos']} parágrafo(s) de prosa, média de "
                       f"{est['media_palavras']:.0f} palavras (faixa-alvo {cfg.media_min} a "
-                      f"{cfg.media_max}), o maior com {est['maior']}")
+                      f"{cfg.media_max}), o maior com {est['maior']}; aberturas por sujeito "
+                      f"nominal: {est['aberturas_nominais_pct']}% (teto "
+                      f"{cfg.max_abertura_nominal}%)")
         if alertas:
             partes = ", ".join(f"{k}: {v}" for k, v in resumo(alertas).items())
             print(f"\n{len(alertas)} alerta(s) em {n_arq} arquivo(s) ({partes}). Radar: confirme "

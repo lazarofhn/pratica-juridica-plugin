@@ -40,17 +40,36 @@ Entre registros muda o tom e, no `externo`, também o que se diz; as regras vale
 
 ## Regras de ouro (prioridade máxima)
 
-### GO-1 — Conectivos, uso máximo e intencional
+### GO-1 — Conectivos e ligação: cada parágrafo nasce do anterior
 Encadeie com conjunções e locuções, no período e entre parágrafos: sem elas o texto fica
 fragmentado e robótico. Cada conectivo tem um valor lógico (adição, contraste, causa,
 consequência, concessão); use o da relação real, não o que só preenche a transição. No
 período: porque, embora, ainda que, de modo que, uma vez que, portanto, todavia, na
 medida em que, razão pela qual. Entre parágrafos: com efeito, além disso, por sua vez,
-nessa linha, desse modo, em consequência, cabe acrescentar que.
+nessa linha, desse modo, em consequência, diante disso, daí resulta.
 
 > ✗ "O contrato venceu em março. A ré continuou prestando o serviço. A cobrança é devida."
 > ✓ "Embora o contrato tenha vencido em março, a ré continuou prestando o serviço, de
 > modo que a cobrança é devida."
+
+- **A abertura do parágrafo faz a ligação.** Abra com o que amarra ao parágrafo anterior:
+  o conectivo da relação lógica ("Diante disso,", "Ainda que se admitisse,"), uma
+  circunstância ("Quanto ao dolo,", "Na premissa adotada pelo acórdão,") ou a retomada da
+  ideia anterior ("Essa omissão", "Tal registro"). Sujeito nominal seco abrindo o
+  parágrafo ("O MPF", "O acórdão", "A sentença") é exceção: no máximo cerca de 30% dos
+  parágrafos e nunca mais de dois seguidos. É vício recorrente do modelo, com ou sem esta
+  skill: confira no radar antes de entregar.
+- **O capítulo também se liga:** abre situando-se no argumento e retomando o anterior, e
+  fecha com a conclusão que conduz ao próximo (a micro-conclusão dos padrões da casa).
+- **Ligar não é metalinguagem.** A transição que diz a relação entre as ideias ("Diante
+  dessa omissão, a multa perde a base") é obrigatória, e o parágrafo de síntese que
+  costura capítulos fica. Corta-se só o texto comentando a si mesmo ("passa-se a
+  demonstrar", "como se verá") e a repetição pura.
+
+> ✗ Três parágrafos seguidos: "O MPF imputou dolo…" / "O acórdão manteve…" / "A
+> sindicância não apurou…"
+> ✓ "Na denúncia, o MPF imputou dolo…" / "Ainda assim, o acórdão manteve…" / "Essa
+> conclusão ignora a sindicância, que não apurou…"
 
 ### GO-2 — Proibição do traço aditivo (inviolável)
 Travessão, meia-risca ou hífen nunca introduzem ideia apositiva ou intercalada no
@@ -78,8 +97,10 @@ denso: o argumento morre pela forma, não pelo mérito.
   não o número; os números só apontam onde olhar: média de 70 a 90 palavras por parágrafo
   na peça e 120 como referência de teto (125 ou 130 cabem se a ideia pede). Duas ideias
   no mesmo bloco: ache a costura lógica e quebre.
-- **Quebrar não é resumir (inviolável):** nada se corta; o desenvolvimento inteiro fica,
-  distribuído em mais parágrafos encadeados pelo GO-1, como escada de degraus curtos.
+- **Quebrar não é resumir nem picotar (inviolável):** nada se corta; o desenvolvimento
+  inteiro fica, distribuído em parágrafos encadeados pelo GO-1, como escada de degraus
+  curtos. Parágrafos de uma frase em série, sem ligação, são o vício oposto ao bloco
+  denso, e a média abaixo de 70 palavras costuma denunciá-lo.
 - **Costuras naturais:** premissa normativa ¦ aplicação aos fatos ¦ consequência
   jurídica; cada fundamento autônomo, seu parágrafo.
 - **Anti-mecanicidade:** varie o comprimento (um período curto depois de dois longos dá
@@ -179,7 +200,7 @@ decisão") e latim ornamental constante ("in casu", "a priori" o tempo todo).
    diagnostique antes de reescrever.
 
 No N3, o radar roda em cada seção devolvida e, na costura, na peça inteira: aberturas
-repetidas e saturação só aparecem no conjunto.
+repetidas, a parcela de aberturas nominais e a saturação só aparecem no conjunto.
 
 ## Revisar peça pronta ou remover juridiquês (chamada direta)
 Roteiro em `references/revisao.md`: situar registro e destinatário, rodar o radar,

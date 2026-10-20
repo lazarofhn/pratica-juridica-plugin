@@ -19,12 +19,13 @@ revisar peça pronta, remover juridiquês ou dar fluidez a um texto.
 ```
 python "${CLAUDE_PLUGIN_ROOT}/skills/escrita-juridica/scripts/lint_peca.py" <arquivo|pasta>
     [--json] [--max-palavras 120] [--limite-palavras 130] [--max-periodos 2]
-    [--media 70-90] [--aberturas 3] [--max-cortesia 2] [--ignorar GO-6,cortesia]
+    [--media 70-90] [--aberturas 3] [--max-abertura-nominal 30]
+    [--max-nominais-seguidas 2] [--max-cortesia 2] [--ignorar GO-6,cortesia]
 ```
 Lê markdown ou blocos `@tag` e ignora citação em bloco (`@citacao`, `@citacao-ref`,
 linhas `>`), trecho entre aspas, títulos, tabelas e código. Saída: `arquivo:linha:
-[regra] mensagem | trecho` e a média de palavras por parágrafo de cada arquivo, ou JSON
-com `alertas`, `resumo` e `paragrafos`.
+[regra] mensagem | trecho` e, por arquivo, a média de palavras por parágrafo e a parcela
+de aberturas por sujeito nominal; ou JSON com `alertas`, `resumo` e `paragrafos`.
 
 | Regra | Aponta | Triagem |
 |---|---|---|
@@ -32,6 +33,7 @@ com `alertas`, `resumo` e `paragrafos`.
 | `GO-4/paragrafo` | acima de 120 palavras (referência), acima de 130 (quase sempre duas ideias), ou mais de dois períodos num parágrafo acima de 90 palavras | uma ideia só? mantenha; duas? quebre na costura, nunca resuma |
 | `GO-4/media` | média de palavras por parágrafo fora de 70 a 90 (peça com seis ou mais parágrafos) | acima: parágrafos juntando ideias; abaixo: raciocínio picotado |
 | `GO-4/aberturas` | três parágrafos seguidos com a mesma abertura | varie conectivo ou estrutura |
+| `GO-1/abertura-nominal` | mais de 30% dos parágrafos abrindo com sujeito nominal (artigo + substantivo: "O MPF", "A sentença"), ou três seguidos (peça com seis ou mais parágrafos) | reabra pelo conectivo da relação lógica, por uma circunstância ou retomando a ideia anterior |
 | `GO-5/ensaio`, `GO-5/metadiscurso` | léxico da lista do GO-5 | regra de conversão do GO-5 |
 | `GO-6` | "não é X, mas Y", "não se trata de", "longe de ser" | teste de triagem do GO-6 |
 | `precisao/o-mesmo` | "o mesmo" seguido de verbo ou pontuação | repita o termo ou reorganize |
@@ -48,6 +50,12 @@ com `alertas`, `resumo` e `paragrafos`.
    radar dá a média da peça (alvo de 70 a 90 palavras) e aponta os que passam de 120; a
    leitura decide. Uma ideia que precisa de 125 ou 130 palavras fica; dois movimentos
    argumentativos no mesmo bloco se separam (o movimento a mais, só a leitura vê).
+   **Ligação (GO-1)** — *radar e leitura*. O radar dá a parcela de parágrafos abertos por
+   sujeito nominal (teto de cerca de 30%, nunca três seguidos); a leitura confere se cada
+   parágrafo nasce do anterior e se cada capítulo abre retomando o anterior e fecha
+   conduzindo ao próximo. Média baixa com muitas aberturas nominais é texto picotado:
+   funda os fragmentos da mesma ideia e reabra pelo que os liga, sem cortar
+   desenvolvimento.
 3. **Dois pontos em série (GO-3)** — *leitura*. Conte, por seção, as frases "afirmação:
    desdobramento"; repetidas, integre com conjunção. O anúncio de transcrição
    ("vejamos:", "in verbis:") não conta.
@@ -87,6 +95,11 @@ com `alertas`, `resumo` e `paragrafos`.
    Adjetivo sobre o próprio argumento ("robusto", "irrefutável", "reais e favoráveis") é
    sempre corte: se o argumento é forte, o leitor percebe pelo argumento. O anúncio de
    transcrição do sanduíche de citação ("vejamos:") não é metalinguagem e fica.
+
+   **Cuidado inverso:** a transição que diz a relação lógica entre as ideias ("Diante
+   dessa omissão, a multa perde a base") e o parágrafo de síntese que costura capítulos
+   são ligação (GO-1), não metalinguagem. Nunca proponha cortá-los; o corte que picota o
+   texto é tão vício quanto o anúncio vazio.
 9. **Persuasão (peça)** — *leitura*. O tópico abre pela tese? O fecho toma partido (teste
    do parecer neutro)? A crítica mira a decisão, não o julgador? Objeção antecipada só a
    provável, e nunca nos pedidos? (`persuasao.md`)
@@ -131,6 +144,7 @@ Mesmo roteiro, com foco em:
 - ênfase por negrito ou maiúsculas soltas no meio do texto, em vez da posição
   (palavra-chave no início ou no fim da frase); a formatação estrutural é da
   `formatacao-entrega`;
-- frases justapostas sem conectivo (GO-1) e ritmo monótono (GO-4).
+- frases justapostas sem conectivo e parágrafos abertos em série por sujeito nominal
+  (GO-1), e ritmo monótono (GO-4).
 
 Escreva para se expressar, não para impressionar, sem descer do registro técnico (GO-5).
