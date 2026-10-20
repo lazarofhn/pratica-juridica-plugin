@@ -1,71 +1,121 @@
 ---
 name: formatacao-entrega
-description: (camada E — compartilhada) Converte a peça/relatório externo em documento de ENTREGA no padrão da casa — gera um .docx (Cambria, margens em cm, recuos, entrelinha 1,15, separação por parágrafo em branco) a partir da peça marcada com diretivas @tag. Usada pelas skills de output EXTERNAS (peças protocoladas e relatório para cliente). Relatórios internos dispensam.
+description: Gera o .docx de entrega no padrão da casa a partir de blocos @tag, colando ementas e trechos dos autos verbatim por @citacao-ref, com timbrado por modelo .docx. Não use para relatório interno (markdown basta) nem para redigir ou revisar o texto.
 ---
 
-> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
-> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
-> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
-> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
-> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
-> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
-> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+# Formatação de entrega
 
-# Formatação de Entrega (camada E)
+Converte a peça ou o relatório externo, já redigido e verificado, no `.docx` final; não
+altera conteúdo. É a dona do contrato `@tag`: a `escrita-juridica` emite os blocos e as
+skills de saída apontam para cá. O nível não muda a formatação, só a verificação que vem
+antes (`verificacao-citacoes`).
 
-Produz o **.docx final** com fidelidade ao padrão da casa. Não altera conteúdo —
-recebe o texto pronto e verificado e aplica a forma.
-
-## Mecanismo (determinístico)
+## Gerar
 Script: `${CLAUDE_PLUGIN_ROOT}/skills/formatacao-entrega/scripts/build_docx.py`
-(usa `python-docx`; se faltar: `pip install python-docx`).
+(requer `python-docx`: `pip install python-docx`).
 
 ```
-python build_docx.py <peca_marcada.md> --out <workspace>/<numero-cnj>/peca.docx
+python build_docx.py <peca.md> --out <workspace>/peca.docx
+       [--modelo <nome> | --template <timbrado.docx>] [--workspace <workspace>]
+       [--transcript <arquivo|pasta>]
+python build_docx.py --preparar-modelo <documento do escritório.docx> <raiz>/modelos/<nome>.docx
 ```
+- `<workspace>` é o caminho que `processo.py workspace <cnj>` imprime; não o monte à mão.
+- **`fonte: autos` precisa do workspace.** Sem `--workspace`, o script procura os
+  `doc_NNN_*.md` na pasta do `.md` e até dois níveis acima (serve para
+  `<workspace>/redacao/`); rascunho fora dele exige `--workspace`.
+- **Timbrado:** `--modelo <nome>` usa um modelo da pasta privada `<raiz>/modelos/` (raiz =
+  `PRATICA_JURIDICA_DATA`; sem ela, a pasta `dados-juridicos/modelos/` acima do `.md`).
+  Qual modelo vale para cada escritório e tipo de documento está no `LEIA-ME.md` dessa
+  pasta; na dúvida sobre o escritório do caso, pergunte. Página, margens, cabeçalho e
+  rodapé vêm do modelo; a tipografia é a do padrão. Os modelos ficam fora do repositório.
+  `--template <caminho>` serve para um modelo avulso.
+- **Novo timbrado:** `--preparar-modelo` cria o modelo a partir de um documento real do
+  escritório e guarda só página, margens, cabeçalho e rodapé; corpo, comentários, notas,
+  imagens do corpo, metadados e propriedades do arquivo saem. A mesma limpeza roda em todo
+  modelo na hora do uso: nada do documento de origem vai para a peça.
+- Erro em qualquer `@citacao-ref` (fonte não achada, âncora ambígua, ementa com defeito,
+  grifo ausente) para a geração e nada é gravado: o `.docx` anterior fica intacto. No
+  fim, o script lista de onde veio cada citação (detalhes, busca, cache ou autos).
+- Abra no Word para a conferência visual: parágrafo em branco entre blocos é o padrão.
 
-Salve o `.docx` no workspace do processo
-(`${CLAUDE_PLUGIN_DATA}/processos/<numero-cnj>/`).
+## Contrato @tag
+Cada bloco começa numa linha só com a diretiva e vai até a próxima. Exemplo completo:
+`assets/exemplo-peca.md`. Medidas: `assets/padrao-formatacao.md`, fonte da verdade (mudou
+o padrão, mude o asset e o script).
 
-## Fonte da verdade
-`assets/padrao-formatacao.md` descreve o padrão completo (medidas, fontes, recuos).
-O script é a implementação desse padrão. **Se o padrão mudar, edite os DOIS** (o
-asset e o script) para não divergirem.
-
-## Contrato com a `escrita-juridica` (convenção @tag)
-Para o output ser convertível, a `escrita-juridica` deve emitir a peça em blocos
-marcados por uma diretiva `@tag` no início da linha (exemplo completo em
-`assets/exemplo-peca.md`):
-
-| Tag | Papel | Formato aplicado |
+| Tag | Uso | Forma (Cambria) |
 |---|---|---|
-| `@enderecamento` | Endereçamento | Cambria 14, negrito, justificado |
-| `@identificacao` | Processo/classe/partes | Cambria 12 negrito (linhas coladas) |
-| `@titulo` | Título da peça | Cambria 14 negrito, **centralizado** |
-| `@corpo` | Parágrafos de texto | Cambria 12, justificado, recuo 1ª linha 2 cm |
-| `@secao` | Título de seção | Cambria 12 negrito, justificado |
-| `@citacao` | Transcrição | Cambria 11 **negrito**, recuo esq. 2 cm, entre “aspas curvas” |
-| `@pedidos` | Itens a) b) c) | Cambria 11 **negrito**, justificado, recuo esq. 2 cm |
-| `@fecho` | "Nestes termos…" | Cambria 12, justificado, **sem** recuo de 1ª linha |
-| `@data` | Local e data | Cambria 12, justificado, sem recuo |
-| `@assinatura` | 1ª linha nome (negrito), demais OAB | Cambria 12, **centralizado** |
+| `@enderecamento` | endereçamento | 14 pt negrito, justificado |
+| `@identificacao` | processo, classe, partes | 12 pt negrito, linhas coladas |
+| `@titulo` | nome da peça | 14 pt negrito, centralizado |
+| `@secao` | título de seção | 12 pt negrito, justificado |
+| `@corpo` | parágrafos | 12 pt, justificado, recuo de 1ª linha 2 cm |
+| `@citacao` | transcrição escrita à mão | 11 pt negrito, recuo esquerdo 2 cm, aspas curvas |
+| `@citacao-ref` | transcrição por referência (abaixo) | a mesma do `@citacao` |
+| `@pedidos` | itens a), b), c) | 11 pt negrito, recuo esquerdo 2 cm |
+| `@fecho` | "Nestes termos, pede deferimento." | 12 pt, justificado, sem recuo |
+| `@data` | local e data | 12 pt, justificado, sem recuo |
+| `@assinatura` | nome (1ª linha, negrito) e OAB | 12 pt, centralizado |
 
-Regras do parser:
-- Cada `@tag` vale até o próximo `@tag`.
-- Em `@corpo` e `@pedidos`, parágrafos/itens são separados por **linha em branco**.
-- O conversor insere **um parágrafo vazio** entre blocos (a "respiração" do padrão);
-  espaçamento automático antes/depois fica sempre em zero.
+- Em `@corpo`, `@citacao` e `@pedidos`, parágrafos e itens se separam por linha em branco.
+- Entre blocos entra um parágrafo vazio; espaçamento antes/depois é sempre zero.
+- Linha com `@` que não seja uma tag da tabela é texto do bloco em curso.
 
-## Papel timbrado
-A **imagem** do timbre é deliberadamente omitida (o padrão só define texto). As
-margens (superior 4 cm, cabeçalho/rodapé a 1,25 cm) já reservam o espaço do timbre.
-> TODO: opção `--timbrado <img>` para inserir a imagem no cabeçalho, quando o José
-> fornecer o arquivo do timbre.
+## @citacao-ref — citar sem redigitar
+Cola o texto **verbatim** da fonte: só o espaço em branco é normalizado. Uma chave por
+linha:
 
-## Verificação
-Depois de gerar, **abrir no Word** para conferência visual final. É esperado ver um
-parágrafo em branco entre os blocos — é o padrão, não erro.
+| Chave | Valor |
+|---|---|
+| `fonte` | rótulo da base (`STJ`, `STF`, `TRF1`, `TRF5`, `TJPE`, `CARF`, `RFB`, `TCU`) ou `autos` |
+| `processo` | classe e número como o conector devolveu; casa o número inteiro e a classe |
+| `id` | ID do resultado do conector, quando o número casar com mais de um julgado |
+| `itens` | recorte por item da ementa: `1`, `1-2`, `2,4`, `II-IV` (vale para itens na mesma linha) |
+| `trecho` | `de "âncora inicial" ate "âncora final"`; âncora repetida só vale se as passagens forem idênticas |
+| `grifo` | trecho realçado com marca-texto; repetível; tem de estar no texto citado |
+| `ref` | atribuição depois das aspas |
+| `doc` · `arquivo` | com `fonte: autos`: seq do documento extraído (`doc: 28` → `doc_028_*.md`) ou arquivo do workspace |
+
+```
+@citacao-ref
+fonte: STJ
+processo: REsp 1.234.567
+itens: 1-2
+grifo: configura negativa de prestação jurisdicional
+ref: STJ, REsp 1.234.567, Segunda Turma, Rel. Min. Fulano de Tal
+
+@citacao-ref
+fonte: autos
+doc: 28
+trecho: de "PROCESSUAL CIVIL" ate "Apelação desprovida"
+ref: TRF-1, 7ª Turma, acórdão recorrido
+```
+
+Jurisprudência — de onde vem o texto:
+- Só da saída do conector gravada **nesta sessão** (transcript da sessão, dos subagentes e
+  saídas grandes salvas à parte); nunca de texto do modelo ou de Bash. Outra sessão ou
+  projeto, só com `--transcript <arquivo .jsonl ou pasta>`.
+- Busca e detalhes do mesmo julgado: vale o detalhes (ementa íntegra). Ementa longa, ou
+  do TRF-5: rode o `*_detalhes_*` antes de citar.
+- O texto achado fica em `<workspace>/citacoes/`; nova geração em outra sessão o usa sem
+  refazer a busca.
+- Do resultado do TRF-5 o script tira o cabeçalho do PJe com as partes: o texto começa
+  em "EMENTA".
+- Ementa com "[…ementa truncada…]" ou com "?" no lugar de aspa ou travessão (defeito do
+  conector) é recusada: reabra pelo `*_detalhes_*`; persistindo, transcreva do inteiro
+  teor oficial em `@citacao` e passe pela `verificacao-citacoes`.
+
+**Conferir o texto que vai entrar** — é o que a `verificacao-citacoes` inspeciona
+(`citar.py` fica na pasta do `build_docx.py`):
+```
+python citar.py --processo "REsp 1.234.567" [--id <ID>] [--itens 1] [--trecho '...']
+       [--grifo '...'] [--workspace <workspace>] [--transcript <arquivo|pasta>] [--json]
+python citar.py --fonte autos --workspace <workspace> (--doc 28 | --arquivo <x.md>) [--trecho '...']
+```
+Imprime só o texto resolvido; a procedência (detalhes, busca, cache ou autos, e o
+arquivo) vai para o stderr, ou para o JSON com `--json`. Exit 2 = não resolveu.
 
 ## TODO
-- [ ] Suporte a papel timbrado (imagem no cabeçalho).
-- [ ] Integrar os modelos de endereçamento da `peca-processual-base`.
+- Fórmulas de endereçamento da casa (por instância/tribunal) — o José fornece; entram em
+  `assets/enderecamento.md`.

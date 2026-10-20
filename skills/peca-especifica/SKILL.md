@@ -1,68 +1,39 @@
 ---
 name: peca-especifica
-description: (camada D) Produz peças com previsão e nomenclatura próprias no CPC — contestação, réplica, impugnação ao cumprimento de sentença, embargos à execução, embargos de terceiro, exceções e afins. Skill fina: define a estrutura própria da peça e puxa a camada E. Use após a análise quando o objetivo é uma dessas peças. NÃO cobre embargos de declaração (é recurso → peca-recurso).
+description: Redige peça com previsão própria no CPC a partir dos autos, como contestação (com a reconvenção, se houver), réplica, impugnação ao cumprimento de sentença, embargos à execução ou de terceiro. Não use para embargos de declaração (recurso) nem petição sem forma própria.
 ---
 
-> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
-> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
-> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
-> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
-> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
-> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
-> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+# Peça específica
 
-# Peça: Específica (camada D)
+Nível típico: N2; N3 com várias causas de pedir densas ou risco alto. Chamada fora do
+pipeline, assuma N2. Precondições: workspace com a peça ou o ato a que se responde
+extraído, e plano pelo `plano-de-respostas` antes de redigir.
 
-Skill de output fina. O comum às peças protocoladas está em `peca-processual-base`
-(endereçamento, estrutura, método de pesquisa) — **puxe-a**. Aqui fica só o que é
-próprio de cada peça específica.
+## 1. Identificar a peça (regra de ouro)
+A previsão e a nomenclatura corretas definem a estrutura e os requisitos. Pergunte só se o
+pedido for ambíguo; citação, intimação e prazo que autorizam a peça são dados dos autos
+(anote-os no `plano.md`). Bordas:
+- Embargos de declaração são recurso → `peca-recurso`. Aqui, só os embargos que são ação
+  ou incidente (à execução, de terceiro).
+- Reconvenção não é peça à parte: vai na própria contestação (CPC, art. 343).
+- Não há mais "exceções" autônomas: a incompetência é preliminar da contestação (art.
+  337, II); impedimento e suspeição se arguem em petição específica (art. 146).
+- A exceção de pré-executividade não tem artigo no CPC, mas tem nomenclatura e requisitos
+  firmados pela jurisprudência (Súmula 393/STJ: matéria conhecível de ofício, sem
+  dilação probatória). Trate-a aqui, com a estrutura vinda da jurisprudência e da doutrina.
 
-## 1. Quando ativar
-Peça com **previsão e nomenclatura próprias no CPC**, cuja dica vem do prompt do
-usuário: contestação, réplica, impugnação ao cumprimento de sentença, embargos à
-execução, embargos de terceiro, exceção de pré-executividade, reconvenção, etc.
+## 2. Estrutura e segmentação
+- Localize a previsão da peça e leia os requisitos próprios na fonte, não de memória.
+  Ex.: contestação = preliminares + mérito rebatendo cada causa de pedir + resposta a
+  eventual tutela + pedidos; impugnação ao cumprimento, só as matérias que a lei admite.
+- Uma geração por causa de pedir rebatida, matéria arguida ou preliminar relevante; cada
+  preliminar ou matéria com a sua base legal.
+- Peça de resposta (contestação, réplica, impugnação): rebata cada ponto da peça adversa,
+  sem deixar causa de pedir sem enfrentamento.
+- Sem a ênfase de admissibilidade dos recursos; os requisitos próprios da peça, sim.
 
-> ⚠️ **Embargos de declaração NÃO entram aqui** — é recurso → `peca-recurso`. Aqui
-> só cabem embargos que são incidentes/ações (à execução, de terceiro).
-
-## 2. Perguntas antes de começar
-- Confirmar **qual peça** quando o prompt for ambíguo (a nomenclatura costuma
-  identificar; na dúvida, pergunte).
-- Confirmar o marco processual (prazo/intimação) que autoriza a peça.
-
-## 3. Estrutura do documento
-- **Localize a previsão da peça no CPC** e leia seus **requisitos/pressupostos
-  próprios** (via `peca-processual-base` / Know-How) — não de memória (R1). Cada
-  peça tem sua estrutura (ex.: contestação organiza-se por preliminares + mérito
-  rebatendo cada causa de pedir da inicial + resposta a eventual tutela + pedidos;
-  impugnação ao cumprimento, pelas matérias que a lei admite).
-- Subsegmentável conforme o `plano-de-respostas`.
-
-## 4. Plano de respostas (segmentação)
-- Tende a **N gerações**: uma por causa de pedir a rebater / matéria arguida /
-  preliminar relevante.
-- **Sem** a ênfase-padrão de admissibilidade dos recursos — mas respeite os
-  **requisitos próprios** da peça (não confundir).
-
-## 5. Pesquisa (via peca-processual-base → pesquisa-juridica)
-- `mérito` — segmentada por causa de pedir / matéria.
-- `processual` — para as preliminares/requisitos próprios; **jurisprudência
-  processual só quando o usuário enfatizar** a questão processual ou ela for muito
-  discutida (caso contrário, CPC comentado + doutrina bastam).
-- Filtros (R2); nunca inventar (R3); rastro em `pesquisas.jsonl`.
-
-## 6. Escrita
-`escrita-juridica`, registro `peça`. Saída no formato `@tag` (vira `.docx`).
-
-## 7. Entrega
-Output externo → `formatacao-entrega` (`.docx`/timbrado), salvo no workspace.
-
-## 8. Verificação
-`verificacao-citacoes` **antes de fechar** (obrigatória).
-
-## 9. Regras de ouro / vícios a evitar
-- **Identificar a peça e sua previsão específica corretas** — inclusive não tratar
-  embargos de declaração como peça específica.
-- Endereçar cada preliminar/matéria à sua base legal própria.
-- Coerência: se é resposta (contestação/impugnação), rebater **cada** ponto da peça
-  adversa, sem deixar causa de pedir sem enfrentamento.
+## 3. Pesquisa
+Mérito: uma linha por causa de pedir ou matéria. Processual: CPC comentado e doutrina
+bastam; jurisprudência processual só se o José enfatizar a questão ou ela for muito
+discutida no processo. Escrita (registro `peça`), entrega (`.docx`) e verificação seguem
+o padrão do nível.

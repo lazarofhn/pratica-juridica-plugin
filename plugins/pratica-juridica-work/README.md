@@ -1,5 +1,7 @@
 # Prática Jurídica Work
 
+> **Congelada em 1.2.0 (out/2026) — não acompanha a v1.3 do plugin Claude.**
+
 Variante OpenAI 0.1.0, derivada de `pratica-juridica` 1.2.0, revisão
 `2b16ab2cd00b8e5774e9e3a2aba1c47eb229f711`. Preserva 15 skills, extração seletiva
 de PDFs PJe e geração de DOCX no padrão da casa. As instruções foram adaptadas

@@ -1,109 +1,80 @@
 ---
 name: peca-recurso
-description: (camada D) Produz RECURSOS — apelação, agravo (de instrumento/interno), embargos de declaração, recurso ordinário, RE, REsp, contrarrazões. Skill fina: define a ESTRUTURA e a FINALIDADE do recurso e puxa a camada E (peca-processual-base, pesquisa-juridica, escrita-juridica, plano-de-respostas, formatacao-entrega, verificacao-citacoes). Use após a análise quando o objetivo é recorrer.
+description: Redige recurso (apelação, agravo, embargos de declaração, recurso ordinário, REsp, RE) ou contrarrazões a partir dos autos, com estudo de viabilidade no REsp/RE. Não use para contestação, réplica, impugnação ou embargos à execução, que são da peca-especifica.
 ---
 
-> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
-> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
-> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
-> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
-> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
-> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
-> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+# Peça: recurso e contrarrazões
 
-# Peça: Recurso (camada D)
+Nível típico: N3 no REsp/RE e na apelação ou nas contrarrazões com várias teses; N2 nos
+embargos de declaração simples. Chamada fora do pipeline, assuma N3 no REsp/RE (recurso
+excepcional sobe um nível) e N2 nos demais; declare em uma linha e o José ajusta.
 
-Skill de output fina. A lógica comum às peças protocoladas está em
-`peca-processual-base` (endereçamento, estrutura, método de pesquisa) — **puxe-a**.
-Aqui ficam só a estrutura e as decisões próprias de recurso.
+## 1. Precondições
+- Workspace (o caminho que `processo.py workspace <cnj>` imprime) com a decisão
+  recorrida extraída e, havendo, o acórdão dos embargos; nas contrarrazões, também o
+  recurso adverso. Intimação e prazo são dados dos autos: anote-os no `plano.md`.
+- Plano pelo `plano-de-respostas` antes de redigir, com a segmentação do item 4.
 
-## 1. Quando ativar
-Objetivo do usuário = recorrer de uma decisão/sentença/acórdão.
+## 2. Identificar o recurso
+- Indicado, ou um só cabível (sentença → apelação): siga direto.
+- Omitido, com mais de um plausível (ex.: acórdão omisso, embargos de declaração ou REsp
+  direto): informe o cabimento que vê, com o fundamento, e confirme antes de redigir.
+- Dúvida do próprio José: resolva com pesquisa processual antes de escrever.
 
-## 2. Perguntas antes de começar — identificar o recurso
-O recurso pode vir de três formas:
-- **Já indicado:** "faça uma apelação contra a sentença" → siga.
-- **Omitido:** "faça o recurso dessa decisão" → **você define o cabível, mas
-  informe ao usuário qual escolheu e pergunte se ele concorda com o cabimento
-  ANTES de confeccionar.**
-- **Dúvida real do usuário** sobre qual cabe → ajude a decidir (pesquisa
-  processual) antes de escrever.
+## 3. Viabilidade — obrigatória no REsp/RE
+Antes da estrutura, estude como o STJ e o STF vêm decidindo o tema (`pesquisa-juridica`),
+cruzando com as bases do conector aplicáveis ao tribunal de origem e à matéria (quais
+existem e como filtrá-las: a descrição viva da ferramenta e o `*_listar_filtros`). O modo
+como a Corte decide define a natureza da peça, não só o conteúdo.
+- **Óbice de conhecimento** (Súmula 7/STJ, Súmula 279/STF: reexame de prova): o mérito
+  não pode ser o carro-chefe. Migre o eixo para o que é conhecível: negativa de prestação
+  jurisdicional (CPC, art. 1.022), questão de direito pura, divergência.
+- Identifique de saída o precedente qualificado que rege o tema e os óbices sumulares.
+- **O pedido segue o eixo.** Com eixo no art. 1.022, o pedido é anulatório, de retorno à
+  origem; pedir o provimento direto do mérito reintroduz o óbice contornado.
+- **Não misture as vias.** No REsp, argumento constitucional (isonomia, capacidade
+  contributiva, art. 150 da CF) não vira tópico autônomo: é matéria de RE e enfraquece o
+  especial. Dilua-o como reforço das teses infraconstitucionais (ex.: a solução de
+  consulta que reconhece o crédito mostra que a omissão era decisiva, sem abrir capítulo
+  de isonomia). No RE, o espelho: não trave tese infraconstitucional como constitucional.
+- **N3:** o eixo, e o cabimento quando duvidoso, passam pelo conselheiro Fable (advisor,
+  se ligado; senão, subagente Fable com dossiê); você decide e registra no `plano.md`.
+- Estudo feito antes, como estratégia no `relatorio`: na redação, reabra os precedentes
+  pela fonte, pelo rastro da `pesquisa-juridica`, e não pela memória da conversa.
 
-## 2A. Estudo de viabilidade recursal — OBRIGATÓRIO em REsp/RE
-Antes de definir a estrutura, faça um **estudo de como o STJ/STF vêm decidindo o
-tema** (via `pesquisa-juridica`; em matéria tributária, cruzar também CARF e
-Soluções de Consulta da RFB). Motivo: **o modo como a Corte decide define a
-NATUREZA da peça**, não só o conteúdo.
-- Se o **mérito esbarra em óbice de conhecimento** (Súmula 7/STJ — reexame de
-  prova; Súmula 279/STF), o carro-chefe **não** pode ser o mérito. Migre o eixo
-  central para **questões conhecíveis**: vícios processuais (negativa de prestação
-  jurisdicional — art. 1.022 CPC), questões **de direito** puras, divergência.
-- Identifique o **precedente qualificado** que rege o tema e eventuais **óbices
-  sumulares** logo de saída.
-- Este estudo pode ser **preliminar** (estratégia). Na redação, a pesquisa é
-  **re-rodada** direto na fonte (ver `pesquisa-juridica`, regra do rastro) — não se
-  apoie na memória da conversa.
-- **Respeite a competência da via — não misture REsp com RE.** No REsp, evite erigir
-  em tópico autônomo argumento de índole **constitucional** (isonomia, capacidade
-  contributiva, art. 150 CF etc.): isso "cheira" a **matéria de recurso
-  extraordinário** e enfraquece o especial. Se o ponto ajuda, **dilua-o como reforço**
-  dentro das teses infraconstitucionais (ex.: a Solução de Consulta vinculante e o
-  CARF que reconhecem o crédito entram para demonstrar que a **omissão era decisiva**,
-  não como capítulo de isonomia). Espelhe o cuidado no RE (não travar tese
-  infraconstitucional como se fosse constitucional).
-- **O pedido segue o eixo.** Se o carro-chefe é a negativa de prestação jurisdicional
-  (art. 1.022), o pedido é **anulatório/de retorno** à origem — **não** peça
-  provimento direto do mérito, sob pena de reintroduzir o óbice (Súmula 7) que se
-  contornou.
+## 4. Estrutura e segmentação
+- A estrutura é a do artigo do CPC que regula o recurso, lido na fonte e não de memória;
+  sem regra própria, o esqueleto do `plano-de-respostas`.
+- Admissibilidade com ênfase média-alta por padrão: tempestividade, cabimento, preparo.
+- **Colacione a decisão recorrida** (praxe): ementa e trechos cruciais do julgado e,
+  havendo, do acórdão dos embargos, por `@citacao-ref fonte: autos`, verbatim do
+  workspace, sem redigitar. Na negativa de prestação jurisdicional, a ementa genérica dos
+  embargos costuma ser a própria prova da omissão.
+- Coerência decisão recorrida → fundamentos → pedidos: todo fundamento autônomo da
+  decisão que sustenta o resultado precisa ser atacado.
 
-## 3. Estrutura do documento
-- Se o usuário não especificar, **busque a estrutura no artigo do CPC que regula
-  aquele recurso** (via `peca-processual-base` / Know-How) — não de memória (R1).
-- Fallback comum: Fatos → Requisitos de Admissibilidade → Fundamentos → Pedidos.
-- Subsegmentável conforme o `plano-de-respostas`.
-- **Colacione a decisão recorrida (praxe em recurso):** transcreva a **ementa** e os
-  **trechos cruciais** do julgado impugnado e, havendo, do **acórdão dos embargos** —
-  é neles que se demonstra o vício. Use `@citacao-ref fonte: autos` (verbatim do
-  workspace), **não redigite**. Em recurso por negativa de prestação jurisdicional, a
-  ementa dos ED costuma ser a **própria prova** da omissão/contradição (fundamentação
-  genérica).
+> **REGRA DE OURO — RE e REsp.** A falta de fundamentação específica de um requisito de
+> admissibilidade leva ao não conhecimento (ex.: RE sem o tópico de repercussão geral).
+> Salvo comando em contrário, o plano dedica **uma geração a cada requisito**: o
+> cabimento sempre em tópico isolado; correlatos (tempestividade, prequestionamento)
+> podem compartilhar. Admissibilidade nunca se mistura com a síntese fática nem com o
+> mérito, mesmo quando o eixo é processual (art. 1.022).
 
-## 4. Plano de respostas (segmentação)
-- **Ênfase média-alta em admissibilidade por padrão** (tempestividade, cabimento,
-  preparo/custas).
-- **REGRA DE OURO — RE e REsp:** os requisitos de admissibilidade são vários e os
-  tribunais superiores muito exigentes; a falta de fundamentação **específica** de
-  um requisito é causa de não conhecimento (ex.: faltar o tópico de Repercussão
-  Geral no RE). Por isso, salvo comando em contrário, **dedique uma geração a cada
-  requisito de admissibilidade** no `plano-de-respostas` — o **cabimento sempre em
-  tópico isolado**; correlatos (tempestividade, prequestionamento) podem
-  compartilhar. **Nunca** misture admissibilidade com a síntese fática nem com o
-  mérito. Vale mesmo quando o eixo central do recurso for processual (art. 1.022).
-- Confirme os requisitos do recurso concreto na fonte (CPC + Know-How), não de
-  memória (R1).
+## 5. Contrarrazões
+Mesmo método, com a admissibilidade invertida; a estrutura vem do artigo do CPC que prevê
+a resposta àquele recurso.
+- **Não conhecimento primeiro.** Confira cada requisito do recurso adverso
+  (tempestividade, cabimento, preparo, regularidade formal, impugnação específica dos
+  fundamentos da decisão) e os óbices da Corte; no REsp/RE, o estudo do item 3, feito do
+  lado de quem responde, aponta-os (reexame de prova, falta de prequestionamento,
+  fundamento não atacado). Alegue o óbice que os autos sustentam, não a lista inteira.
+- **Rebata cada ponto** do recurso, capítulo por capítulo, sem deixar fundamento sem
+  resposta, e sustente a decisão recorrida com os fundamentos dela.
+- **Pedido:** não conhecimento; subsidiariamente, desprovimento.
+- Segmentação: uma geração para o não conhecimento e uma por capítulo rebatido.
 
-## 5. Pesquisa (via peca-processual-base → pesquisa-juridica)
-- **Duas linhas**, conforme os perfis:
-  - `processual/admissibilidade` — cabimento e requisitos do recurso.
-  - `mérito` — a(s) tese(s) de fundo, **segmentada(s) por fundamento**.
-- Filtros sempre que possível (R2); nunca inventar julgado (R3); rastro em
-  `pesquisas.jsonl`.
-
-## 6. Escrita
-`escrita-juridica`, registro `peça`. Saída no formato `@tag` (vira `.docx`).
-> **Uma geração por vez, com checkpoint** — NUNCA escreva todas as seções num único
-> output (isso deixa a peça rasa). Siga o `plano-de-respostas`, Passo 4: pesquisa
-> focada → redação profunda da seção → "Como ficou a G{N}?" → próxima.
-
-## 7. Entrega
-Output externo → `formatacao-entrega` (`.docx`/timbrado), salvo no workspace.
-
-## 8. Verificação
-`verificacao-citacoes` **antes de fechar** (obrigatória). Em RE/REsp, confira
-também que **cada requisito de admissibilidade** tem seu tópico fundamentado.
-
-## 9. Regras de ouro / vícios a evitar
-- Admissibilidade de RE/REsp: fundamentação específica de **cada** requisito é
-  inegociável (um requisito sem tópico próprio pode derrubar o recurso inteiro).
-- Não presumir requisitos de memória — confirmar na fonte.
-- Coerência entre a decisão recorrida, os fundamentos do recurso e os pedidos.
+## 6. Pesquisa e verificação
+- Pesquisa em duas linhas: admissibilidade (cabimento e requisitos do recurso concreto) e
+  mérito (uma por fundamento). Escrita (registro `peça`) e entrega (`.docx`): o padrão.
+- `verificacao-citacoes` obrigatória; no REsp/RE, confira também que cada requisito tem
+  tópico próprio e fundamentado e, nas contrarrazões, que cada óbice tem base nos autos.

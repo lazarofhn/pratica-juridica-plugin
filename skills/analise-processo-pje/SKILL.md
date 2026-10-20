@@ -1,163 +1,134 @@
 ---
 name: analise-processo-pje
-description: >-
-  Analisa processos judiciais GRANDES em PDF (cópia integral do PJe, centenas/milhares
-  de páginas) sem carregar tudo no contexto. Use quando o usuário pedir para resumir um
-  processo, gerar relatório completo, redigir uma peça (apelação, contrarrazões,
-  embargos, manifestação), analisar o valor/pedidos da causa, encontrar ou ler
-  documentos específicos, ou rastrear o andamento. Funciona com PDFs que têm índice de
-  documentos em bookmarks (padrão do PJe). Faz retrieval agêntico guiado pelo índice:
-  lê o mapa, rankeia o que importa, extrai só os documentos necessários.
+description: Lê autos do PJe em PDF sem carregar o processo inteiro — índice de documentos, busca textual, extração seletiva em .md no workspace e imagem de página escaneada. Não use para redigir a peça (skills de saída) nem para PDF que não sejam autos.
 ---
 
-> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
-> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
-> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
-> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
-> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
-> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
-> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+# Leitura dos autos (PJe)
 
-# Análise de Processos PJe (grandes) — camada C
+O PDF do PJe traz bookmarks que mapeiam cada documento (tipo, nome, evento, data,
+páginas). O script lê o mapa, localiza o que importa e extrai só isso para o workspace
+do processo. Nunca carregue o PDF inteiro no contexto.
 
-Processos do PJe em PDF têm **bookmarks** que mapeiam cada documento (tipo, evento/NUM,
-data, página). Isso permite **extração sob demanda**: nunca carregamos o PDF inteiro
-(que pode ter 3M+ tokens) — lemos o índice, decidimos o que importa, e extraímos só isso.
+Chamada pelo `analise-processual` com objetivo e nível definidos (fora do pipeline,
+N2). O objetivo decide o que é estratégico: no recurso, a decisão recorrida e as razões;
+na contestação, a inicial e os documentos. O workspace é reconsultado a cada geração da
+peça, não só no começo. Plano de leitura (o que extrair) não é `plano-de-respostas`.
 
-## Encaixe no plugin (camada C)
-- **Chamada pelo orquestrador** (`analise-processual`) COM o **objetivo** já definido.
-  O objetivo muda o que é "estratégico": para um recurso importam sentença/acórdão e
-  razões; para uma contestação, a inicial e o que a instrui.
-- **Grava no workspace persistente** do processo, não em pasta temporária. **Não
-  hardcode** o caminho: rode `processo.py workspace <numero-cnj>` e use o diretório
-  **gravável** que ele imprime (ver "Ambiente e caminhos"). Assim outra tarefa depois
-  (recurso hoje, relatório semana que vem) reaproveita as peças já convertidas em `.md`.
-- **Não confundir dois "planos":** o *plano de leitura* daqui (quais documentos
-  extrair) é diferente do `plano-de-respostas` (como segmentar a escrita do output).
-  Este roda antes, na análise; aquele roda depois, antes de escrever.
-- **Uso recorrente, não só inicial:** a análise NÃO se esgota na leitura de contexto
-  do começo do pipeline. O workspace persistente é **reconsultado durante as
-  gerações** da peça, via `find`/`extract` sob demanda, para **ancorar cada seção aos
-  fatos concretos** (ex.: reabrir a petição de embargos para listar as questões
-  suscitadas; reler a decisão recorrida para citar o que ela de fato disse). Espere
-  voltar aos autos a cada geração, não apenas uma vez.
+| Nível | Leitura |
+|---|---|
+| N1 | consulta pontual: `find`, `grep` ou `peek`; extrai só o documento da resposta |
+| N2 | índice → shortlist → `extract` dos documentos da tese; plano de leitura em uma linha, sem parar |
+| N3 | leitura ampla com triagem por subagente; mostre o plano de leitura e siga (a aprovação do N3 é a do plano de respostas) |
+| N4 | a leitura que a equipe (`equipe-juridica`) definir |
 
 ## Motor (CLI)
-
-Script: `${CLAUDE_PLUGIN_ROOT}/skills/analise-processo-pje/scripts/processo.py`.
-Requer `pypdfium2` (wheel leve, sem PyTorch). Se faltar: `pip install pypdfium2`.
-Nos exemplos abaixo, `processo.py` = esse caminho completo.
+Script: `${CLAUDE_PLUGIN_ROOT}/skills/analise-processo-pje/scripts/processo.py`, abaixo
+`processo.py`. Requer `pypdfium2` (`pip install pypdfium2`); Pillow é opcional (render em
+cores). A saída sai em UTF-8 em qualquer console.
 
 ```
-python processo.py index   <pdf>                     # mapa dos documentos (markdown)
-python processo.py index   <pdf> --json              # idem em JSON
-python processo.py peek    <pdf> --docs 10,22 --chars 300   # substância inicial p/ ranking
-python processo.py extract <pdf> --docs 10,22 --out <dir>   # markdown completo (rodapé limpo)
-python processo.py find    <pdf> --id 240714892      # resolve citação "id N" -> documento
-python processo.py workspace <numero-cnj>            # cria/resolve o diretório GRAVÁVEL do processo e imprime o caminho
+processo.py workspace <cnj>                  # pasta do processo (imprime o caminho)
+processo.py index   <pdf> [--json]           # seq, tipo, nome, evento, data, págs, s/ texto, peça?
+processo.py peek    <pdf> --docs 10,22 [--chars 300]   # começo de cada documento, sem o timbre
+processo.py grep    <pdf> "<termo>" [--docs 10,22] [--regex] [--exato] [--max 40]
+processo.py find    <pdf> --id 240714892     # evento/id → documento (--pattern = grep)
+processo.py refs    <pdf> --docs 27          # "ID N - Pág. X" citados no documento → doc. e página
+processo.py extract <pdf> --docs 10,22 [--out <workspace>]     # um .md limpo por documento
+processo.py extract <pdf> --pages 120-135 [--out <workspace>]  # fatia de páginas
+processo.py sem-texto <pdf> [--doc 4] [--json]                # páginas sem texto extraível
+processo.py render  <pdf> --pages 7,12 [--out <pasta>]         # PNG das páginas
 ```
 
-`index` marca `peça? sim/—`: peças jurídicas (decisão, petição, manifestação, parecer,
-sentença, embargos, contrarrazões, despacho, certidão...) vs anexos/documentos
-(registrados, mas não transformados por padrão).
+- `index`: o nome vem do bookmark; no TRF-5, que só traz o tipo, do documento "Índice"
+  dos autos. `peça?`: **sim** (petição, decisão, parecer) · **?** (petição genérica ou
+  volume digitalizado — o de processo migrado reúne as peças da fase física: localize por
+  `grep` e extraia por `--pages`) · **—** (anexo, expediente).
+- `grep` ignora maiúsculas e acentos (`--exato` respeita) e devolve página, documento e
+  trecho: ache o ponto antes de extrair.
+- `extract` remove rodapé de assinatura e cabeçalho de página do PJe. Sem `--out`, grava
+  no workspace do processo pelo CNJ do PDF. Acima de ~150 mil tokens estimados, recusa
+  (exit 3) e pede `--confirmar`; antes disso, prefira `grep` e `--pages`.
 
-## Ambiente e caminhos (workspace gravável + Bash↔Read)
-O plugin roda tanto no **Claude Code (CLI)** quanto no **Cowork (app desktop)**, que têm
-sistemas de arquivos diferentes. Três regras evitam os atritos conhecidos:
+## Fluxo
+1. `workspace <cnj>` e reaproveite o que já está extraído (`doc_NNN_*.md`).
+2. `index` (barato: ~400 documentos cabem em poucos mil tokens; a 1ª chamada mede as
+   páginas sem texto e leva segundos em PDF grande, as seguintes usam cache).
+3. Shortlist pelo índice (tipo, data, tamanho, `peça?`); desempate por `peek` nos
+   candidatos; ache pontos específicos com `grep`. Vários "Anexo" seguidos, com NUMs
+   sequenciais, podem ser um documento só, partido pelo limite de upload.
+4. `extract` para o workspace e leia os `.md` verbatim.
+5. Siga as citações: `refs --docs N` resolve os "ID N - Pág. X" da peça para o documento
+   e a página do PDF; extraia o citado (ou só a página, com `--pages`). Repita até ter o
+   necessário.
+6. Cite a procedência: tipo, evento (NUM) e páginas. Ao terminar, ofereça extrair o que
+   ficou fora do escopo.
 
-1. **Nunca hardcode o diretório de dados.** Rode `processo.py workspace <numero-cnj>` e
-   use o caminho que ele **imprime** (stdout). Ele escolhe, nessa ordem, um diretório
-   **gravável**: `$PRATICA_JURIDICA_DATA` (config explícita do usuário) →
-   `$CLAUDE_PLUGIN_DATA` (Claude Code) → pasta **`dados-juridicos/`** auto-detectada
-   (ver regra 2) → `./outputs` (sessão). No Cowork o `.claude/plugins/data` costuma ser
-   **read-only** (`nobody:nogroup`); sem `dados-juridicos/`, cai em `./outputs` —
-   funciona, mas **não persiste entre sessões**.
-2. **Persistência automática no Cowork — a regra da primeira sessão.** Antes de rodar o
-   `workspace`, verifique se o usuário montou uma pasta de trabalho na sessão (ela
-   aparece no seu contexto como "pasta selecionada"; no sandbox fica em
-   `/sessions/<id>/mnt/<pasta>/`). Se houver pasta montada e ainda **não existir**
-   `<pasta-montada>/dados-juridicos/`, **crie-a** (`mkdir`) — uma vez criada, o
-   `processo.py` a **detecta sozinho** em todas as sessões futuras em que essa pasta
-   estiver montada, e o `workspace` passa a resolver para dentro dela (persistente no
-   PC do usuário). Avise o usuário em uma linha: *"criei `dados-juridicos/` na sua
-   pasta para os dados do processo persistirem entre sessões"*. Se **não** houver pasta
-   montada, siga com `./outputs` e avise que os dados valem só para a sessão (sugira
-   montar uma pasta ou definir `PRATICA_JURIDICA_DATA`). **Não crie** a pasta se o
-   usuário já tiver indicado outro local via `PRATICA_JURIDICA_DATA`.
-3. **Bash e Read/Edit podem exigir caminhos diferentes.** Em alguns ambientes (Cowork), o
-   script grava num caminho POSIX do sandbox (`/sessions/.../mnt/outputs/...`) enquanto as
-   ferramentas Read/Edit exigem o caminho do host (`C:\Users\...\outputs\...`). Logo: **não
-   presuma que o caminho impresso pelo script funciona direto no Read.** Depois de extrair,
-   liste o diretório e use a forma de caminho que a ferramenta de leitura aceita naquele
-   ambiente (o caminho impresso é a referência; traduza se o Read falhar).
+Por pedido: relatório completo varre as peças (`peça?` sim e ?), em lotes; peça foca a
+decisão atacada, as peças da parte e o que citam; valor da causa parte da inicial, dos
+laudos e das decisões sobre crédito, com `grep` pelos números.
 
-## Fluxo de trabalho
+## Triagem delegada (subagentes nativos)
+- **Haiku**: localizar documentos no índice — roda `index`, `find` e `grep` e devolve
+  seq, evento e páginas.
+- **Sonnet**: triar índice grande (centenas de documentos) — roda `index` e `peek` e
+  devolve só a shortlist rankeada (seq, tipo, págs., uma linha de motivo). Os snippets
+  ficam fora do contexto principal. No relatório completo, resume lotes de peças.
+- A leitura profunda não se delega: para redigir ou analisar argumento, leia o texto
+  literal extraído; resumo de subagente perde a nuance que importa. Sem subagentes no
+  ambiente, faça você mesmo, em passos separados.
 
-1. **Ler o índice** (barato): `index <pdf>`. ~400 documentos cabem em poucos K tokens.
-2. **Rankear (2 estágios)** conforme o pedido do usuário:
-   - *Estágio 1*: filtre por tipo + data + tamanho, direto do índice (de graça).
-   - *Estágio 2*: para os ~15-30 candidatos, rode `peek` e desempate pela substância.
-3. **Mostrar o plano de leitura ao usuário** antes de extrair em massa:
-   "Vou analisar estes N documentos: ...". Deixe-o adicionar/remover (salvaguarda
-   contra erro de ranking).
-4. **Extrair** os alvos para o workspace do processo: primeiro resolva o diretório com
-   `workspace <numero-cnj>` (imprime um caminho gravável) e passe-o em
-   `extract --docs ... --out <esse-caminho>`. O comando informa o custo estimado em
-   tokens de cada arquivo. (Se um `--out` read-only for passado assim mesmo, o `extract`
-   **auto-cai** para `./outputs/...` e avisa no stderr — nunca falha por permissão.)
-5. **Ler verbatim** os markdowns extraídos e produzir a resposta.
-6. **Seguir citações e iterar**: peças citam outras por `id NNNNN`. Ao encontrar uma
-   citação relevante, resolva com `find --id NNNNN` e extraia o documento citado.
-   Repita até ter o necessário.
+## Sem bookmarks
+`index` avisa no stderr e no topo da tabela. Com o rodapé "Num. N - Pág. M" do PJe, os
+documentos são remontados por ele (sem data; o tipo vem do cabeçalho de página, quando
+há): confira com `peek`. Sem rodapé, modo sem índice: faixas de 50 páginas; localize com
+`grep` e leia com `extract --pages`.
 
-## Orquestração de modelos (importante)
+## Páginas sem texto
+Página com menos de 80 caracteres úteis (sem rodapé e cabeçalho do PJe) e imagens
+cobrindo ao menos 10% dela: escaneada sem OCR. O plugin não faz OCR.
+- `index` conta essas páginas por documento (coluna `s/ texto`); `sem-texto` as lista
+  (`--json` para uso por programa).
+- `extract` marca a página (`<!-- pág. N · sem texto extraível (imagem) -->`) e preenche
+  no front matter `fonte` (texto-nativo | ocr | misto | sem-texto), `paginas_sem_texto`
+  e `paginas_ocr`. **ocr** = texto que a digitalização já pôs sobre a imagem: pode ter
+  erro; confira na imagem antes de citar literalmente.
+- Página decisiva sem texto: `render --pages N` e leia o PNG com a ferramenta de leitura
+  de arquivo (ela mostra a imagem). Transcrição de imagem é marcada como tal e vai à
+  `verificacao-citacoes`.
 
-Quando rodando em Opus, **delegue a triagem a um subagente Sonnet** (Agent tool,
-`model: sonnet`) e mantenha o raciocínio jurídico no Opus:
+### Busca nas páginas sem texto (conector busca-autos)
+Com o conector busca-autos instalado, dá para achar documentos nas páginas sem texto pela
+imagem, que o `grep` e o título do índice não alcançam (no teste com dois processos do
+TRF-5: 0 de 20 sem ele, 16 de 20 com ele). Regra de uso:
+1. **Decida pelo `index`.** Processo digital ou com OCR: não indexe; título e `grep`
+   bastam. Parte relevante sem texto (volumes de autos físicos, anexos digitalizados) e o
+   que se procura pode estar nela: use o busca-autos.
+2. **Quando:** no N3/N4, dispare a indexação logo no início, em segundo plano, e siga com
+   o resto; no N1/N2, só se o documento procurado for escaneado. Processo já indexado
+   (`status_indice`): busque direto.
+3. **Só a parte que é imagem vai ao Colab:** as páginas sem texto e as que são quase toda
+   imagem. Digitais e com OCR ficam no índice local. Modo rápido por padrão; o fino, só
+   quando o José pedir; GPU A100 quando houver pressa. Leva de poucos minutos a ~40 min,
+   conforme o tamanho da parte escaneada.
+4. **Buscar:** `buscar_paginas` filtrando as páginas sem texto (`classe='imagem_sem_texto'`)
+   e ler o achado com `ler_pagina`, que devolve a imagem. Transcrição de imagem segue a
+   regra do item acima.
+5. **Peça longa datilografada dentro de volume** (inicial, sentença, decisão, parecer): a
+   busca por imagem falha. Use as folhas citadas em outras peças e o índice de volumes do
+   PJe e leia as faixas como imagem (`ler_pagina` ou `render`), com leitores Haiku se
+   forem muitas páginas.
 
-- **Subagente Sonnet (triagem)**: recebe o caminho do PDF + o pedido do usuário.
-  Ele mesmo roda `index` e `peek` e devolve **só a shortlist rankeada**
-  (seq, tipo, páginas, 1 linha de justificativa cada). Assim os snippets de `peek`
-  **nunca entram no contexto do Opus** — é o maior ganho (higiene de contexto, não só custo).
-- **Opus (principal)**: a partir da shortlist, roda `extract` e **lê o texto verbatim**
-  para a redação/análise.
+Nomes e parâmetros exatos: a descrição viva das ferramentas do conector.
 
-**A linha que não se cruza:** delegue TRIAGEM, não a LEITURA PROFUNDA. Para redigir uma
-peça ou analisar um argumento específico, o Opus deve ler o texto literal — resumo de
-subagente perde nuance que importa juridicamente.
+## Workspace
+`workspace <cnj>` resolve a pasta, nesta ordem: `PRATICA_JURIDICA_DATA` →
+`CLAUDE_PLUGIN_DATA` → `dados-juridicos/` na pasta de trabalho (atual, ancestrais ou
+mounts do Cowork) → `./outputs` da sessão. Pasta antiga no formato `<raiz>/<cnj>` é
+reaproveitada. Caindo em pasta temporária, o script avisa alto no stderr: diga ao José em
+uma linha e recomende `PRATICA_JURIDICA_DATA`. Use sempre o caminho impresso; nunca o
+monte à mão.
 
-Exceção por tipo de tarefa:
-
-| Pedido | Orquestração |
-|---|---|
-| Apelação / contrarrazões / analisar argumento | Sonnet triagem → **Opus lê verbatim** as peças-chave |
-| Relatório completo do processo | **Map-reduce**: vários Sonnet resumem peças em paralelo → Opus sintetiza |
-| Encontrar/ler um documento específico | Direto: `find`/`index` → `extract` → ler |
-
-## Estratégia por tipo de pedido
-
-- **Relatório completo**: varra TODAS as peças (`is_peca = sim`). Em geral são poucas
-  páginas no total mesmo num processo gigante; processe em lotes (map-reduce).
-- **Redigir peça** (apelação etc.): foco na decisão/sentença recorrida, nas peças da
-  parte, e nas citações que elas fazem. Retrieval rankeado + seguir citações.
-- **Análise de valor**: priorize petição inicial, planos, laudos, decisões sobre
-  crédito/tutela; rode `peek` para achar onde estão os números.
-
-## Anexos e escaneados
-
-- Por padrão só transformamos peças. Anexos ("Outros Documentos", "Anexo",
-  "Procuração") ficam no índice como referência ("p. X-Y no PDF"); só extraia se o
-  pedido exigir.
-- Se um documento vier com páginas-imagem sem texto (raro — o PJe costuma aplicar OCR),
-  o `extract` traz pouco/nada. Nesse caso use OCR local (Tesseract) sob demanda:
-  veja `scripts/processo.py` (comando `ocr` é o ponto de extensão) e
-  `pip install pytesseract` + binário do Tesseract. Marque o resultado como
-  `fonte: ocr` (pode ter erros).
-
-## Boas práticas
-
-- **Nunca** despeje o PDF inteiro no contexto. Sempre via `index` → `extract` seletivo.
-- Cite sempre a procedência ao responder: tipo do documento, evento (NUM) e páginas.
-- Ao terminar, ofereça extrair documentos adicionais que ficaram fora do escopo inicial.
-- Cuidado com documentos partidos (vários "Anexo"/"Outros Documentos" consecutivos com
-  NUMs sequenciais): podem ser um único documento lógico dividido por limite de upload.
+> **Cowork.** Havendo pasta de trabalho montada sem `dados-juridicos/`, crie-a uma vez e
+> avise o José; o script a detecta nas sessões seguintes. Bash e Read podem pedir formas
+> diferentes do mesmo caminho: se o Read recusar o impresso, liste a pasta e use a forma
+> que ele aceita.

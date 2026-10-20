@@ -1,63 +1,55 @@
 ---
 name: relatorio
-description: (camada D) Produz RELATÓRIO sobre o processo, em modo interno (para o escritório — franco, "raw", com riscos, probabilidade de êxito e estratégia) ou externo (para o cliente — acessível, institucional). O modo externo FILTRA conteúdo (sem probabilidade crua nem estratégia interna) e equilibra a situação negativa com a solução, sem omitir. Use quando o objetivo é informar sobre o processo, não redigir peça.
+description: Redige relatório sobre o processo, interno para o escritório (franco, com riscos, chance qualitativa e estratégia, inclusive antes de decidir a peça) ou externo para o cliente, que filtra estratégia e chance. Não use para peça processual nem para parecer sem processo.
 ---
 
-> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
-> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
-> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
-> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
-> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
-> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
-> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+# Relatório (interno | externo)
 
-# Relatório (camada D, modo interno|externo)
+Informa sobre o processo ou planeja a estratégia; não é peça (sem endereçamento,
+admissibilidade nem pedidos). Nível típico: N2, com plano curto de uma geração; N3 no
+relatório estratégico detalhado. Chamada fora do pipeline, assuma N2.
 
-Skill de output fina. **Não é peça protocolada** → **não puxa** `peca-processual-base`
-(sem endereçamento/estrutura de peça). Puxa `escrita-juridica` (registro
-`interno`/`externo`), `pesquisa-juridica` (quando necessário) e, no modo externo,
-`formatacao-entrega`.
+## 1. Precondições e perguntas
+- **Workspace em dia.** Antes de relatar a situação atual, compare a data do documento
+  mais recente extraído com o andamento de agora (conectores de andamento ou
+  `obter-processo` em modo consulta, como no `analise-processual`). Se houve movimento
+  depois, atualize os autos ou relate com a data de corte expressa.
+- Pergunte só o que o pedido não disser: o destinatário (escritório ou cliente), porque
+  muda o conteúdo e não só o tom; na estratégia, o foco e, se ela antecede uma peça, o
+  objetivo final.
 
-## 1. Quando ativar
-Objetivo = **informar** sobre a situação do processo, não produzir peça.
+## 2. Estrutura
+Situação atual → o que está em jogo → [só no interno: riscos, chance, estratégia] →
+próximos passos. Segmente por processo ou por questão-chave se cobrir vários.
 
-## 2. Perguntas antes de começar
-- **Destinatário:** escritório (`interno`) ou cliente (`externo`)? Se não estiver
-  claro, pergunte — muda o conteúdo, não só o tom.
+**Interno com foco em estratégia:** situação atual → questões-chave → cenários e riscos →
+recomendação → próximos passos.
+- Chance de êxito qualitativa (alta, razoável, baixa, remota), sempre com a base
+  declarada: o precedente, o fato dos autos ou o óbice que a sustenta. Nunca percentual.
+- Pesquisa sob demanda, quando a chance ou a recomendação dependem de uma tese
+  (viabilidade de recurso, chance de tutela); é ela a base declarada.
+- **N3:** risco e recomendação passam pelo conselheiro Fable (advisor, se ligado; senão,
+  subagente Fable com dossiê); você decide.
+- Fase prévia de uma peça: grave em `<workspace>/estrategia.md`; o plano da peça parte das
+  decisões dele (ex.: o eixo do REsp, na `peca-recurso`).
 
-## 3. Estrutura do documento
-- Situação atual do processo → o que está em jogo → próximos passos.
-- **Só no `interno`:** riscos, **probabilidade de êxito** e recomendação
-  estratégica.
-- Fatos vêm do workspace (`analise-processo-pje`), não de releitura.
+## 3. Regras de ouro
+- **Externo nunca omite** situação negativa, mas a equilibra com o caminho de solução que
+  de fato existe nos autos ou no plano do escritório.
+- **Externo filtra conteúdo**, não só o tom: sem chance de êxito nem estratégia interna;
+  risco comunicado com prudência; lei e jurisprudência ficam nos bastidores.
+- **Externo só afirma o que está nos autos ou no `plano.md`.** Providência ainda não
+  tomada entra como próximo passo, não como feito.
+  - ❌ "A decisão foi desfavorável, mas já preparamos o recurso, com tema de repercussão
+    geral favorável." (nada disso consta dos autos nem do plano)
+  - ✅ "A sentença julgou o pedido improcedente. Ainda cabe apelação, no prazo que termina
+    em [data], e nela o tribunal pode rever o fundamento que levou à improcedência."
+- **Interno é franco:** descrição direta, sem verniz de cliente, também sobre fraquezas e
+  riscos; o objetivo é decidir bem, não convencer.
 
-## 4. Plano de respostas (segmentação)
-- Normalmente **1 geração**. Segmente se cobrir vários processos ou muitos temas.
-
-## 5. Pesquisa
-- Serve de **base interna** do que se afirma (ex.: embasar a avaliação de risco no
-  modo interno). Ao **cliente**, normalmente **não se cita** jurisprudência/lei — a
-  pesquisa fica nos bastidores.
-
-## 6. Escrita
-`escrita-juridica`:
-- `interno` → franco, técnico, "raw"; pode expor probabilidade e estratégia.
-- `externo` → acessível, institucional; **filtra conteúdo** (sem probabilidade crua
-  nem estratégia interna) e comunica risco com prudência.
-
-## 7. Entrega
-- `externo` → `formatacao-entrega` (`.docx`/timbrado), usando o **subconjunto**
-  aplicável de `@tag` (ex.: `@titulo`, `@corpo`, `@secao`, `@data`, `@assinatura` —
-  sem `@enderecamento`/`@identificacao`/`@pedidos`).
-- `interno` → markdown simples; dispensa `.docx`/timbrado.
-
-## 8. Verificação
-`verificacao-citacoes` se afirmar algo que dependa de fonte (lei, jurisprudência,
-dados dos autos).
-
-## 9. Regras de ouro / vícios a evitar
-- **Externo nunca omite** a situação negativa, mas **equilibra com a solução** (ex.:
-  "a decisão foi desfavorável, mas já preparamos o recurso cabível, inclusive com
-  tema de repercussão geral favorável").
-- **Externo não expõe** probabilidade crua de êxito nem a estratégia interna.
-- **Interno é franco:** descrição direta, sem verniz de cliente.
+## 4. Escrita, entrega e verificação
+- Externo: registro `externo` da `escrita-juridica` e `.docx` pela `formatacao-entrega`,
+  só com as `@tag` que cabem (`@titulo`, `@secao`, `@corpo`, `@data`, `@assinatura`).
+- Interno: registro `interno`, em markdown no workspace, sem `.docx`.
+- `verificacao-citacoes` sempre que o relatório afirmar algo que dependa de fonte (lei,
+  jurisprudência, dados dos autos).

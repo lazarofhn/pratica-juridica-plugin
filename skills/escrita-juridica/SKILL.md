@@ -1,361 +1,197 @@
 ---
 name: escrita-juridica
-description: (camada E — compartilhada) Define COMO escrever texto jurídico natural, humano e preciso, com REGISTROS parametrizáveis (peça | interno | externo). Não é chamada direto pelo usuário — as skills de output (camada D) a invocam com o registro certo. Centraliza as regras de ouro (conectores, proibição do traço aditivo, proibição do padrão "dois pontos + explicação"), a calibragem de latim/bajulação, e o contrato de saída @tag para peças que viram .docx.
+description: Estilo jurídico da casa (peça, interno, externo); redige pelas regras de ouro, revisa peça pronta, remove juridiquês e dá fluidez. Não use para redigir peça a partir dos autos (comece pelo analise-processual), pesquisar fundamento ou gerar o .docx.
 ---
 
-> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
-> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
-> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
-> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
-> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
-> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
-> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+# Escrita jurídica
 
-# Escrita Jurídica (camada E — parametrizada por registro)
+Dona única do estilo do plugin. O estilo deve ser invisível, e "natural" é fluido e bem
+encadeado **dentro** do registro técnico-forense, não licença literária (fórmula de
+crônica ou ensaio na peça é defeito grave, GO-5). Entra no pipeline, com o registro
+passado pela skill de saída ou pelo `plano-de-respostas`, ou direto, para revisar peça
+pronta, remover juridiquês ou dar fluidez (`references/revisao.md`). Fora do pipeline,
+assuma N2 e o registro pelo destinatário: juízo → peça; escritório → interno; cliente →
+externo.
 
-Você atua como editor que transforma texto jurídico e gerado por IA em escrita
-natural, humana e tecnicamente precisa. O estilo deve ser invisível: texto
-conciso, claro, simples e vigoroso, com o foco do leitor na mensagem.
-**"Natural" = fluida e bem encadeada DENTRO do registro técnico-forense — não é
-licença literária.** Fórmula de crônica/ensaio na peça é defeito grave (ver GO-5).
-
-> **Otimização central do plugin:** uma única skill de escrita, não três. As skills
-> de output passam um **registro**; a lógica mora aqui.
+| Nível | O que muda aqui |
+|---|---|
+| N1 | GO-1 a GO-6 e o radar ao fechar; protocolar não infla, as `references/` ficam de fora (salvo revisão). |
+| N2 | Tudo o que segue, geração a geração, por você. |
+| N3 | Cada subagente Opus recebe esta skill e o registro; na costura, você roda radar e varreduras na peça inteira. |
+| N4 | A equipe usa esta skill como régua de estilo. |
 
 ## Registros
-| Registro | Finalidade / tom |
-|---|---|
-| `peça` | Persuasivo, técnico, dirigido ao juízo. Assertivo e fundamentado — na dose da seção **"Persuasão calibrada"**. Sai no formato `@tag` (vira `.docx`). |
-| `interno` | Franco e técnico, para colegas. Pode expor fraquezas, dúvidas, probabilidade e estratégia. Formato simples (markdown). |
-| `externo` | Acessível e institucional, para o cliente. Traduz o jurídico, comunica risco com prudência. **Filtra conteúdo** (sem probabilidade crua nem estratégia interna). Sai no formato `@tag` (vira `.docx`). |
+| Registro | Para quem e com que tom | Saída |
+|---|---|---|
+| `peça` | Juízo. Persuasivo, técnico, assertivo e fundamentado, na dose de `references/persuasao.md`. | blocos `@tag` → `.docx` |
+| `interno` | Colegas. Franco e técnico: pode expor fraqueza, dúvida, probabilidade e estratégia. | markdown |
+| `externo` | Cliente. Acessível e institucional; traduz o jurídico e comunica risco com prudência. **Filtra conteúdo:** sem probabilidade crua nem estratégia interna. | blocos `@tag` → `.docx` |
 
-O que muda entre registros é o **tom** e, no `externo`, também **o que se diz**. As
-regras abaixo valem para todos.
+Entre registros muda o tom e, no `externo`, também o que se diz; as regras valem para os três.
 
----
+## A redação vai para o arquivo, não para o chat
+- Cada geração vai direto para o arquivo (`@tag` no `peça` e no `externo`, markdown no
+  `interno`); no chat, só as notas: o que a seção faz, fontes, decisões. Nunca recole a
+  redação: repeti-la gasta o output que falta às próximas seções.
+- Sintaxe de `@tag` e `@citacao-ref`: `formatacao-entrega`. Ementa e trecho dos autos
+  entram por `@citacao-ref` (texto verbatim, sem redigitar); `@citacao` escrito à mão vai
+  à `verificacao-citacoes`. Trecho de voto exige inteiro teor: onde há, ver
+  `pesquisa-juridica`.
 
-## ⭐ Regras de ouro (prioridade máxima)
+## Regras de ouro (prioridade máxima)
 
 ### GO-1 — Conectivos, uso máximo e intencional
-Use conjunções e locuções de forma sistemática e generosa, **dentro dos períodos e
-entre parágrafos**. A ausência de conectivos produz escrita fragmentada e robótica;
-a presença confere encadeamento lógico e fluidez de prosa humana.
-- *Dentro do período:* "porque", "embora", "ainda que", "de modo que", "uma vez
-  que", "por isso", "portanto", "todavia", "contudo", "ademais", "com efeito",
-  "nesse sentido", "na medida em que", "razão pela qual", em vez de frases
-  justapostas sem ligação.
-- *Entre parágrafos:* inicie os subsequentes retomando o raciocínio: "com efeito",
-  "além disso", "por sua vez", "nessa linha", "desse modo", "em consequência",
-  "cabe acrescentar que", "importa notar, ainda, que".
-- **Atenção:** conectivo não é ornamento — cada um carrega um valor lógico (adição,
-  contraste, causa, consequência, concessão). Use o certo para a relação real entre
-  as ideias, não só para preencher a transição.
+Encadeie com conjunções e locuções, no período e entre parágrafos: sem elas o texto fica
+fragmentado e robótico. Cada conectivo tem um valor lógico (adição, contraste, causa,
+consequência, concessão); use o da relação real, não o que só preenche a transição. No
+período: porque, embora, ainda que, de modo que, uma vez que, portanto, todavia, na
+medida em que, razão pela qual. Entre parágrafos: com efeito, além disso, por sua vez,
+nessa linha, desse modo, em consequência, cabe acrescentar que.
+
+> ✗ "O contrato venceu em março. A ré continuou prestando o serviço. A cobrança é devida."
+> ✓ "Embora o contrato tenha vencido em março, a ré continuou prestando o serviço, de
+> modo que a cobrança é devida."
 
 ### GO-2 — Proibição do traço aditivo (inviolável)
-É **proibido** usar travessão (—), hífen (-) ou qualquer traço para introduzir
-ideias apositivas ou intercaladas dentro de um período. A alternativa obrigatória é
-a **vírgula**.
+Travessão, meia-risca ou hífen nunca introduzem ideia apositiva ou intercalada no
+período; a alternativa obrigatória é a vírgula. O travessão só cabe em ruptura sintática
+deliberada e radical, rara em texto jurídico.
 
-| ❌ Errado (traço) | ✅ Correto (vírgulas) |
-|---|---|
-| "A decisão — amplamente fundamentada — foi publicada." | "A decisão, amplamente fundamentada, foi publicada." |
-| "A empresa — ré no processo — contestou." | "A empresa, ré no processo, contestou." |
+> ✗ "A decisão — amplamente fundamentada — foi publicada."
+> ✓ "A decisão, amplamente fundamentada, foi publicada."
 
-O travessão só se admite em ruptura sintática deliberada e radical, rara em texto
-jurídico. **Ao revisar, substituir todos os traços aditivos por vírgulas é a
-primeira prioridade.**
+### GO-3 — Dois pontos não viram fórmula
+É proibida a repetição de "afirmação ampla + dois pontos + desdobramento": repetida,
+robotiza o texto. O uso pontual é legítimo e pode ser elegante; integre a explicação à
+afirmação com conjunção.
 
-### GO-3 — Proibição do padrão "afirmação + dois pontos + explicação" como fórmula
-É proibido usar de forma **repetida** a estrutura "afirmação ampla : desdobramento
-em elementos/consequências". Repetida, ela robotiza o texto.
+> ✗ "Essa distinção tem reflexo direto sobre quais regras se aplicam: as condições de
+> vigência, as hipóteses de alteração e os limites de acréscimo operam de forma diferente."
+> ✓ "Essa distinção tem reflexo direto sobre quais regras se aplicam, dado que as
+> condições de vigência, as hipóteses de alteração e os limites de acréscimo operam de
+> forma diferente conforme se trate de um ou de outro instrumento."
 
-**Padrão a evitar (quando vira fórmula):**
-> "Essa distinção tem reflexo direto sobre quais regras se aplicam: as condições de
-> vigência, as hipóteses de alteração e os limites de acréscimo operam de forma
-> diferente."
+### GO-4 — Parágrafos curtos e respiráveis (quebrar, nunca resumir)
+Assessores, juízes e as ferramentas de IA dos tribunais param de ler no meio de bloco
+denso: o argumento morre pela forma, não pelo mérito.
+- **Um parágrafo, uma ideia:** normalmente um ou dois períodos curtos. A régua é a ideia,
+  não o número; os números só apontam onde olhar: média de 70 a 90 palavras por parágrafo
+  na peça e 120 como referência de teto (125 ou 130 cabem se a ideia pede). Duas ideias
+  no mesmo bloco: ache a costura lógica e quebre.
+- **Quebrar não é resumir (inviolável):** nada se corta; o desenvolvimento inteiro fica,
+  distribuído em mais parágrafos encadeados pelo GO-1, como escada de degraus curtos.
+- **Costuras naturais:** premissa normativa ¦ aplicação aos fatos ¦ consequência
+  jurídica; cada fundamento autônomo, seu parágrafo.
+- **Anti-mecanicidade:** varie o comprimento (um período curto depois de dois longos dá
+  ênfase) e a abertura; nunca três parágrafos seguidos com o mesmo conectivo ou a mesma
+  estrutura.
+- **Radar:** o `lint_peca.py` mostra a média da peça e aponta os parágrafos acima da
+  referência (`references/revisao.md`); quem decide se é uma ideia só é a leitura.
 
-**Correto — integre a explicação à afirmação com conjunções:**
-> "Essa distinção tem reflexo direto sobre quais regras se aplicam, dado que as
-> condições de vigência, as hipóteses de alteração e os limites de acréscimo operam
-> de forma diferente conforme se trate de um ou de outro instrumento."
-
-O uso **pontual** dos dois pontos é legítimo e pode ser elegante; proíbe-se a
-repetição como fórmula automática. Identifique ativamente esse padrão e substitua.
-
-### GO-4 — Parágrafos curtos e respiráveis (QUEBRAR, nunca resumir)
-Parágrafo longo é onde a peça perde o leitor. Assessores, juízes e as próprias
-ferramentas de IA dos tribunais **param de ler no meio de blocos densos** — o
-argumento morre pela forma, não pelo mérito. Regra operacional:
-- **Um parágrafo = um passo do raciocínio.** Alvo: **2 a 4 períodos** (~4–7 linhas
-  no Word). Passou disso, encontre a costura lógica e **quebre em dois**.
-- **Quebrar ≠ resumir (inviolável).** É proibido cortar conteúdo para encurtar: o
-  desenvolvimento completo permanece, apenas **distribuído em mais parágrafos**,
-  encadeados pelos conectivos do GO-1 ("nessa linha", "por consequência", "não
-  bastasse isso"). O argumento denso vira uma escada de degraus curtos, não um bloco.
-- **Costuras naturais de quebra:** premissa normativa ¦ aplicação aos fatos ¦
-  consequência jurídica — cada movimento pode (e normalmente deve) ser parágrafo
-  próprio. Outro corte natural: cada fundamento autônomo, seu parágrafo.
-- **Anti-mecanicidade:** varie o comprimento (um período curto depois de dois longos
-  dá ritmo e ênfase) e a **abertura** dos parágrafos — nunca três seguidos começando
-  com o mesmo conectivo ou a mesma estrutura sintática.
-- **Teste de revisão (obrigatório antes de fechar a seção):** releia só olhando o
-  tamanho dos blocos; qualquer parágrafo com mais de ~7 linhas ou com mais de um
-  movimento argumentativo dentro, quebre.
+> ✗ Um bloco de nove linhas que transcreve o art. 1.022, narra a omissão e conclui.
+> ✓ Três parágrafos: o que o art. 1.022 exige; o que o acórdão não enfrentou; por que a
+> omissão impõe a anulação.
 
 ### GO-5 — Registro técnico, não narrativo (a peça não é crônica nem ensaio)
-A fluidez que este skill exige vem dos **conectivos e do encadeamento** (GO-1) —
-nunca de fórmulas de crônica/ensaio. É um desvio recorrente dos modelos: a peça sai
-fluida, mas num **padrão de formalidade abaixo** do forense. Exemplos REAIS
-corrigidos pelo usuário, com a conversão:
+A fluidez vem dos conectivos e do encadeamento, nunca de fórmula de crônica ou ensaio.
+É desvio recorrente dos modelos: a peça sai fluida, mas um degrau abaixo da formalidade
+forense. Exemplo real corrigido pelo José (os demais em `references/revisao.md`):
 
-| ❌ Fórmula de ensaio | ✅ Formulação técnica |
-|---|---|
-| "o segundo requisito **é o que melhor revela o descompasso**" | "quanto ao segundo requisito, a apelação **parte de premissa que não corresponde à tese vinculante**" |
-| "**o problema não está em** X, mas em Y" | "a controvérsia **não diz respeito a** X; **cinge-se a** Y" |
-| "**seria uma coisa**; a União, **porém**…" | afirmar direto: "A União, contudo, [operação jurídica]…" (sem o contraste de suspense) |
-| "não segue esse caminho, **e nunca o seguiu**" | "não adotou essa providência" (sem a dramatização por reforço) |
+> ✗ "o segundo requisito **é o que melhor revela o descompasso**"
+> ✓ "quanto ao segundo requisito, a apelação **parte de premissa que não corresponde à
+> tese vinculante**"
 
-**Marcadores do registro ensaístico — varrer ativamente:**
-- **Avaliação impressionista do próprio argumento**: "é o que melhor revela", "salta
-  aos olhos", "nada disso se sustenta de pé", "o contraste é eloquente".
-- **Contraste retórico em suspense**: "uma coisa seria…; outra, bem diferente,…".
-- **Dramatização por reforço/repetição**: "e nunca o seguiu", "não uma, mas duas vezes".
-- **Metáfora e imagem**: "caminho", "descompasso", "pano de fundo", "morre na praia" —
-  substituir pelo termo técnico: critério, premissa, incompatibilidade, fundamento.
-- **Narrador comentando a própria peça** — duas espécies, a segunda mais grave:
-  (i) comentário estilístico: "como se verá, o ponto é mais simples do que parece";
-  (ii) **metadiscurso estratégico**: revelar a arquitetura interna da tese — "este
-  argumento é subsidiário", "o que se admite apenas para argumentar", "o fundamento
-  principal, contudo, é outro", ou contar ao leitor que a estratégia mudou. A peça
-  mostra o **resultado**, nunca o processo de elaboração: o leitor (juiz, Fazenda)
-  deve compreender a mensagem, não como se chegou a ela. Moldura de
-  subsidiariedade sinaliza fragilidade que não existe.
+Marcadores: avaliação impressionista do próprio argumento ("salta aos olhos", "nada
+disso se sustenta de pé", "o contraste é eloquente"); contraste em suspense ("uma coisa
+seria…; outra, bem diferente,…"); dramatização por reforço ("e nunca o seguiu", "não
+uma, mas duas vezes"); metáfora e imagem ("caminho", "descompasso", "pano de fundo",
+"morre na praia") no lugar de critério, premissa, incompatibilidade, fundamento; e o
+narrador comentando a peça, seja no comentário estilístico ("como se verá, o ponto é
+mais simples do que parece"), seja, mais grave, no **metadiscurso estratégico**, que
+revela a arquitetura da tese ("este argumento é subsidiário", "o que se admite apenas
+para argumentar", "o fundamento principal, contudo, é outro") ou conta que a estratégia
+mudou. A peça mostra o resultado, nunca a elaboração; moldura de subsidiariedade
+sinaliza fragilidade que não existe.
 
-**Regra de conversão:** a frase técnica nomeia **(i) o objeto processual** (o acórdão,
-a apelação, o requisito, a premissa, a tese) e **(ii) a operação jurídica** (não
-corresponde, viola, deixa de enfrentar, parte de premissa equivocada, não se
-concilia com) — sem avaliação impressionista nem imagem. A ênfase legítima é a da
-"Persuasão calibrada" (verbos assertivos, "inconteste", "não restam dúvidas"), que é
-vocabulário **forense tradicional**, não ensaístico.
-
-**Teste de varredura (obrigatório na revisão final):** se a frase caberia numa
-crônica de jornal ou num artigo de opinião, reformule tecnicamente. Varrer a peça
-**inteira**, não só os casos vistosos — o padrão escorrega em frases discretas.
+**Regra de conversão:** a frase técnica nomeia o **objeto processual** (o acórdão, a
+apelação, o requisito, a premissa, a tese) e a **operação jurídica** (não corresponde,
+viola, deixa de enfrentar, parte de premissa equivocada, não se concilia com), sem
+avaliação impressionista nem imagem. A ênfase legítima ("inconteste", "não restam
+dúvidas") é vocabulário forense tradicional, não ensaístico (`references/persuasao.md`).
 
 ### GO-6 — Definição por negação (afirme direto; negue só quem existe nos autos)
-Para afirmar algo, **não é preciso dizer o que ele "não é"** — a negação gratuita
-inventa um adversário só para dar relevo à afirmação. Exemplo REAL corrigido:
+Para afirmar algo, não é preciso dizer o que ele "não é": a negação gratuita inventa um
+adversário só para dar relevo à afirmação.
 
-| ❌ Definição por negação | ✅ Afirmação direta |
-|---|---|
-| "a usina **não é projeto anunciado**, mas empreendimento regularmente outorgado" | "a usina **é empreendimento regularmente outorgado** e em operação comercial há mais de uma década" |
+> ✗ "a usina **não é projeto anunciado**, mas empreendimento regularmente outorgado"
+> ✓ "a usina **é empreendimento regularmente outorgado** e em operação comercial há mais
+> de uma década"
 
-**Teste de triagem (o coração da regra):** *alguém nos autos sustentou o que estou
-negando?*
-- **Sim** → negação **legítima**: refutar tese da parte contrária, afastar precedente
-  invocado, responder a fundamento da decisão recorrida. Mantém-se.
-- **Não** → vício: converta em afirmação direta.
+**Teste de triagem:** alguém nos autos sustentou o que estou negando? **Sim** → negação
+legítima (refutar tese da parte contrária, afastar precedente invocado, responder a
+fundamento da decisão recorrida): fica. **Não** → converta em afirmação direta. A regra
+não proíbe negar; sem o teste, a réplica e as contrarrazões morrem.
 
-A regra **não proíbe negação** — sem o teste, a réplica e as contrarrazões morrem.
-**Varredura (revisão final):** o padrão sempre contém uma negação ("não é X, mas Y",
-"não se trata de", "longe de ser"), então a busca tem recall alto; a triagem pelo
-teste acima é que separa vício de refutação (em peça real: 31 negações, 23 eram o
-vício).
+## Latim e cortesia forense — calibragem, não proibição
+O problema é o excesso e a repetição. Um "Exmo.", um "egrégio" ou um "data venia" de vez
+em quando, sem repetição, é natural no registro forense; latim técnico insubstituível
+(habeas corpus, erga omnes, data maxima venia em momento solene) é sempre livre. Combata
+a saturação: adjetivação bajulatória a cada frase ("ínclito magistrado", "brilhante
+decisão") e latim ornamental constante ("in casu", "a priori" o tempo todo).
 
-> **Método de revisão (vale para as varreduras dos GO-4 a GO-6):**
-> **(1) Diagnostique antes de reescrever** — separe o que peca na frase: (i) a
-> estrutura lógica, (ii) o registro/vocabulário, (iii) o conteúdo jurídico. Se só o
-> vocábulo peca, troque o vocábulo e **preserve a arquitetura** — não se joga fora
-> um bom argumento por defeito que era só de léxico.
-> **(2) Agente auxiliar é radar, nunca revisor** — modelo externo (DeepSeek etc.)
-> serve para **localizar** ocorrências do padrão; a reescrita é sempre do redator,
-> com o texto à vista. Sugestão automática já inverteu o sentido jurídico de frase
-> nuclear da tese ("nenhum provedor dispõe de meio" → "provedor dispõe de meio").
-
----
-
-## Latim e cortesia forense — calibragem (não é proibição absoluta)
-O problema é o **excesso e a repetição**, não o uso em si.
-- **Aceitável:** um "Exmo.", "egrégio", "data venia" usado **uma vez ou outra, sem
-  repetição**, é natural no registro forense e não faz mal. Latim **técnico
-  insubstituível** (habeas corpus, erga omnes, data maxima venia em momento
-  solene) é sempre livre.
-- **A combater:** a **saturação** — adjetivação bajulatória a cada frase ("ínclito
-  magistrado", "brilhante decisão" repetidos), latim ornamental como enfeite
-  constante ("in casu", "a priori" o tempo todo). Corte o que vira vício, mantenha o
-  que soa natural em dose pontual.
-
-## Persuasão calibrada (registro `peça`) — nem morno, nem espalhafatoso
-A peça existe para **convencer**; neutralidade total é defeito, não virtude. Um texto
-que apenas "constata" lê-se como parecer, e parecer não ganha causa. Mas o excesso
-(indignação adjetivada, ataque ao pronunciamento judicial) queima credibilidade. O
-alvo é o meio-termo assertivo:
-
-- **Defenda com verbo e arquitetura, não com adjetivo.** A ênfase legítima vem de
-  verbos assertivos e da força do encadeamento: "impõe-se", "não se sustenta",
-  "é o que basta para", "não resiste ao confronto com", "a conclusão é inafastável"
-  (este, com parcimônia). **Banidos** os adjetivos de indignação ("absurda",
-  "teratológica", "inaceitável"), salvo teratologia real e decisão estratégica
-  expressa do usuário.
-- **Critique a decisão, jamais o julgador.** Impessoalize o alvo: "o acórdão não
-  enfrentou a questão", "a premissa adotada não se concilia com o critério do
-  repetitivo", "a conclusão destoa do que decide esta Corte" — nunca "o magistrado
-  ignorou/equivocou-se gravemente". O rechaço a pronunciamento judicial é **firme no
-  conteúdo e respeitoso na forma** (uma "devida vênia" pontual; sem saturar).
-- **Abra o tópico afirmando a própria tese; a distinção e a objeção vêm depois.**
-  Começar pela refutação (ou pelo instituto vizinho que se quer afastar) obriga o
-  leitor a entender o adversário antes de entender a tese, e ainda enquadra a
-  discussão nos termos dele. O elemento mais forte vai para o começo: primeiro a
-  premissa afirmativa ("os elementos materiais já estão caracterizados na lei e o
-  MS é o remédio cabível"), só então a distinção ("diferente seria a hipótese do
-  MI…"). **Premissa fundamental não fica no meio do capítulo: abre-o.**
-- **Tome partido nas conclusões.** Fecho de tópico não é relatório: conclui **em
-  favor da tese**. Teste: se o parágrafo final do tópico pudesse constar de um
-  parecer neutro, falta ênfase. A assertividade **cresce** nos fechos de tópico e nos
-  pedidos; na narrativa fática, mantém-se a sobriedade (fato bem contado persuade
-  sozinho).
-- **Escala de referência (calibre pelo exemplo do meio):**
-  - *Morno (falta ênfase):* "Verifica-se que o acórdão possivelmente não abordou
-    todos os pontos suscitados nos embargos."
-  - *Calibrado (alvo):* "O acórdão não enfrentou a questão, embora expressamente
-    suscitada nos embargos. A omissão, por incidir sobre fundamento capaz de alterar
-    o resultado do julgamento, impõe a anulação."
-  - *Espalhafatoso (excesso):* "É teratológica e absolutamente inaceitável a postura
-    do juízo, que ignorou por completo os embargos opostos."
-
-## Padrões da casa (extraídos de peça REAL do usuário — recurso provido)
-Fonte: REsp manual (PIS/COFINS insumos, 2024) que resultou em **recurso provido**.
-Números medidos na peça: mediana de **2 períodos** e **~41 palavras** por parágrafo;
-**43% dos parágrafos têm um único período**. É o alvo concreto do GO-4. Além da
-métrica, sete padrões de construção a REPRODUZIR:
-
-1. **Sanduíche de citação.** Parágrafo curto anuncia a transcrição com fecho de
-   abertura ("vejamos:", "observe-se:", "in verbis:") → citação em bloco → parágrafo
-   de **leitura dirigida** que extrai da citação exatamente o que serve à tese
-   ("Observe-se que as disposições são claras ao delimitar…"). **Nenhuma citação fica
-   órfã**: transcrever sem ler dirigidamente é desperdiçar a prova.
-   **Vale igualmente para prova documental e enumeração** (estatuto social, CNAE,
-   cláusula contratual, ato regulatório): fonte normativa e documental não se
-   "joga" — transcrever o artigo do estatuto e listar os códigos não demonstra
-   nada. Narra-se a **cadeia**: percorrer o ciclo etapa por etapa (ex.: plantio →
-   colheita → beneficiamento → cogeração → entrega), amarrando cada etapa ao item
-   do objeto social e ao dispositivo legal que se quer aplicar.
-2. **Alavanca "Ora, se… (então)".** O golpe mais forte: usar a **premissa do próprio
-   julgado** (ou do adversário) como motor da conclusão. Âncora real: *"Ora, se o
-   próprio Acórdão de origem alegou que os gastos impostos por exigência legal devem
-   ser classificados como insumos, a sua omissão quanto às NORMAS que impõem à
-   Recorrente [esses] dispêndios é fato que macula o julgado."* O vício se demonstra
-   **de dentro** da decisão, o que é firme sem ser desrespeitoso.
-3. **Micro-conclusão parcial.** Cada tópico fecha com parágrafo de **1 período** que
-   toma partido: "Dessa feita, inconteste a tempestividade…", "Portanto, inconteste o
-   cabimento…". Trilha de conclusões parciais que desemboca nos pedidos (casa com a
-   "Persuasão calibrada": fecho conclui em favor da tese).
-4. **Reformulação "Ou seja,".** Ponto técnico seguido da tradução em linguagem
-   direta: *"Ou seja, a decisão poderia ser utilizada para o julgamento de embargos
-   de declaração em qualquer ação, independentemente da questão de direito."*
-   Primeiro preciso, depois inescapável. Usar nas ideias-chave, não em todas.
-5. **Ênfase mirada no objeto certo.** Vocabulário enfático legítimo ("inconteste",
-   "não restam dúvidas", "evidente contradição", "afronta direta") **dirigido ao
-   requisito, ao vício ou à situação — nunca ao julgador**. Indignação só contra a
-   SITUAÇÃO objetiva (âncora real: a "teratológica situação" de o contribuinte que
-   não foi a juízo ganhar na RFB enquanto o que foi, não) e mesmo assim rara.
-6. **Vocativo estratégico pontual.** "Importante frisar, Ex.ª, que…" / "Nesse
-   sentido, Exmos. Ministros," **apenas nos 1-2 momentos decisivos** da peça (a
-   virada argumentativa central), como acorde para acordar o leitor. Dose: ainda
-   menos que na peça-fonte (o próprio autor hoje calibra para baixo).
-7. **Recapitulação enumerada antes do fecho.** Seção longa termina com "Com isso, em
-   suma…" listando **um por parágrafo** cada vício/violação demonstrado, e só então
-   vem a conclusão/pedido. O julgador (e a IA do gabinete) encontra o mapa pronto.
-
-## Demais princípios (todos os registros)
-
-### Concisão
-- Delete o inútil: palavra sem função na ideia, apague.
-- Sem sinonimomania/tautologia ("nulo e de nenhum efeito", "claro e evidente").
-
-### Clareza
-- Ordem direta (Sujeito-Verbo-Complemento); evite inversões e orações intercaladas
-  longas.
-- Voz ativa (passiva só quando o agente for irrelevante/desconhecido).
-- Forma afirmativa ("é possível", não "não é impossível").
-
-### Precisão
-- Palavras específicas e concretas, não abstrações vagas.
-- Sem variação elegante: repita o termo técnico exato se preciso; sinônimo só para
-  não repetir gera ambiguidade.
-- Nunca use "o mesmo"/"a mesma" como pronome anafórico.
+## Precisão e ancoragem
+- **Termo exato, sem variação elegante:** repita o termo técnico; sinônimo usado só para
+  não repetir gera ambiguidade. Nunca "o mesmo"/"a mesma" como pronome ("o contrato foi
+  assinado e o mesmo previa multa" → "o contrato foi assinado e previa multa").
 - **O léxico não concede a premissa adversária.** Ao relatar ato, decisão ou tese
-  contrária, o verbo e o substantivo escolhidos não podem conceder por descuido a
-  premissa central que se combate. Exemplo REAL: com tese de eficácia plena do
-  dispositivo, escrever que o decreto "reconheceu **depender de providência futura
-  a eficácia**" (ou falar em "dever de **regulamentação**") trai a tese — o correto
-  é "reconheceu que **ainda não editou** o ato". É erro difícil de ver porque a
-  frase costuma estar correta como relato; o vazamento está no léxico. **Teste de
-  varredura (revisão final):** identifique a premissa nuclear da tese e procure, na
-  peça inteira, palavras que a contradigam por descuido.
-- **Léxico da casa:** preferir "ação"/"demanda" a "impetração" (fora de citações).
+  contrária, verbo e substantivo não podem admitir por descuido a premissa que se
+  combate. Exemplo real: com tese de eficácia plena, escrever que o decreto "reconheceu
+  **depender de providência futura a eficácia**" (ou falar em "dever de
+  **regulamentação**") trai a tese; o correto é "reconheceu que **ainda não editou** o
+  ato". A frase costuma estar correta como relato: o vazamento está no léxico.
+- **Léxico da casa:** "ação" ou "demanda", não "impetração" (fora de citação).
+- **Ancoragem no caso:** todo tópico, de admissibilidade ou de mérito, vincula a regra
+  aos fatos deste processo, tirados do workspace, em vez de dissertar sobre o instituto.
+  Em prequestionamento não basta explicar o art. 1.025: diga quais questões foram
+  suscitadas nos embargos, quais ficaram omissas e onde serão enfrentadas. Se o
+  parágrafo coubesse em qualquer processo sobre o tema, falta ancoragem.
+- **Procedência dos autos:** cite tipo do documento, NUM (id ou evento) e páginas, como
+  o workspace entrega: "(Certidão de intimação, id 12345678, p. 3)".
+- **Nenhuma transcrição órfã:** ementa, artigo, cláusula ou documento transcrito recebe
+  leitura dirigida (padrão 1 de `references/padroes-da-casa.md`).
 
-### Ancoragem ao caso concreto (sobretudo no registro peça)
-Não disserte sobre o instituto em abstrato. Todo tópico, de admissibilidade ou de
-mérito, deve **vincular a regra aos fatos DESTE processo** (extraídos dos autos /
-workspace): o que aconteceu nos autos e por que o requisito está satisfeito aqui.
-Ex.: em prequestionamento, não basta explicar o art. 1.025; é preciso dizer QUAIS
-questões foram suscitadas nos embargos e permaneceram omissas, e onde serão
-enfrentadas. **Regra prática:** se o parágrafo pudesse ser colado em qualquer
-processo sobre o mesmo tema, falta ancoragem. E nenhuma transcrição ou enumeração
-fica órfã: a leitura dirigida do padrão 1 ("Padrões da casa") vale para prova
-documental tanto quanto para ementa.
+## Persuasão e padrões da casa (registro peça)
+- **Antes de redigir os fundamentos**, leia `references/persuasao.md`: verbo e
+  arquitetura em vez de adjetivo, crítica à decisão e nunca ao julgador, tese na
+  abertura do tópico, fecho que toma partido, escala de calibragem e antecipação de
+  objeção.
+- **Ao redigir tópico com citação, prova documental, fecho ou recapitulação**, siga
+  `references/padroes-da-casa.md` (sete padrões da peça real que teve o recurso provido).
 
-### Vigor e estrutura
-- Verbos de ação, não substantivos zumbis ("decidir revisar", não "tomar a decisão
-  de revisar"; "reclamou", não "apresentou reclamação").
-- Ênfase pela **posição** (palavras-chave no início/fim de frases e parágrafos), não
-  por tipografia. **Ressalva:** isto se refere a não grifar palavras soltas no meio
-  do texto para dar destaque; a formatação estrutural do padrão da casa (negrito de
-  título/seção/citação) é aplicada pela `formatacao-entrega`, não conta como "ênfase
-  tipográfica" aqui.
-- Parágrafos: regra completa no **GO-4** (curtos, um passo do raciocínio cada,
-  quebrar sem resumir).
+## Ao fechar cada geração
+1. Rode o radar no arquivo (`--json` para lista estruturada; limiares em `--help`):
+   ```
+   python "${CLAUDE_PLUGIN_ROOT}/skills/escrita-juridica/scripts/lint_peca.py" <arquivo>
+   ```
+2. Fora do N1, leia `references/revisao.md` e faça as varreduras de leitura que o
+   script não vê.
+3. Trie cada alerta pelo teste da regra (se for falso positivo, o texto fica) e
+   diagnostique antes de reescrever.
 
----
+No N3, o radar roda em cada seção devolvida e, na costura, na peça inteira: aberturas
+repetidas e saturação só aparecem no conjunto.
 
-## Contrato de saída @tag (registros `peça` e `externo`)
-Quando o output vira `.docx` (peça protocolada ou relatório externo), **emita em
-blocos marcados por `@tag`** — o formato que a `formatacao-entrega` consome. Tags:
-`@enderecamento`, `@identificacao`, `@titulo`, `@corpo`, `@secao`, `@citacao`,
-`@citacao-ref`, `@pedidos`, `@fecho`, `@data`, `@assinatura` (ver `formatacao-entrega`
-e `assets/exemplo-peca.md` lá). No registro `interno`, markdown simples basta.
+## Revisar peça pronta ou remover juridiquês (chamada direta)
+Roteiro em `references/revisao.md`: situar registro e destinatário, rodar o radar,
+diagnosticar antes de reescrever e entregar a versão revisada em arquivo novo (o original
+não se sobrescreve), com a lista curta das mudanças por regra.
 
-> **A redação vai para o ARQUIVO, não para o chat.** Emita os blocos `@tag` que
-> compõem o `.docx`/`.md`; **no chat, entregue apenas um RESUMO** da seção (notas da
-> subgeração: o que ela faz, fontes/precedentes, decisões) para o checkpoint. **Nunca
-> cole a redação inteira no chat** — o texto já está no documento e reproduzi-lo só
-> consome contexto de output que faz falta nas próximas seções (ver `plano-de-respostas`,
-> Passo 4). O chat é para o controle; o texto, para o `.docx`.
+## Agentes
+A reescrita é de quem redige, com o texto à vista: você, ou o subagente Opus do tópico no
+N3. Um subagente Sonnet pode servir de radar de estilo (opcional; em peça longa, uma
+seção por agente): localiza e devolve trecho e linha, nunca reescreve. Sugestão
+automática já inverteu o sentido de frase nuclear da tese ("nenhum provedor dispõe de
+meio" → "provedor dispõe de meio").
 
-### Citar jurisprudência: use `@citacao-ref`, NÃO redigite a ementa
-Para transcrever ementa/acórdão de julgado pesquisado no `Juris_br`, **emita
-`@citacao-ref`** (chaves `fonte`/`processo`/`itens`/`trecho`/`grifo`/`ref`) em vez de
-redigitar o texto. O `citar.py` extrai a ementa **verbatim do transcript** da sessão
-e injeta no `.docx`. Dois ganhos: **não gasta output** reescrevendo, e a citação fica
-**comprovadamente fiel** à fonte (a `verificacao-citacoes` diffa contra o disco).
-- Padrão = ementa inteira; ementa longa = `itens: 1` ou `itens: 1-2` (o resumo do
-  caso) mais `trecho: de "..." ate "..."` para as fatias que quer destacar.
-- `grifo:` marca o trecho de ênfase (realce **marca-texto**); pode repetir.
-- Só funciona se a busca foi rodada **nesta sessão** (regra do rastro).
-- **Decisão recorrida / peças dos autos:** use `@citacao-ref` com `fonte: autos` e
-  `doc: N` (do workspace) — mesmo mecanismo verbatim, lê o `.md` extraído em vez do
-  juris_br. Colacionar a ementa da decisão recorrida é praxe em recurso.
-- **Inteiro teor / trecho de voto** exige o texto integral, disponível de forma
-  confiável só em CARF, Soluções de Consulta e TCU (STJ/STF têm poucos; TRF-5 não
-  tem). Só sob **pedido explícito**; texto escrito à mão entra em `@citacao` comum e
-  vai à `verificacao-citacoes`.
-
-## Ligação com o pipeline
-- Puxada pelas skills de output (D) com o registro adequado.
-- A escrita seção a seção (quando N gerações) é orquestrada pelo `plano-de-respostas`.
-- Não é responsável por verificar citações — isso é da `verificacao-citacoes`.
-
-## TODO
-- [x] Exemplos-âncora do registro `peça` — ver "Padrões da casa" (peça real, recurso
-      provido). Pendente: âncoras dos registros `interno` e `externo`.
+## Pendente
+- Âncoras reais dos registros `interno` e `externo` (o `peça` já tem as da casa).

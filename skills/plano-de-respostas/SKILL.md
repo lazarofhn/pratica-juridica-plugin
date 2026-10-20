@@ -1,135 +1,97 @@
 ---
 name: plano-de-respostas
-description: (camada E — compartilhada, SEMPRE roda ANTES de escrever) Monta o PLANO DE RESPOSTAS de qualquer output — o índice numerado do documento e a decisão de em QUANTAS gerações a redação será segmentada. Distingue seções (estrutura) de gerações (passes de escrita): documento simples = 1 geração; complexo = N gerações (uma por seção/causa de pedir/requisito), acumulando no documento final. Em peças grandes (N gerações), apresenta o plano ao usuário para aprovação antes de escrever.
+description: Monta o plano de redação de peça ou relatório nos níveis N2 e N3 — índice numerado, quantas gerações, o que cada uma pesquisa e relê nos autos, e quem redige (você ou um subagente por tópico). Chamado pelo orquestrador e pelas skills de saída; não use no N1.
 ---
 
-> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
-> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
-> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
-> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
-> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
-> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
-> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+# Plano de respostas
 
-# Plano de Respostas (camada E — passo obrigatório antes de escrever)
+O plano revela a complexidade: antes de escrever, decida em quantas gerações o texto
+sai e quem escreve cada uma. O nível (N1 a N4) vem do `analise-processual`; chamado
+fora do pipeline, assuma N2.
 
-> Insight do José: antes de construir o documento, a IA precisa saber **em quantas
-> respostas a tarefa será segmentada**. O plano revela a complexidade — não o
-> contrário. Roda SEMPRE, mesmo em peça simples.
+## Seções não são gerações
+Seção é parte da estrutura; geração é um passe de escrita. Seções curtas podem sair
+juntas; um fundamento denso pode pedir várias gerações (subseções 5.1, 5.2…).
 
-## O que este passo faz (e o que NÃO faz)
-- **NÃO inventa a estrutura da peça.** A estrutura vem da skill de output (D), que a
-  busca na `peca-processual-base` / no artigo do CPC do tipo de peça. Aqui a gente
-  **organiza** esse índice e **decide a segmentação**.
-- **Distinção central — seções ≠ gerações.** Uma seção é uma parte da *estrutura*
-  do documento; uma geração é um *passe de escrita* da IA. **Não é 1:1**: várias
-  seções curtas podem sair numa geração só; uma causa de pedir densa pode exigir
-  várias gerações (subseções). É essa a decisão que se toma aqui.
+## Passo 1 — Índice numerado
+A estrutura vem da skill de saída (o artigo do CPC do tipo de peça). Sem estrutura
+própria, use o esqueleto da peça protocolada:
 
-## Passo 1 — Montar o índice numerado
-Liste as seções do documento, na ordem, a partir da estrutura definida pela skill de
-peça. Os **fatos** vêm do workspace do processo (saída da `analise-processo-pje`),
-não de releitura. Exemplo (recurso — admissibilidade individualizada, sem mistura):
 ```
-1. Endereçamento
-2. Cabimento
-3. Tempestividade e prequestionamento
-4. Síntese fática
-5. Fundamento 1 (mérito)
-6. Fundamento 2 (mérito)
-7. Pedidos
+1. Endereçamento — órgão competente, confirmado pela capa e pelo andamento no workspace: o juízo da causa; nos recursos, a quo ou ad quem conforme o CPC
+2. Qualificação / referência ao processo
+3. Fatos — só o necessário à tese, tirado do workspace
+4. Admissibilidade / cabimento — quando o tipo de peça exigir
+5. Fundamentos — um por tese ou causa de pedir
+6. Pedidos — claros, específicos, cada um com fundamento
 ```
-Causas de pedir / fundamentos densos podem virar subseções (5.1, 5.2…).
-> Note: NÃO junte "Endereçamento e Fatos" nem lumpe a admissibilidade num tópico
-> só (ver regra de ouro abaixo).
 
-## Passo 2 — Decidir a segmentação (quantas gerações)
-Para cada item, marque se entra na mesma geração ou em geração própria. Gatilhos
-para segmentar (N gerações):
-- ≥ 2 fundamentos/causas de pedir de mérito; **ou**
-- tutela de urgência + mérito; **ou**
-- documento projetado > ~10 páginas.
+- Regras de segmentação próprias do tipo vêm da skill de saída (ex.: admissibilidade
+  individualizada no REsp/RE, em `peca-recurso`). Não junte endereçamento com fatos nem
+  admissibilidade com mérito.
+- Os fatos vêm do workspace (`analise-processo-pje`), não de releitura do PDF.
+- Havendo `estrategia.md` no workspace (relatório estratégico feito antes da peça),
+  parta das decisões dele.
 
-Regras de ouro herdadas das skills de peça (respeitar quando aplicável):
-- **RE/REsp — admissibilidade individualizada (regra dura):** cada requisito de
-  admissibilidade em foco próprio. O **cabimento sempre em geração isolada**;
-  requisitos correlatos (tempestividade, prequestionamento) podem compartilhar uma
-  geração. **NUNCA** lumpe todos num só tópico e **NUNCA** misture admissibilidade
-  com a **síntese fática** ou com o mérito. Isso vale **inclusive** quando o
-  carro-chefe do recurso for processual (ex.: art. 1.022 CPC) — não rebaixe a
-  admissibilidade a formalidade.
+## Passo 2 — Quantas gerações
+Segmente quando houver dois ou mais fundamentos de mérito, tutela de urgência mais
+mérito, ou texto projetado acima de ~10 páginas. Sem gatilho, uma geração — o plano
+continua explícito, com um item. Para cada geração anote: tema, perfil de pesquisa,
+documentos dos autos a reler, registro de escrita e quem redige.
 
-Se nenhum gatilho → **1 geração** (escrita de uma vez). Ainda assim o plano é
-explicitado, só que com um item.
+## Passo 3 — Aprovação conforme o nível
+- **N2:** mostre o plano num bloco curto e siga.
+- **N3:** apresente o plano e espere o ok antes de redigir, junto com as decisões já
+  tomadas com o conselheiro Fable (cabimento, eixo, ordem das teses).
+- **Revisão tópico a tópico** só se o José pedir: aí, ao fim de cada geração, mostre as
+  notas da geração e espere.
 
-## Passo 3 — Aprovação (só em peças grandes) — DECISÃO TRAVADA
-- **Se N > 1 gerações:** apresente o plano (índice + segmentação) ao usuário e
-  **aguarde o ok** antes de escrever — não gaste as gerações sem aval.
-- **Se 1 geração:** siga direto, sem checkpoint.
+Salve o plano no workspace do processo (o caminho de `processo.py workspace <cnj>`) como
+`plano.md`, com as decisões tomadas. Serve para retomar o trabalho depois.
 
-## Passo 4 — Executar UMA geração por vez (quando N > 1)
-> ⚠️ **ERRO FATAL a evitar:** escrever todas as gerações num único output (um só
-> `Write`/uma só resposta). Isso derrota a segmentação e produz peça **RASA**,
-> mesmo em modelo de contexto longo (Opus 1M). Cada geração é um **ciclo próprio**,
-> executado em **passo separado** — não em lote.
+## Passo 4 — Uma geração por vez
+> ⚠️ **Erro fatal:** escrever todas as gerações num único output. Isso derrota a
+> segmentação e produz peça rasa, mesmo com contexto longo. Cada geração é um ciclo
+> próprio, em passo separado.
 
-Para cada geração N, na ordem do plano:
-1. **Pesquisa focada** no tema daquela seção (`pesquisa-juridica`, perfil/assunto
-   próprios, **re-rodada na fonte** — regra do rastro). A pesquisa material é
-   segmentada aqui. Quando a seção invoca **lei/doutrina** (e não só jurisprudência),
-   consulte os **DOIS pilares** — leia o dispositivo e a doutrina no Know-How antes
-   de afirmar (R1), inclusive em seções processuais como cabimento/admissibilidade.
-   **Volte também aos autos** (workspace, via `analise-processo-pje`: `find`/`extract`)
-   para **ancorar a seção aos fatos concretos** do processo. A análise inicial não
-   esgota o uso: cada geração costuma exigir uma consulta pontual aos autos (ex.:
-   quais questões os embargos suscitaram, o que a decisão recorrida disse).
-2. **Redação profunda** apenas daquela seção (`escrita-juridica`, registro da
-   peça), escrita **direto no arquivo** (`@tag`/`.md` → `.docx` via
-   `formatacao-entrega`), acumulando no documento com o contexto das anteriores.
-3. **Finalizar + CHECKPOINT:** grave a seção no documento e, **no chat, apresente só
-   um RESUMO** — as "notas da subgeração": o que a seção faz, fontes/precedentes
-   usados e decisões tomadas. **NÃO reproduza a redação inteira no chat** — o texto já
-   está no `.docx`; recolá-lo só queima contexto de output que faz falta para escrever
-   as próximas seções (a redação boa é longa; o chat é para o controle, não para o
-   texto). Então pergunte **"Como ficou a G{N}?"** e só avance para a G{N+1} depois do
-   retorno dele.
+Ciclo de cada geração:
+1. **Pesquisa focada** no tema (`pesquisa-juridica`); quando a seção invoca lei, leia o
+   dispositivo e a doutrina antes de afirmar.
+2. **Volta aos autos:** consulta pontual no workspace (`analise-processo-pje`: `find`,
+   `extract`) para ancorar a seção nos fatos concretos — o que a decisão disse, o que a
+   parte alegou.
+3. **Redação** só daquela seção (`escrita-juridica`), direto no arquivo (`@tag` →
+   `.docx` por `formatacao-entrega`). No chat, só as notas da geração: o que a seção
+   faz, fontes usadas, decisões. Nunca recole a redação no chat.
 
-Nunca pule o checkpoint nem agrupe gerações. Concluídas todas, faça uma passada
-final de **costura** (transições e coerência fatos ↔ fundamentos ↔ pedidos).
+Seção densa — lei e doutrina mais jurisprudência de peso — sai em dois passes seguidos,
+sem parar: **A**, fundação em lei e doutrina; **B**, jurisprudência que confirma ou
+corrige o que A afirmou.
 
-### Gerações densas — duas subgerações (ideia do José)
-Quando a seção combina **lei/doutrina E jurisprudência de peso**, quebre a geração
-em dois passes, para não empilhar consulta demais num só turno:
-- **Subgeração A — fundação (lei + doutrina):** consulte o Know-How, escreva a seção
-  ancorada no dispositivo e na doutrina. Finalize **no arquivo** e, no chat (resumo, não
-  a redação — Passo 3), pergunte: *"Posso seguir com a complementação da jurisprudência?"*.
-- **Subgeração B — jurisprudência (confirmar/corrigir):** com o ok, rode a pesquisa
-  de jurisprudência conforme o método (escada temporal, filtros, fracionamento,
-  rastro) e **complemente ou corrija** a seção conforme os tribunais decidem. Feche
-  com *"Como ficou a G{N}?"*.
+### N2 — você redige
+Gerações em sequência, cada uma em passo separado, sem perguntar "como ficou".
 
-Ordem é **doutrina → jurisprudência** (a lei/doutrina fixa a tese; a jurisprudência
-mostra a aplicação e pode derrubá-la — é a camada de correção). Aplique só nas
-seções densas; as curtas seguem em passe único.
-> Não confundir com o **estudo de viabilidade recursal** (peca-recurso, 2A): aquele
-> é PRÉVIO, no nível do plano, e pode até PARTIR da jurisprudência para definir a
-> natureza da peça. A subgeração B é DENTRO da geração, com a arquitetura já decidida.
+### N3 — um subagente por tópico
+Cada geração vai para um subagente Opus dedicado, com contexto limpo. Briefing:
+- objetivo da peça, eixo e decisões já tomadas (do `plano.md`);
+- o tópico: função na peça, tese a sustentar, o que não repetir dos outros tópicos;
+- caminhos dos extratos dos autos no workspace — o agente lê os `.md`, não o PDF;
+- pesquisa: rodar `pesquisa-juridica` para o tema e gravar o rastro;
+- regras: `escrita-juridica`, registro peça; escrever a seção em
+  `<workspace>/redacao/G{N}-<tema>.md`; devolver só as notas (o que fez, fontes,
+  pendências).
 
-## Saída deste skill
-Um plano executável: o índice + a marcação de segmentação + por seção, qual **perfil
-de pesquisa** e qual **registro de escrita**. Salve o plano aprovado no workspace do
-processo (`${CLAUDE_PLUGIN_DATA}/processos/<numero-cnj>/`) como blueprint — útil em
-peças grandes e para retomar o trabalho depois.
+Tópicos independentes podem rodar em paralelo; os que dependem de outro (ex.: mérito que
+pressupõe o enquadramento do cabimento) esperam. Ao receber, **leia cada seção
+inteira** — as notas do agente não bastam — antes de costurar.
 
-## Não confundir com o "plano de leitura"
-Este é o **plano de respostas** (como *escrever*, roda antes da redação). É diferente
-do **plano de leitura** da `analise-processo-pje` (quais documentos *extrair*, roda
-antes, na análise).
+## Passo 5 — Costura
+Uma passada final, sua: transições, termos uniformes, nenhuma contradição entre
+tópicos, coerência fatos → fundamentos → pedidos, cada pedido com fundamento. Depois,
+`verificacao-citacoes`.
 
-## Nota (Claude Code)
-Seções independentes podem ser escritas por subagentes em paralelo, mas em peça
-jurídica a **coerência** pesa mais que a velocidade: repasse o contexto acumulado e
-faça a costura final num único passe.
-
-## TODO
-- [ ] Calibrar o limiar de páginas do gatilho (~10) com o uso real.
+## Não confundir
+- O plano de leitura (`analise-processo-pje`) decide o que extrair dos autos; este
+  decide como escrever.
+- O estudo de viabilidade do recurso (`peca-recurso`) é prévio e pode mudar a natureza
+  da peça; o passe B acontece dentro de uma geração, com a arquitetura já decidida.

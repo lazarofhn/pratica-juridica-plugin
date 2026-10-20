@@ -1,5 +1,7 @@
 # Adaptação para Astra e ChatGPT Work
 
+> **Congelada em 1.2.0 (out/2026) — não acompanha a v1.3 do plugin Claude.**
+
 ## Resultado e escopo
 
 A variante `plugins/pratica-juridica-work` mantém as 15 skills e os ativos de

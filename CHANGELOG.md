@@ -1,5 +1,106 @@
 # Changelog — pratica-juridica
 
+## v1.3.0 (2026-10-20)
+
+Revisão geral: auditoria das 15 skills por quatro revisores em paralelo, contagem de uso
+nos registros de sessão e decisões do José. A complexidade do pedido passa a decidir a
+profundidade, e o que toda peça carrega ficou menor (SKILL.md: 1.753 → 1.201 linhas;
+cadeia de um REsp: −34%; peça protocolar: −63%).
+
+**Arquitetura (`analise-processual`, `plano-de-respostas`, GUIA)**
+- **Triagem de complexidade N1–N4** como primeira regra do pipeline: o nível é declarado
+  em uma linha, sem pergunta e antes de ler qualquer documento (só o índice do PDF pode
+  vir antes), e decide o plano, quem redige, o conselheiro e a verificação. N4 →
+  proposta de `/equipe-juridica:iniciar`.
+- **Profundidade sem paradas:** o checkpoint "Como ficou a G{N}?" deixa de ser padrão. N2
+  segue geração a geração sem parar; N3 tem aprovação do plano e **um subagente Opus por
+  tópico**, com leitura integral e costura do coordenador. Revisão tópico a tópico, só a
+  pedido.
+- **Agentes nativos com modelo por tarefa:** Haiku (mecânico), Sonnet (leitura, triagem,
+  buscas com síntese), Opus (tópicos do N3, ratio) e **conselheiro Fable** nas decisões
+  decisivas — o advisor da aba Code (`/advisor fable`) quando ligado; senão, subagente
+  Fable com dossiê. Saem as referências ao conector de agentes externos.
+- Rotas novas no orquestrador: contrarrazões, revisão de peça pronta, consulta pontual nos
+  autos e andamento (conectores antes do navegador).
+- **Remissão ao conector busca-autos** (busca por imagem nas páginas sem texto), com a
+  regra de uso na `analise-processo-pje`: decide-se pelo índice; no N3/N4 a indexação
+  começa no início, em segundo plano; só a parte que é imagem vai ao Colab; modo rápido
+  por padrão. No teste com dois processos do TRF-5, os documentos escaneados achados
+  passaram de 0 para 16 em 20.
+
+**Skills: 15 → 13**
+- Removida `peca-processual-base`: esqueleto e coerência da peça protocolada →
+  `plano-de-respostas`; antecipação de objeção → `escrita-juridica/references/persuasao.md`.
+- Removida `analise-estrategia`: vira o modo interno com foco em estratégia do `relatorio`.
+- Sai das 14 skills o bloco "regra de uso" (pergunta pipeline × avulso), que nas sessões
+  reais nunca foi respondido e o equipe-juridica anulava à mão.
+- **Frontmatter YAML corrigido:** na v1.2.0, 7 descrições tinham ": " sem aspas e essas
+  skills ficavam fora da lista que o modelo vê (só como comando de barra). As 13 passam
+  em YAML estrito, com descrição de ~250 caracteres (o que produz e quando não usar).
+- Template "só o delta" nas saídas (452 → 273 linhas).
+
+**Saídas**
+- `peca-recurso`: ramo de contrarrazões (não conhecimento primeiro; rebater cada ponto);
+  cabimento só perguntado com mais de um recurso plausível; viabilidade com as bases do
+  conector aplicáveis; eixo do REsp/RE pelo conselheiro no N3; fora do pipeline, REsp/RE
+  assume N3.
+- `peca-especifica`: bordas corrigidas (reconvenção na contestação; fim das "exceções"
+  autônomas; exceção de pré-executividade).
+- `peca-simples`: trilho protocolar com mini-modelo embutido, sem carregar a escrita
+  inteira; no máximo uma pergunta.
+- `memorial`: matriz eixo → documento/página da peça-base.
+- `relatorio`: chance qualitativa com base declarada; o modo externo só afirma o que está
+  nos autos ou no plano; confere se o workspace está defasado.
+
+**Compartilhadas**
+- `escrita-juridica` (361 → 195): núcleo com GO-1 a GO-6; persuasão, padrões da casa e
+  revisão em `references/`, lidos em passos definidos; lentes "enumeração-andaime" e
+  "metalinguagem" trazidas do equipe-juridica; rotas de revisão de peça pronta e de
+  "remover juridiquês"; exemplo do GO-5 que contradizia o GO-6 corrigido.
+- **Régua do parágrafo (GO-4), refeita pelo José:** uma ideia por parágrafo, normalmente
+  em um ou dois períodos curtos; média de 70 a 90 palavras na peça; 120 como referência
+  de teto, não como limite (125 ou 130 cabem se a ideia pede). Substitui os "2 a 4
+  períodos / ~7 linhas" e a mediana de ~41 palavras.
+- **Novo `escrita-juridica/scripts/lint_peca.py`:** varredura determinística do estilo
+  (travessão, parágrafo acima da referência, média da peça fora de 70–90, aberturas
+  repetidas, léxico ensaístico, "não é X, mas Y", "o mesmo") — radar, não juiz.
+- `pesquisa-juridica` (189 → 90): só o método; bases e parâmetros pela descrição viva da
+  ferramenta; rastro com ferramenta + ID + parâmetros.
+- `verificacao-citacoes`: reabre precedentes pelo ID; inteiro teor onde a base oferece,
+  declarando o alcance; o mecânico vai a subagentes (Haiku/Sonnet).
+- `formatacao-entrega`: contrato `@tag` e `@citacao-ref` documentados; timbrado por
+  `--template`.
+
+**Scripts**
+- `processo.py`: UTF-8 no console do Windows (antes quebrava em 2 de 4 PDFs reais);
+  índice que separa nome e tipo e marca peça com critério (antes, 98% das páginas davam
+  "peça"); aviso para PDF sem bookmarks, com remontagem pelo rodapé; novos `grep`,
+  `refs`, `sem-texto`, `render` e `extract --pages`, com trava de tamanho; páginas sem
+  texto e com OCR de terceiros marcadas — ponto de encaixe do MCP de embeddings
+  multimodais, em desenvolvimento.
+- `citar.py`: reconhece o cabeçalho de TRF-5, TRF-1 e TJPE (antes, só o do STJ); casa
+  número exato ("REsp 213661" não casa mais "REsp 2136610"); recusa ementa truncada ou
+  com "?" no lugar de aspas; lê só o registro da conversa atual e guarda as ementas em
+  `<workspace>/citacoes/` (antes varria os registros de todos os projetos).
+- `build_docx.py`: docstring corrigida; `--workspace`; **timbrado por modelo** —
+  `--modelo <nome>` (modelos em `<raiz de dados>/modelos/`, fora do repositório),
+  `--preparar-modelo` (cria o modelo a partir de um documento real do escritório) e
+  limpeza automática de todo modelo (corpo, comentários, notas, imagens do corpo,
+  metadados e propriedades do arquivo não passam para a peça).
+- Testes novos: `tests/test_processo.py`, `test_citar.py`, `test_lint_peca.py` e
+  `test_build_docx.py` (83 testes).
+
+**Aquisição e documentação**
+- `obter-processo`: modo consulta de andamento; o que está verificado (1º grau) e o que
+  não está (2º grau) — a v1.1.0 anunciou "1º e 2º graus"; armadilhas de espera do
+  download; painel padronizado; não abrir intimação pelo navegador (pode registrar ciência
+  e abrir prazo).
+- README e GUIA reescritos para a v1.3 (decisões travadas no GUIA).
+- Removidos `.mcp.json.example` (URL desligada), `hooks/hooks.json` (vazio; nunca houve
+  hook) e `docs/PR-OPENAI.md` (PR já mesclado).
+- Variante ChatGPT Work/Codex congelada em 1.2.0. Registro: ela entrou no `main` em 09/09
+  (PR #1) sem entrada própria neste changelog.
+
 ## v1.2.0 (2026-08-12)
 
 Calibragem por feedback de uso real (revisão de peça densa, 8 constatações) +

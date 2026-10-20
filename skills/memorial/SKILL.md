@@ -1,64 +1,41 @@
 ---
 name: memorial
-description: (camada D) Produz MEMORIAL — peça híbrida entregue ao(s) julgador(es) com o processo pendente de julgamento (1º grau ou instância recursal). Resume as alegações e fundamentos da peça-base em julgamento (inicial, recurso…), com ênfase nos precedentes decisivos. REGRA DE OURO: não inova a argumentação — pode mudar a ênfase, mas não introduz ratio que não esteja nos autos. Skill fina que puxa (em parte) a camada E.
+description: Redige memorial ao julgador com o processo pendente de julgamento, resumindo a peça-base por eixo e com ênfase nos precedentes decisivos, sem inovar a argumentação. Não use para levar tese que não está nos autos nem para recurso ou peça de resposta.
 ---
 
-> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
-> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
-> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
-> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
-> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
-> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
-> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+# Memorial
 
-# Memorial (camada D)
+Resumo persuasivo da peça-base, entregue ao juiz ou ao relator enquanto o processo aguarda
+julgamento. Nível típico: N2; N3 no memorial decisivo. Chamada fora do pipeline, assuma N2.
 
-Skill de output fina. Puxa **parcialmente** a `peca-processual-base` (endereçamento
-ao julgador, boas práticas, método de pesquisa) — mas tem **estrutura e regra
-próprias**, porque não é uma peça de estrutura livre nem uma protocolada comum.
+> **REGRA DE OURO — o memorial não inova.** Muda a ênfase (o peso de cada argumento, a
+> ordem, o precedente que lidera), nunca a ratio. Reforçar com precedente novo uma tese
+> já sustentada pode; deduzir tese que não está nos autos, não.
 
-## 1. Quando ativar
-Processo **pendente de julgamento** e o usuário quer entregar um memorial ao(s)
-julgador(es) (juízo de 1º grau às vésperas da sentença, ou relator/turma/câmara na
-instância recursal).
+## 1. Precondições
+- A peça-base se infere do andamento: a peça da parte que o julgamento pendente vai
+  decidir (o recurso ou as contrarrazões em pauta; antes da sentença, a inicial ou a
+  contestação). Pergunte só se o andamento não deixar claro.
+- No workspace: a peça-base e o que se debateu depois dela (resposta, decisões, parecer).
 
-## 2. Perguntas antes de começar
-- **Qual a peça-base em julgamento** que o memorial resume (petição inicial,
-  contestação, o recurso em julgamento…)? O memorial é sempre atrelado a ela.
-- Alguma **ênfase estratégica diferente** da peça original (mudar o peso dos
-  argumentos é permitido; introduzir argumento novo não — ver Regra de ouro).
+## 2. Estrutura, segmentação e pesquisa
+- Endereçamento ao julgador (relator ou juízo) e referência ao processo e ao julgamento.
+- Síntese por eixo argumentativo já constante dos autos, com destaque aos precedentes
+  decisivos; fecho pedindo o julgamento no sentido defendido. Sem admissibilidade nem
+  pedido novo.
+- Enxuto: resumo, não repetição da peça. O plano (`plano-de-respostas`) segue os eixos,
+  segmenta só se houver muitos eixos densos e fixa a ênfase: que eixo abre, qual
+  precedente lidera.
+- A fundamentação vem dos autos. Pesquise só para reforçar os precedentes decisivos das
+  teses já sustentadas (ex.: julgado posterior à peça-base), nunca para achar tese.
 
-## 3. Estrutura do documento
-- **Endereçamento** ao julgador (relator/juízo), via `peca-processual-base`.
-- **Síntese** das alegações e fundamentos da peça-base, organizada por eixo
-  argumentativo, com **destaque aos precedentes decisivos** para o caso.
-- Fecho pedindo o julgamento no sentido defendido.
-- Enxuto: memorial é resumo persuasivo, não repetição integral da peça.
+## 3. Verificação, com a matriz
+Antes de fechar, grave no workspace `matriz-memorial.md`, uma linha por eixo:
 
-## 4. Plano de respostas (segmentação)
-- Por **eixo argumentativo** já constante dos autos. Costuma ser mais enxuto que a
-  peça-base; segmente só se houver muitos eixos densos.
+| Eixo do memorial | Onde está nos autos (documento, id, página) | Precedente (id nos autos ou rastro da pesquisa) |
+|---|---|---|
 
-## 5. Pesquisa (via peca-processual-base → pesquisa-juridica)
-- **Reaproveita a fundamentação já nos autos.** A pesquisa aqui serve para
-  **reforçar os precedentes decisivos** das teses **já sustentadas** — não para
-  achar teses novas.
-- Filtros (R2), nunca inventar (R3), rastro em `pesquisas.jsonl`.
-
-## 6. Escrita
-`escrita-juridica`, registro `peça` (persuasivo, dirigido ao julgador), enxuto.
-Saída no formato `@tag` (vira `.docx`).
-
-## 7. Entrega
-Output externo → `formatacao-entrega` (`.docx`/timbrado), salvo no workspace.
-
-## 8. Verificação
-`verificacao-citacoes` **antes de fechar**, com **checagem especial**: confirmar que
-**nenhum argumento/ratio está fora dos autos** — todo eixo do memorial deve ter
-correspondência na peça-base ou no que já foi debatido no processo.
-
-## 9. Regra de ouro
-- **O memorial NÃO inova a argumentação.** É legítimo **mudar a ênfase** (dar mais
-  peso a um argumento, menos a outro), mas é proibido **introduzir uma ratio nova**
-  que não esteja nos autos. Reforçar precedentes de uma tese já sustentada = ok;
-  criar tese não deduzida = não.
+Eixo sem lugar na peça-base, nem no que já se debateu nos autos, é ratio nova e sai do
+memorial. A conferência mecânica (ids e páginas batem) pode ir a um subagente Haiku; o
+juízo de que o eixo não inova é seu. Depois, a `verificacao-citacoes` completa. Escrita
+(registro `peça`, persuasivo e enxuto) e entrega (`.docx`) seguem o padrão.

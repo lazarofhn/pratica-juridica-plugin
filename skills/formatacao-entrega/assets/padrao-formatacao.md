@@ -1,6 +1,6 @@
 # Padrão de Formatação das Petições
 
-Guia de referência com todas as características de formatação usadas na peça, para reprodução em novas petições. A única característica deliberadamente omitida é o papel timbrado (imagem de cabeçalho/rodapé).
+Guia de referência com todas as características de formatação usadas na peça, para reprodução em novas petições. O papel timbrado (imagem de cabeçalho/rodapé) não faz parte deste padrão de texto: vem do modelo `.docx` do escritório, passado ao `build_docx.py` em `--template`.
 
 > Conversão usada: 1440 DXA = 1 polegada = 2,54 cm. Fonte medida em "meios-pontos" no XML (ex.: `sz 24` = 12 pt).
 
@@ -19,7 +19,7 @@ Guia de referência com todas as características de formatação usadas na peç
 | Distância do cabeçalho até a borda | 1,25 cm |
 | Distância do rodapé até a borda | 1,25 cm |
 
-Observação: a margem superior maior (4,0 cm) e as distâncias de 1,25 cm de cabeçalho/rodapé existem para acomodar o timbre. Se for reproduzir sem timbre, essas medidas continuam funcionando; apenas não haverá imagem de fundo.
+Observação: a margem superior maior (4,0 cm) e as distâncias de 1,25 cm de cabeçalho/rodapé existem para acomodar o timbre. Se for reproduzir sem timbre, essas medidas continuam funcionando; apenas não haverá imagem de fundo. Com `--template`, página, margens, cabeçalho e rodapé vêm do modelo; o restante deste padrão (fonte, espaçamento, recuos) é aplicado igual.
 
 ---
 

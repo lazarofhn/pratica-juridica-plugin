@@ -7,7 +7,7 @@ __pycache__/
 .w_test
 .t_del
 
-# Config local de MCP (só o .example é versionado)
+# Config local de MCP (os conectores são da conta; nada disso é versionado)
 .mcp.json
 
 # SO / editores

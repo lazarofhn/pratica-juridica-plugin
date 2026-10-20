@@ -1,90 +1,58 @@
 ---
 name: peca-simples
-description: (camada D) Produz petições SEM nomenclatura ou requisitos próprios no CPC — manifestações, juntada de documentos, requerimento/especificação de provas, ciência, cumprimento de despacho, pedidos incidentais. Guiada pelo COMANDO (do usuário ou do despacho/decisão que intimou a parte). "Simples" = sem previsão específica, NÃO = rasa — mas o porte é ditado pelo comando, em bifurcação: protocolar (parágrafos a uma lauda, fluxo curto, sem pesquisa) × substancial (pode ser tão densa quanto um recurso, fluxo completo). Inflar é defeito igual a rasar. Skill fina que puxa a camada E.
+description: Redige petição sem forma própria no CPC (manifestação, juntada, ciência, cumprimento de despacho, requerimento de provas) no porte que o comando pede, de um parágrafo protocolar a uma manifestação desenvolvida. Não use para peça com previsão própria nem para recurso.
 ---
 
-> **⚙️ Regra de uso — pipeline do plugin.** A orquestração geral deste plugin (o fluxo
-> de ponta a ponta: análise → plano de respostas → pesquisa → escrita → verificação →
-> entrega) está definida na skill **`analise-processual`**. Se o usuário acionou **esta**
-> skill diretamente, **pergunte antes de executar**: ele quer **(a) seguir o pipeline do
-> plugin** (via `analise-processual` — recomendado para trabalho completo: ancora nos
-> autos, usa checkpoints e verificação de citações) ou **(b) usar esta skill de forma
-> avulsa** (isolada, apenas o que ela faz)? Prossiga conforme a escolha do usuário.
+# Peça simples
 
-# Peça: Simples (camada D)
+"Simples" quer dizer sem previsão específica no CPC, não curta. O porte vem do
+**comando** (do José ou do despacho que intimou a parte), por um teste: **o leitor
+precisa ser convencido de algo?** Não → trilho protocolar (N1). Sim → trilho substancial
+(N2/N3). Inflar a protocolar é defeito tão grave quanto rasar a substancial. Chamada fora
+do pipeline, assuma N1 no protocolar e N2 no substancial.
 
-Skill de output fina. O comum às peças protocoladas está em `peca-processual-base`
-(endereçamento, estrutura, método de pesquisa) — **puxe-a**. Aqui fica só o que é
-próprio.
+## 1. Comando e porte
+- Leia no workspace o despacho ou a decisão que intimou e extraia exatamente o que o
+  juízo pede; o comando do José, se houver, prevalece.
+- No máximo uma pergunta, só se o despacho não deixar claro, com comando e porte juntos
+  (*"o despacho de id N pede X; petição de um parágrafo ou manifestação desenvolvida?"*).
+- Responda exatamente ao comando: nem menos (pedido do juízo sem resposta), nem mais; o
+  vício mais comum é o segundo.
 
-> ⚠️ **O porte é ditado pelo COMANDO, não pela skill — régua de duas pontas.**
-> "Simples" não significa rasa: é chamada assim apenas por **não** ter nomenclatura
-> nem requisitos próprios no CPC (diferente da `peca-especifica`), e **quando o
-> comando exigir** pode ter densidade igual à de uma peça específica ou de um
-> recurso. Mas o inverso também é defeito: **inflar uma petição protocolar de uma
-> lauda é tão grave quanto rasar uma manifestação densa** — a divagação em peça de
-> rotina irrita o juízo e enterra o requerimento. Não presuma o porte em nenhuma
-> direção: decida pela **bifurcação do passo 2.1**.
+## 2. Trilho protocolar (N1)
+Só comunica, requer o rotineiro ou cumpre: juntada, ciência, dilação de prazo,
+cumprimento de despacho, habilitação de patrono. Sem plano, sem pesquisa, uma geração,
+direto ao `.docx` (`formatacao-entrega`). Não carregue a `escrita-juridica` inteira;
+basta este modelo:
 
-## 1. Quando ativar
-Petição de rotina sem previsão específica no CPC: manifestação, juntada, provas,
-ciência, cumprimento de despacho, pedido incidental curto ou não.
+```
+@enderecamento
+[Juízo da causa, como consta da capa dos autos]
+@identificacao
+Processo nº 1234567-89.2024.4.05.8100
+@corpo
+[PARTE], já qualificada nos autos, vem, por seus advogados, em atenção ao despacho de
+id [N], [informar ou requerer o ato, em uma frase].
 
-## 2. Perguntas antes de começar — identificar o COMANDO
-O driver é o comando. Antes de escrever, deixe claro **o que se está respondendo**:
-- Comando do **usuário** ("manifeste sobre a proposta de acordo", "peça a produção
-  de prova pericial"); **ou**
-- **Despacho/decisão que intimou** a parte representada — leia essa decisão no
-  workspace (`analise-processo-pje`) e extraia exatamente **o que o juízo pede**.
-- Se o comando não estiver claro, pergunte.
+[Se preciso, um segundo parágrafo: o documento ou o fato que sustenta o pedido, com o id.]
+@fecho
+Nestes termos, pede deferimento.
+@data
+[Local], [data].
+@assinatura
+[Advogado(a)]
+OAB/[UF] [número]
+```
 
-### 2.1 Bifurcação de porte (decida ANTES de escrever)
-Identificado o comando, classifique o trilho. **Teste objetivo: o leitor precisa
-ser CONVENCIDO de algo?**
-- **Protocolar** — a petição só comunica, requer o rotineiro ou cumpre: juntada de
-  documentos, ciência, dilação de prazo, cumprimento de despacho, habilitação de
-  patrono. Entregável: **de um parágrafo a uma lauda**. Fluxo curto: **sem
-  pesquisa, 1 geração, sem segmentação do plano** — direto para escrita
-  (`escrita-juridica`, registro `peça`) → entrega (`formatacao-entrega`);
-  verificação só se houver alguma citação. Dizer mais do que o ato exige é vício
-  (parente do "antecipar objeção que ninguém fez": sinaliza insegurança).
-- **Substancial** — há mérito ou posição a defender: manifestação sobre laudo,
-  sobre proposta de acordo com contrapontos, impugnação incidental. Segue o fluxo
-  completo dos passos 3-8, como qualquer peça.
-- **Na dúvida, pergunte o porte-alvo ao usuário** ("uma lauda ou desenvolvimento
-  completo?") — pergunta barata que evita os dois vícios.
+Três vedações de estilo:
+1. Nenhum traço para intercalar ideia; a intercalação vai entre vírgulas.
+2. Cortesia e latim em dose única: nada de "data venia" em série nem adjetivo ao julgador.
+3. Nada além do ato: sem fundamentar o rotineiro, antecipar objeção ou resumir o processo.
 
-## 3. Estrutura do documento
-- **Livre, guiada pelo comando** (não há forma imposta pelo CPC). Costuma ser mais
-  atrelada a **fatos**.
-- Ainda assim use o endereçamento e as boas práticas da `peca-processual-base`.
-- Subsegmentável conforme o `plano-de-respostas`.
+Verificação: as referências aos autos (id, datas) e a lei, se citada.
 
-## 4. Plano de respostas (segmentação)
-- **Depende do conteúdo, como as demais.** Manifestação simples → 1 geração;
-  manifestação densa (várias questões, muitos fatos) → N gerações. Não force 1 —
-  **nem force N**: petição **protocolar** (passo 2.1) é 1 geração por definição e
-  dispensa o plano.
-
-## 5. Pesquisa (via peca-processual-base → pesquisa-juridica)
-- **Sob demanda:** só acione quando a manifestação tiver conteúdo de mérito
-  jurídico. Muitas peças simples são só fáticas e dispensam pesquisa.
-- Quando houver mérito, mesmas regras (filtros R2, nunca inventar R3, rastro).
-
-## 6. Escrita
-`escrita-juridica`, registro `peça`. Saída no formato `@tag` (vira `.docx`).
-
-## 7. Entrega
-Output externo → `formatacao-entrega` (`.docx`/timbrado), salvo no workspace.
-
-## 8. Verificação
-`verificacao-citacoes` **antes de fechar** — se houver qualquer citação de
-lei/jurisprudência/autos.
-
-## 9. Regras de ouro / vícios a evitar
-- **Responder exatamente ao comando** — nem menos (deixar pedido do juízo sem
-  resposta) nem divagar além do que foi pedido. O vício mais comum do modelo é o
-  segundo: dizer mais do que o ato exige.
-- **Não presumir porte em nenhuma direção**: nem simplicidade (rasar manifestação
-  densa) nem complexidade (inflar petição protocolar). O esforço se dimensiona pelo
-  comando, via bifurcação do passo 2.1.
+## 3. Trilho substancial (N2/N3)
+Há mérito ou posição a defender: manifestação sobre laudo, sobre proposta de acordo com
+contrapontos, impugnação incidental. Segue o `plano-de-respostas` como qualquer peça, com
+estrutura livre guiada pelo comando e atrelada aos fatos. Pesquisa só se houver mérito
+jurídico; escrita, entrega e verificação no padrão do nível.
