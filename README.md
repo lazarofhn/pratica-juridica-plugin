@@ -55,8 +55,15 @@ sem estourar o contexto, ancora cada argumento nos fatos do processo e na fonte
 - **Cita sem redigitar.** A ementa pesquisada é **colada verbatim** na peça
   (`@citacao-ref`), com fidelidade comprovável — jurisprudência ou trecho dos próprios
   autos.
+- **Constrói o argumento pelo peso.** Antes do índice, mede quanto cada argumento pesa
+  no convencimento do julgador: o que decide o resultado abre e ganha espaço, o que não
+  muda nada sai ou vira uma oração, e cada tópico é o caminho até um resultado.
 - **Escreve com método.** Plano de respostas, uma geração por vez, redação direto no
-  arquivo e não no chat. No N3, um subagente Opus por tópico, e o Claude costura.
+  arquivo e não no chat. Uma só mão escreve a peça: no N3, um subagente Opus prepara cada
+  tópico e o Claude redige o todo.
+- **Revisa a construção antes de entregar.** Com a peça pronta, a
+  `sensibilidade-argumentativa` a reorganiza pelo peso, sem nada novo, e o
+  `moderador-final` lê como o julgador e diz como decidiria; o Claude decide o que adotar.
 - **Entrega formatada.** Gera `.docx` (fonte, recuos, citações e realce padronizados).
 - **Confere antes de fechar.** A verificação cruza cada citação com a fonte real,
   contra citação alucinada ou superada, na profundidade do nível.
@@ -141,19 +148,19 @@ tópico a tópico, se você pedir ("revisar tópico a tópico").
 
 ---
 
-## Como funciona (arquitetura v1.3)
+## Como funciona (arquitetura v1.4)
 
 Orquestrador + camadas componíveis — skill nova só quando muda **estrutura e finalidade**;
 tom e método de pesquisa são **parâmetros** de skills compartilhadas.
 
 ### Triagem de complexidade (primeira regra do pipeline)
 
-| Nível | Pedido típico | Plano de respostas | Quem redige | Conselheiro Fable | Verificação |
-|---|---|---|---|---|---|
-| **N1** simples | juntada, ciência, prazo, resposta a despacho simples | — | o Claude, de uma vez | — | referências aos autos |
-| **N2** padrão | peça ou relatório com 1 a 3 fundamentos | curto: mostra e segue | o Claude, geração a geração | — | completa |
-| **N3** complexo | REsp/RE, apelação ou contrarrazões com várias teses; memorial decisivo | aprovação antes de redigir | um subagente Opus por tópico; o Claude costura | nas decisões decisivas | completa, com subagentes |
-| **N4** equipe | várias frentes ou processos; parecer amplo | o da equipe | executores da equipe | desafiante da equipe | auditor da equipe |
+| Nível | Pedido típico | Plano de respostas | Quem redige | Conselheiro Fable | Revisores | Verificação |
+|---|---|---|---|---|---|---|
+| **N1** simples | juntada, ciência, prazo, resposta a despacho simples | — | o Claude, de uma vez | — | — | referências aos autos |
+| **N2** padrão | peça ou relatório com 1 a 3 fundamentos | curto, com o mapa de peso: mostra e segue | o Claude, geração a geração | — | sensibilidade + moderador (Opus) | completa |
+| **N3** complexo | REsp/RE, apelação ou contrarrazões com várias teses; memorial decisivo | mapa de peso e plano aprovados antes de redigir | o Claude, com um dossiê Opus por tópico | nas decisões decisivas | sensibilidade + moderador (Fable) | completa, com subagentes |
+| **N4** equipe | várias frentes ou processos; parecer amplo | o do Claude, no protocolo da equipe | o Claude, com o operacional da equipe | nas decisões decisivas | sensibilidade + moderador (Fable) | verificador da equipe |
 
 O N4 vai para o plugin **`equipe-juridica`** (`/equipe-juridica:iniciar`), sempre por
 proposta e com o seu ok — nunca automático.
@@ -167,12 +174,14 @@ final, ratio de precedente, o que dizer ao cliente — fica com a sessão princi
   conferir números, datas e IDs.
 - **Sonnet** — ler e triar documentos extraídos, rodar buscas de jurisprudência e
   sintetizar, primeira revisão de estilo.
-- **Opus** — redigir os tópicos no N3, crítica de mérito, conferência de ratio.
+- **Opus** — dossiê de tópico no N3, a `sensibilidade-argumentativa` (reorganiza a peça
+  pronta pelo peso) e conferência de ratio.
 - **Fable** — conselheiro nas decisões decisivas de N3/N4 (cabimento e eixo do recurso,
   escolha e ordem das teses, risco num relatório, conflito entre precedentes), quando a
   sessão principal não é Fable. Com o advisor da aba Code ligado (`/advisor fable`,
   recurso experimental), o Claude o consulta antes de decidir; sem advisor (ex.:
-  Cowork), abre um subagente Fable com um dossiê curto. O uso do Fable pode consumir
+  Cowork), abre um subagente Fable com um dossiê curto. No N3 e no N4, também o
+  `moderador-final`, que lê a peça pronta como o julgador. O uso do Fable pode consumir
   créditos conforme o seu plano.
 
 ### Skills (13)
@@ -186,6 +195,9 @@ D. SAÍDAS          peca-recurso, peca-especifica, peca-simples, memorial,
 E. COMPARTILHADAS  plano-de-respostas, pesquisa-juridica, escrita-juridica,
                    formatacao-entrega, verificacao-citacoes
 ```
+
+Dois agentes acompanham as skills (`agents/`): `sensibilidade-argumentativa` e
+`moderador-final`, os revisores da peça pronta, que a `equipe-juridica` também usa.
 
 Saíram na v1.3: `peca-processual-base` (esqueleto e coerência → `plano-de-respostas`;
 antecipação de objeção → `escrita-juridica`) e `analise-estrategia` (→ `relatorio`, modo

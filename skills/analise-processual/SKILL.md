@@ -28,23 +28,26 @@ O que cada nível aciona:
 
 | | N1 | N2 | N3 | N4 |
 |---|---|---|---|---|
-| Plano de respostas | não | curto: mostra e segue | aprovação do José antes de redigir | o da equipe |
-| Redação | você, de uma vez | você, geração a geração, sem paradas | um subagente Opus por tópico; você costura | executores da equipe |
-| Conselheiro Fable | — | — | nas decisões decisivas | desafiante da equipe |
-| Verificação | referências aos autos | `verificacao-citacoes` completa | completa, com subagentes | auditor da equipe |
+| Plano de respostas | não | curto, com o mapa de peso: mostra e segue | mapa de peso e plano aprovados pelo José antes de redigir | o seu, no protocolo da equipe |
+| Redação | você, de uma vez | você, geração a geração, sem paradas | você, a partir de um dossiê Opus por tópico | você, a partir do que o operacional da equipe apurou |
+| Conselheiro Fable | — | — | nas decisões decisivas | nas decisões decisivas |
+| Revisão argumentativa | — | `sensibilidade-argumentativa` e `moderador-final`, este em Opus | os dois, com o moderador em Fable | os dois, com o moderador em Fable |
+| Verificação | referências aos autos | `verificacao-citacoes` completa | completa, com subagentes | verificador da equipe |
 
 - **N4:** proponha `/equipe-juridica:iniciar` e espere o ok; não abra a equipe sozinho.
 - Paradas tópico a tópico só quando o José pedir ("revisar tópico a tópico").
 
 ## 2. Agentes e modelos
-Delegue triagem e volume; o juízo fica com você: escolha de tese, coerência final,
-veredito sobre a ratio de um precedente, o que dizer ao cliente.
+Delegue triagem e volume; o juízo e a redação ficam com você: escolha de tese, mapa de
+peso, coerência final, veredito sobre a ratio de um precedente, o que dizer ao cliente.
+Uma só mão escreve a peça; os revisores opinam e você decide.
 
 - **Haiku** — mecânico: localizar documentos no índice, inventário de citações, conferir
   números, datas, IDs e referências "id N / fls.", varreduras de padrão no texto.
 - **Sonnet** — ler e triar documentos extraídos; rodar buscas de jurisprudência e
   sintetizar; primeira revisão de estilo.
-- **Opus** — redigir tópicos no N3, crítica de mérito, conferência de ratio.
+- **Opus** — dossiê de tópico no N3, a `sensibilidade-argumentativa` (reorganiza a peça
+  pelo peso) e conferência de ratio.
 - **Fable** — conselheiro nas decisões decisivas de N3/N4 quando a sessão principal não
   for Fable: cabimento e eixo do recurso, escolha e ordem das teses, risco num relatório,
   conflito entre precedentes.
@@ -53,6 +56,8 @@ veredito sobre a ratio de um precedente, o que dizer ao cliente.
   - Sem advisor (ex.: Cowork), abra um subagente com `model: fable` e mande um dossiê
     curto: a pergunta, as opções, os fatos e os precedentes com IDs.
   - Em qualquer caso, você decide e registra a decisão no `plano.md`.
+  - O `moderador-final`, que lê a peça pronta como o julgador, roda em Fable no N3 e no
+    N4 (no N2, em Opus), qualquer que seja o modelo da sessão principal.
 
 Subagentes nativos rodam no próprio Claude: o texto dos autos não sai para outro
 provedor. Se o ambiente não oferecer subagentes, faça você mesmo, em passos separados.
@@ -67,7 +72,7 @@ provedor. Se o ambiente não oferecer subagentes, faça você mesmo, em passos s
 | Memorial (processo pendente de julgamento) | `memorial` |
 | Relatório ou estratégia — para o escritório (interno) ou para o cliente (externo) | `relatorio` |
 | Pergunta pontual sobre os autos ou localizar um documento | `analise-processo-pje` (N1) |
-| Revisar uma peça já escrita | `escrita-juridica` (revisão) + `verificacao-citacoes` |
+| Revisar uma peça já escrita | `escrita-juridica` (revisão; em peça de mérito, com a `sensibilidade-argumentativa` e o `moderador-final`) + `verificacao-citacoes` |
 | Andamento atual do processo | conectores de andamento disponíveis (ex.: Legal One, DataJud/DJEN) antes do navegador; `obter-processo` em modo consulta |
 
 - Embargos de declaração são recurso (`peca-recurso`); embargos à execução ou de
@@ -93,6 +98,7 @@ conector busca-autos; no N3/N4, a indexação começa já, em segundo plano.
 
 ## 6. Planejar e produzir
 - **N1:** vá direto à skill de saída.
-- **N2 e N3:** `plano-de-respostas` (segmentação, aprovação no N3, subagente por tópico).
+- **N2 e N3:** `plano-de-respostas` (mapa de peso, segmentação, aprovação e dossiês por
+  tópico no N3, revisão argumentativa ao fim).
 - A skill de saída puxa `pesquisa-juridica` e `escrita-juridica`, entrega o `.docx` por
   `formatacao-entrega` e fecha com `verificacao-citacoes`.

@@ -1,5 +1,47 @@
 # Changelog — pratica-juridica
 
+## v1.4.0 (2026-10-26)
+
+A construção do argumento passa à frente da forma. O José comparou a versão do Claude de
+uma petição com a reescrita dele: a do Claude dissertava sobre a teoria da contagem do
+prazo e deixava a própria data sem prova, provava o mesmo fato quatro vezes e abria um
+tópico para cada ponto do adversário, enquanto a dele juntava num caminho só o que
+decidia o resultado. Faltava às skills o juízo que produz essa diferença: quanto cada
+argumento pesa no convencimento do julgador.
+
+**O peso decide (`plano-de-respostas`, `escrita-juridica`)**
+- **Mapa de peso antes do índice:** para cada argumento, fato ou objeção, o teste "se o
+  julgador não ler, o que acontece com o resultado?" separa núcleo, apoio e fora. O
+  índice passa a ter um tópico por resultado (não "um por tese"), subtópico só para
+  núcleo e o espaço previsto para cada tópico.
+- **Na `escrita-juridica`,** a seção "Antes da forma: o peso decide" (ordem dentro do
+  tópico, espaço proporcional, fato documental mostrado e não argumentado, o teste do
+  parágrafo) e, na `persuasao.md`, a régua completa, com a objeção já levantada pelo
+  adversário: só a que pode impedir o resultado recebe resposta desenvolvida, mas o ponto
+  em que o adversário apoia o resultado dele recebe ao menos uma oração.
+- **Saem as instruções que empurravam ao contrário:** "Fundamentos, um por tese",
+  "rebata cada ponto, capítulo por capítulo" (contrarrazões) e "uma geração por causa de
+  pedir rebatida". A exigência legal fica: admissibilidade, impugnação especificada (art.
+  341) e fundamento autônomo da decisão (Súmula 283/STF) entram sempre; o peso decide só
+  o espaço.
+
+**Dois revisores com a peça pronta (`agents/`, novos)**
+- **`sensibilidade-argumentativa` (Opus):** reorganiza a peça pelo peso, em arquivo
+  novo, sem argumento, fato, citação ou pedido novos; devolve o mapa de peso, as
+  mudanças, os cortes para o veto de quem redigiu e as lacunas.
+- **`moderador-final` (Fable; Opus no N2):** faz o papel do julgador, com a peça
+  adversária e a decisão atacada na mesa; devolve a decisão simulada por pedido, até
+  cinco ajustes por impacto e o que pularia.
+- Rodam do N2 em diante, uma rodada de cada, no Passo 5 do `plano-de-respostas`; o N1
+  não tem revisores. Também na revisão de peça pronta de mérito.
+
+**Uma só mão escreve (N3)**
+- O subagente Opus por tópico deixa de redigir: prepara o dossiê do tópico (fatos com
+  folha, precedentes com ID, o que o adversário disse, lacunas), e o coordenador redige a
+  peça inteira. A redação por tópico inflava cada tópico e quebrava a coesão.
+
+Acompanha o `equipe-juridica` 0.5.0, que passa a usar os dois revisores.
+
 ## v1.3.1 (2026-10-20)
 
 Ligação entre parágrafos. O José pegou o texto robótico em peça pronta, com e sem a

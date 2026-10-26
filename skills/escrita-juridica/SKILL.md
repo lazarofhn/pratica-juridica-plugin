@@ -16,9 +16,9 @@ externo.
 | Nível | O que muda aqui |
 |---|---|
 | N1 | GO-1 a GO-6 e o radar ao fechar; protocolar não infla, as `references/` ficam de fora (salvo revisão). |
-| N2 | Tudo o que segue, geração a geração, por você. |
-| N3 | Cada subagente Opus recebe esta skill e o registro; na costura, você roda radar e varreduras na peça inteira. |
-| N4 | A equipe usa esta skill como régua de estilo. |
+| N2 | Tudo o que segue, geração a geração, por você; na peça, os dois revisores ao fim (`plano-de-respostas`, Passo 5). |
+| N3 | Você redige a peça inteira a partir dos dossiês dos tópicos; na costura, radar e varreduras na peça inteira; depois, os dois revisores. |
+| N4 | O principal da equipe redige por esta skill, com os mesmos revisores do N3. |
 
 ## Registros
 | Registro | Para quem e com que tom | Saída |
@@ -37,6 +37,28 @@ Entre registros muda o tom e, no `externo`, também o que se diz; as regras vale
   entram por `@citacao-ref` (texto verbatim, sem redigitar); `@citacao` escrito à mão vai
   à `verificacao-citacoes`. Trecho de voto exige inteiro teor: onde há, ver
   `pesquisa-juridica`.
+
+## Antes da forma: o peso decide (registro peça)
+As regras de ouro cuidam da forma. Antes delas vem o juízo que a forma não supre: quanto
+cada argumento pesa no convencimento do julgador. É o peso que decide se o argumento
+entra, onde entra, quanto espaço recebe e em que posição aparece, inclusive dentro do
+mesmo tópico; o tamanho do parágrafo vem depois.
+- **Teste:** se o julgador não ler este argumento, fato ou resposta, o que acontece com o
+  resultado? Cai → núcleo; fica mais difícil → apoio; nada muda → sai ou vira uma oração.
+- **Tópico é o caminho até um resultado,** não uma tese: reúne tudo de que o julgador
+  precisa para chegar lá, ainda que sejam matérias distintas. Subtópico só para etapa de
+  núcleo, porque subtópico dá importância: argumento fraco em subtópico próprio é
+  promovido.
+- **Dentro do tópico, a ordem do peso:** conclusão, fato decisivo com a prova, condição
+  que estende ou limita o resultado, objeção relevante, fecho.
+- **Espaço proporcional ao peso.** Fato que se prova por documento se mostra (data,
+  folha, imagem), não se argumenta; resposta longa a objeção fraca promove a objeção.
+- **Revisão:** de cada parágrafo, pergunte se a decisão mudaria caso o julgador o pulasse.
+
+O mapa de peso nasce no plano (`plano-de-respostas`, Passo 1); a objeção já levantada
+pelo adversário e os exemplos estão em `references/persuasao.md`. Com a peça pronta, a
+`sensibilidade-argumentativa` revisa a construção e o `moderador-final` lê como o
+julgador (`plano-de-respostas`, Passo 5).
 
 ## Regras de ouro (prioridade máxima)
 
@@ -182,10 +204,10 @@ decisão") e latim ornamental constante ("in casu", "a priori" o tempo todo).
   leitura dirigida (padrão 1 de `references/padroes-da-casa.md`).
 
 ## Persuasão e padrões da casa (registro peça)
-- **Antes de redigir os fundamentos**, leia `references/persuasao.md`: verbo e
-  arquitetura em vez de adjetivo, crítica à decisão e nunca ao julgador, tese na
-  abertura do tópico, fecho que toma partido, escala de calibragem e antecipação de
-  objeção.
+- **Antes de redigir os fundamentos**, leia `references/persuasao.md`: o peso de cada
+  argumento e a objeção já levantada pelo adversário, verbo e arquitetura em vez de
+  adjetivo, crítica à decisão e nunca ao julgador, tese na abertura do tópico, fecho que
+  toma partido, escala de calibragem e antecipação de objeção.
 - **Ao redigir tópico com citação, prova documental, fecho ou recapitulação**, siga
   `references/padroes-da-casa.md` (sete padrões da peça real que teve o recurso provido).
 
@@ -199,20 +221,25 @@ decisão") e latim ornamental constante ("in casu", "a priori" o tempo todo).
 3. Trie cada alerta pelo teste da regra (se for falso positivo, o texto fica) e
    diagnostique antes de reescrever.
 
-No N3, o radar roda em cada seção devolvida e, na costura, na peça inteira: aberturas
-repetidas, a parcela de aberturas nominais e a saturação só aparecem no conjunto.
+Na costura, o radar roda na peça inteira: aberturas repetidas, a parcela de aberturas
+nominais e a saturação só aparecem no conjunto. Depois da revisão argumentativa, rode-o
+de novo na versão adotada.
 
 ## Revisar peça pronta ou remover juridiquês (chamada direta)
 Roteiro em `references/revisao.md`: situar registro e destinatário, rodar o radar,
 diagnosticar antes de reescrever e entregar a versão revisada em arquivo novo (o original
-não se sobrescreve), com a lista curta das mudanças por regra.
+não se sobrescreve), com a lista curta das mudanças por regra. Em peça de mérito, a
+construção do argumento vem antes da forma: a `sensibilidade-argumentativa` e o
+`moderador-final` (`plano-de-respostas`, Passo 5) rodam antes das varreduras de forma.
 
 ## Agentes
-A reescrita é de quem redige, com o texto à vista: você, ou o subagente Opus do tópico no
-N3. Um subagente Sonnet pode servir de radar de estilo (opcional; em peça longa, uma
-seção por agente): localiza e devolve trecho e linha, nunca reescreve. Sugestão
-automática já inverteu o sentido de frase nuclear da tese ("nenhum provedor dispõe de
-meio" → "provedor dispõe de meio").
+A reescrita de estilo é de quem redige, com o texto à vista. Um subagente Sonnet pode
+servir de radar de estilo (opcional; em peça longa, uma seção por agente): localiza e
+devolve trecho e linha, nunca reescreve. A exceção é a `sensibilidade-argumentativa`,
+que reorganiza a peça inteira pelo peso, em arquivo novo, e só é adotada depois da sua
+conferência: nenhum fato, citação, folha ou pedido perdido, e nenhuma frase de tese com
+o sentido mudado. Sugestão automática já inverteu o sentido de frase nuclear da tese
+("nenhum provedor dispõe de meio" → "provedor dispõe de meio").
 
 ## Pendente
 - Âncoras reais dos registros `interno` e `externo` (o `peça` já tem as da casa).

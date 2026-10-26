@@ -14,7 +14,7 @@ assuma N2.
 | N1 | Referências aos autos e a lei citada. |
 | N2 | Completa. |
 | N3 | Completa, com subagentes; conferência de ratio por Opus nos precedentes decisivos. |
-| N4 | O auditor da equipe, com esta skill como régua. |
+| N4 | O verificador da equipe, com esta skill como régua. |
 
 ## Princípios
 - **P1 — Contra a fonte, nunca contra a memória do modelo.** Cada item se confere

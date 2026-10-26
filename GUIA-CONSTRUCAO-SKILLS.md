@@ -3,6 +3,27 @@
 Documento-mãe para construir e revisar as skills. Consolida a ideia bruta do José e as
 decisões de arquitetura já travadas. **Revisar antes de construir.**
 
+## Decisões travadas — v1.4 (out/2026)
+Prevalecem sobre as da v1.3 onde divergem.
+
+1. **O peso decide antes da forma.** O índice nasce do mapa de peso (resultado →
+   núcleo, apoio, fora), pelo teste "se o julgador não ler, o que acontece com o
+   resultado?". Tópico é o caminho até um resultado; subtópico só para núcleo; espaço
+   proporcional ao peso; a objeção já levantada pelo adversário passa pela mesma régua.
+   A exigência legal (admissibilidade, impugnação especificada, fundamento autônomo da
+   decisão) entra sempre, e o peso decide só o espaço. Origem: a reescrita do José de uma
+   petição em que a versão do Claude dissertava sobre a teoria da contagem do prazo,
+   deixava a data sem prova e abria um tópico para cada ponto do adversário.
+2. **Uma só mão escreve.** No N3, o subagente Opus prepara o dossiê do tópico (fatos com
+   folha, precedentes com ID, o que o adversário disse, lacunas) e o coordenador redige a
+   peça inteira. A redação por tópico da v1.3 inflava cada tópico e quebrava a coesão.
+3. **Dois revisores com a peça pronta** (registro peça, N2 em diante):
+   `sensibilidade-argumentativa` (Opus) reorganiza pelo peso, em arquivo novo, sem nada
+   novo e com os cortes para o veto de quem redigiu; `moderador-final` faz o papel do
+   julgador (Fable no N3 e no N4; Opus no N2). Uma rodada de cada; N1 não tem revisores.
+4. **Os revisores moram no `pratica-juridica`** (`agents/`), e a `equipe-juridica` 0.5
+   os usa: uma fonte só para a construção do argumento.
+
 ## Decisões travadas — v1.3 (out/2026)
 Prevalecem sobre as decisões e especificações mais antigas deste guia.
 
@@ -13,7 +34,8 @@ Prevalecem sobre as decisões e especificações mais antigas deste guia.
 2. **Profundidade sem paradas.** A profundidade vem do ciclo por geração (pesquisa
    focada, volta aos autos, redação em arquivo), não da parada. N2: plano curto, sem
    paradas. N3: aprovação do plano e um subagente Opus por tópico, com costura do
-   coordenador. Revisão tópico a tópico só a pedido.
+   coordenador (na v1.4, o subagente prepara o dossiê e o coordenador redige). Revisão
+   tópico a tópico só a pedido.
 3. **Agentes nativos, modelo por tarefa.** Haiku para o mecânico; Sonnet para leitura,
    triagem e buscas com síntese; Opus para redação de tópicos e conferência de ratio;
    Fable como conselheiro nas decisões decisivas (quando a sessão principal não é
@@ -48,7 +70,7 @@ Prevalecem sobre as decisões e especificações mais antigas deste guia.
    Fundida na v1.3 (decisão 9).
 3. ~~Aprovação do plano só em peças grandes.~~ Substituída pela decisão 2 da v1.3.
 
-## Mapa de skills (v1.3)
+## Mapa de skills (v1.4)
 ```
 A · analise-processual   (orquestrador: triagem N1–N4, agentes, roteamento)
 B · obter-processo       (opcional, Chrome; também consulta de andamento)
@@ -62,21 +84,30 @@ D · SAÍDAS:
     relatorio            (interno|externo; inclui estratégia)
 
 E · COMPARTILHADAS:
-    plano-de-respostas   (N2/N3: gerações, aprovação no N3, subagente por tópico)
+    plano-de-respostas   (N2/N3: mapa de peso, gerações, aprovação no N3, dossiê por
+                          tópico, revisão argumentativa)
     pesquisa-juridica    (método único: lei e doutrina, depois jurisprudência)
-    escrita-juridica     (registros peça|interno|externo; revisão de peça pronta)
+    escrita-juridica     (o peso antes da forma; registros peça|interno|externo;
+                          revisão de peça pronta)
     formatacao-entrega   (→ .docx)
     verificacao-citacoes (checagem contra as fontes)
+
+F · AGENTES (agents/):
+    sensibilidade-argumentativa (Opus: reorganiza a peça pronta pelo peso)
+    moderador-final             (Fable no N3/N4, Opus no N2: lê como o julgador)
 ```
 
-## Fluxo do orquestrador (v1.3)
+## Fluxo do orquestrador (v1.4)
 1. Avaliar a complexidade (N1–N4) e declarar o nível.
 2. Rotear para a skill de saída.
 3. Garantir os autos (PDF do José; `obter-processo` se pedido) e resolver o workspace.
 4. Ler seletivamente (`analise-processo-pje`), guiado pelo objetivo e pelo nível.
-5. N2/N3: `plano-de-respostas` (aprovação só no N3). N1 vai direto.
-6. Produzir (skill D), que puxa a camada E; `formatacao-entrega` gera o `.docx`.
-7. `verificacao-citacoes` antes de fechar, na profundidade do nível.
+5. N2/N3: `plano-de-respostas`, com o mapa de peso (aprovação só no N3). N1 vai direto.
+6. Produzir (skill D), que puxa a camada E.
+7. N2 em diante, na peça: revisão argumentativa (`sensibilidade-argumentativa`, depois
+   `moderador-final`), com as decisões de quem redigiu.
+8. Radar, `verificacao-citacoes` na profundidade do nível e `.docx` pela
+   `formatacao-entrega`.
 
 ---
 
@@ -112,7 +143,8 @@ E · COMPARTILHADAS:
 5. **Viabilidade (REsp/RE):** estudo prévio do eixo (Súmula 7/STJ, 279/STF…); no N3 a
    decisão do eixo passa pelo conselheiro Fable.
 6. **Contrarrazões:** admissibilidade invertida (apontar o não cabimento e os óbices) e
-   rebater cada ponto do recurso.
+   resposta pelo peso: todo fundamento do recurso que, acolhido, mudaria o resultado; o
+   resto, uma oração ou nada.
 7. **Verificação:** obrigatória.
 
 ### peca-especifica
@@ -122,7 +154,8 @@ E · COMPARTILHADAS:
 2. **Perguntas:** confirmar qual peça, se ambíguo; o marco processual (prazo,
    intimação) é dado dos autos, não pergunta.
 3. **Estrutura:** onde a peça está prevista no CPC + doutrina; requisitos próprios.
-4. **Plano:** por causa de pedir / tópico; rebater cada ponto adverso.
+4. **Plano:** um tópico por resultado (mapa de peso); toda causa de pedir enfrentada e,
+   na contestação, todo fato impugnado (art. 341), no espaço que o peso pede.
 5. **Pesquisa:** sem a ênfase de admissibilidade dos recursos; jurisprudência
    processual só se o José enfatizar a questão processual.
 6. **Regra de ouro:** identificar a previsão/nomenclatura específica correta.
@@ -164,10 +197,12 @@ E · COMPARTILHADAS:
 ## Especificação das skills E (compartilhadas)
 
 ### plano-de-respostas
-N2/N3. Índice numerado + decisão de segmentação (1 vs N gerações); gatilho: ≥2
-fundamentos/causas, tutela + mérito, ou >~10 páginas. Aprovação só no N3. No N3, um
-subagente Opus por tópico e costura do coordenador. Guarda o esqueleto da peça
-protocolada e as regras de coerência fatos → fundamentos → pedidos.
+N2/N3. Mapa de peso (resultado → núcleo, apoio, fora) e índice por resultado; decisão de
+segmentação (1 vs N gerações), com gatilho em ≥2 tópicos de núcleo, tutela + mérito ou
+>~10 páginas. Aprovação só no N3. No N3, um subagente Opus por tópico prepara o dossiê e
+o coordenador redige. Fecha com a costura, a revisão argumentativa (os dois agentes) e o
+radar. Guarda o esqueleto da peça protocolada e as regras de coerência fatos →
+fundamentos → pedidos.
 
 ### pesquisa-juridica
 Método único de fundamentação: lei e doutrina (Know-How) antes da jurisprudência
@@ -176,9 +211,10 @@ ID e parâmetros, para reabrir por ID. Bases e parâmetros: a descrição viva d
 ferramenta.
 
 ### escrita-juridica
-Dona única do estilo. Registros `peça|interno|externo`; GO-1 a GO-6; persuasão
-calibrada e padrões da casa em `references/`, lidos sob demanda; revisão de peça pronta;
-varredura automática de padrões por script.
+Dona única do estilo. O peso do argumento antes da forma; registros
+`peça|interno|externo`; GO-1 a GO-6; persuasão calibrada (com a régua do peso e a
+objeção já levantada) e padrões da casa em `references/`, lidos sob demanda; revisão de
+peça pronta; varredura automática de padrões por script.
 
 ### formatacao-entrega
 Tipografia e geração do `.docx` a partir de blocos `@tag`; `@citacao-ref` cola a ementa
@@ -188,6 +224,20 @@ verbatim; timbrado por modelo `.docx`.
 Confere jurisprudência (reabrindo pelo ID do rastro), lei/doutrina, referências aos
 autos e números/datas antes de fechar. O mecânico vai a subagentes; o veredito sobre a
 ratio fica com o coordenador.
+
+## Especificação dos agentes F
+
+### sensibilidade-argumentativa
+Opus. Recebe a peça pronta, a mesa do julgador (peça adversária e decisão atacada), os
+resultados e o plano; monta o mapa de peso e reescreve a peça inteira em arquivo novo,
+reorganizada pelo peso. Nada novo (argumento, fato, citação, pedido); citações, folhas,
+pedidos, sentido das frases de tese e exigências legais intocados. Devolve mapa,
+mudanças, cortes para o veto e lacunas.
+
+### moderador-final
+Fable no N3/N4; Opus no N2 (o chamador passa `model`). Lê a mesa e depois a peça, como o
+julgador; devolve a decisão simulada por pedido, onde a convicção se formou ou se perdeu,
+até cinco ajustes por impacto e o que pularia. Não reescreve nem acrescenta tese.
 
 ---
 

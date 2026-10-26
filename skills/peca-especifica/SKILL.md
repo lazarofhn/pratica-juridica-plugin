@@ -26,10 +26,13 @@ pedido for ambíguo; citação, intimação e prazo que autorizam a peça são d
 - Localize a previsão da peça e leia os requisitos próprios na fonte, não de memória.
   Ex.: contestação = preliminares + mérito rebatendo cada causa de pedir + resposta a
   eventual tutela + pedidos; impugnação ao cumprimento, só as matérias que a lei admite.
-- Uma geração por causa de pedir rebatida, matéria arguida ou preliminar relevante; cada
-  preliminar ou matéria com a sua base legal.
-- Peça de resposta (contestação, réplica, impugnação): rebata cada ponto da peça adversa,
-  sem deixar causa de pedir sem enfrentamento.
+- Uma geração por tópico de núcleo (`plano-de-respostas`, Passo 1); cada preliminar ou
+  matéria com a sua base legal.
+- Peça de resposta (contestação, réplica, impugnação): nenhuma causa de pedir fica sem
+  enfrentamento e, na contestação, todo fato alegado se impugna (impugnação
+  especificada, art. 341: o fato não impugnado se presume verdadeiro). O espaço, porém,
+  segue o peso: o que decide a causa se desenvolve, o fato secundário se impugna numa
+  oração ou numa lista, e a resposta não copia o índice da peça adversa.
 - Sem a ênfase de admissibilidade dos recursos; os requisitos próprios da peça, sim.
 
 ## 3. Pesquisa

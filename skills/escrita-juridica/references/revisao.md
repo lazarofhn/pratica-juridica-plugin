@@ -43,6 +43,12 @@ de aberturas por sujeito nominal; ou JSON com `alertas`, `resumo` e `paragrafos`
 | `casa/lexico` | "impetração" | "ação" ou "demanda" |
 
 ## Varreduras, nesta ordem
+**Antes delas, o peso** (peça de mérito) — *leitura*. A construção do argumento vem antes
+da forma: o teste do parágrafo (a decisão mudaria se o julgador o pulasse?), a ordem
+dentro do tópico e o espaço proporcional ao peso (`persuasao.md`). Na peça inteira, essa
+revisão é da `sensibilidade-argumentativa`, seguida do `moderador-final`
+(`plano-de-respostas`, Passo 5); as varreduras abaixo rodam na versão adotada.
+
 1. **Traço aditivo (GO-2)** — *radar*. Primeira prioridade: todos os traços aditivos
    viram vírgula.
 2. **Uma ideia por parágrafo (GO-4)** — *radar e leitura*. A régua é a ideia, não o
@@ -101,8 +107,9 @@ de aberturas por sujeito nominal; ou JSON com `alertas`, `resumo` e `paragrafos`
    são ligação (GO-1), não metalinguagem. Nunca proponha cortá-los; o corte que picota o
    texto é tão vício quanto o anúncio vazio.
 9. **Persuasão (peça)** — *leitura*. O tópico abre pela tese? O fecho toma partido (teste
-   do parecer neutro)? A crítica mira a decisão, não o julgador? Objeção antecipada só a
-   provável, e nunca nos pedidos? (`persuasao.md`)
+   do parecer neutro)? A crítica mira a decisão, não o julgador? A objeção já levantada
+   recebe resposta na medida do peso? Objeção antecipada só a provável, e nunca nos
+   pedidos? (`persuasao.md`)
 10. **Padrões da casa (peça)** — *leitura*. Alguma citação ou documento órfão de leitura
     dirigida? Micro-conclusão no fecho de cada tópico? Recapitulação antes do pedido em
     seção longa? Vocativo só nos momentos decisivos? (`padroes-da-casa.md`)
@@ -129,8 +136,8 @@ de aberturas por sujeito nominal; ou JSON com `alertas`, `resumo` e `paragrafos`
    por regra, e as questões de conteúdo deixadas para decisão. Havendo citações, rode a
    `verificacao-citacoes`; `.docx`, pela `formatacao-entrega`, se pedido.
 6. **Profundidade:** trecho curto ou ajuste pontual (N1) → radar e leitura; peça comum
-   (N2) → roteiro completo; peça longa (N3) → um subagente Sonnet por seção como radar,
-   com a reescrita sua.
+   (N2) → os dois revisores e depois o roteiro completo; peça longa (N3) → os dois
+   revisores, depois um subagente Sonnet por seção como radar, com a reescrita sua.
 
 ### Remover juridiquês e dar fluidez
 Mesmo roteiro, com foco em:

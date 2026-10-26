@@ -24,8 +24,9 @@ julgamento. Nível típico: N2; N3 no memorial decisivo. Chamada fora do pipelin
   decisivos; fecho pedindo o julgamento no sentido defendido. Sem admissibilidade nem
   pedido novo.
 - Enxuto: resumo, não repetição da peça. O plano (`plano-de-respostas`) segue os eixos,
-  segmenta só se houver muitos eixos densos e fixa a ênfase: que eixo abre, qual
-  precedente lidera.
+  segmenta só se houver muitos eixos densos e fixa a ênfase pela régua do peso: o eixo de
+  núcleo abre, o de apoio encolhe, o que não muda o julgamento sai; e qual precedente
+  lidera.
 - A fundamentação vem dos autos. Pesquise só para reforçar os precedentes decisivos das
   teses já sustentadas (ex.: julgado posterior à peça-base), nunca para achar tese.
 

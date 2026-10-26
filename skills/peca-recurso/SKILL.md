@@ -68,10 +68,13 @@ a resposta àquele recurso.
   fundamentos da decisão) e os óbices da Corte; no REsp/RE, o estudo do item 3, feito do
   lado de quem responde, aponta-os (reexame de prova, falta de prequestionamento,
   fundamento não atacado). Alegue o óbice que os autos sustentam, não a lista inteira.
-- **Rebata cada ponto** do recurso, capítulo por capítulo, sem deixar fundamento sem
-  resposta, e sustente a decisão recorrida com os fundamentos dela.
+- **Responda pelo peso, não pelo índice do recurso.** Todo fundamento do recurso que,
+  acolhido, mudaria o resultado recebe resposta, no espaço que o peso pede; o resto, uma
+  oração ou nada (`plano-de-respostas`, Passo 1). Organize por resultado defendido, não
+  capítulo por capítulo do recorrente, e sustente a decisão recorrida com os fundamentos
+  dela.
 - **Pedido:** não conhecimento; subsidiariamente, desprovimento.
-- Segmentação: uma geração para o não conhecimento e uma por capítulo rebatido.
+- Segmentação: uma geração para o não conhecimento e uma por tópico de núcleo.
 
 ## 6. Pesquisa e verificação
 - Pesquisa em duas linhas: admissibilidade (cabimento e requisitos do recurso concreto) e
