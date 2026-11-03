@@ -43,8 +43,11 @@ principal; `listar_materias` e `listar_fontes` só quando a busca não acertar. 
 
 ## Jurisprudência — juris_br
 Cobre tribunais superiores, TRFs, tribunal estadual e órgãos administrativos, conforme a
-lista viva. Bases, parâmetros, filtros e pausas mudam: antes da primeira busca numa base,
-leia a descrição da ferramenta e, para valores exatos de filtro, o `*_listar_filtros`.
+lista viva. Qual chamada usar e em que ordem é o próprio conector que diz: o guia vem nas
+instruções do servidor e em `juris_como_pesquisar`, que também dá a data de cada base.
+Siga-o; se as instruções não estiverem no contexto (subagente, outro cliente), chame
+`juris_como_pesquisar` uma vez antes da primeira busca. Para valores exatos de filtro fora
+do STJ, o `*_listar_filtros`.
 - **Consulta:** a questão jurídica em 1 a 3 frases, com fatos, partes e tese, nunca
   palavra-chave solta; termos exatos (súmula, artigo, tema) no campo lexical.
 - **Base pela matéria:** tributário federal administrativo → CARF e Soluções de Consulta;
