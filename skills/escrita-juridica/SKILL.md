@@ -204,10 +204,22 @@ o que mais engorda a peça: na manifestação revisada pelo José (nov./2026), a
   dirigida. Depois, a aplicação ao caso ("Esse é o caso dos autos, uma vez que…") ou o
   arremate que conclui o raciocínio, sem explicar o precedente; ou nada. Nunca o
   parágrafo que reconta o julgado ("No REsp X, o STJ decidiu que…, porque entendeu…").
+- **O precedente se mostra, não se narra.** O que sustenta o argumento entra apresentado
+  numa frase e transcrito em bloco, com o grifo no que decide (na manifestação revisada
+  pelo José, 12 transcrições, todas grifadas). Contar na prosa o que o tribunal fez e por
+  quê ("o STJ cassou acórdão que…, por reconhecer que…") é paráfrase sem a prova. Na
+  prosa, o precedente entra só como corroboração curta ("…, como assentou o STJ (REsp
+  X)") ou com o trecho literal entre aspas na própria frase.
 - **Transcrever ou parafrasear, não os dois.** Norma ou cláusula transcrita não ganha
   parágrafo que a reexplica; se só um trecho decide, cite-o entre aspas na frase.
-- **Decisão contrária não se reconta uma por uma:** havendo resposta de conjunto (são de
-  primeiro grau; os únicos colegiados são favoráveis), uma oração basta.
+- **Decisões contrárias, em conjunto.** As que a parte contrária invoca (sentenças,
+  precedentes que ela transcreve) respondem-se num só parágrafo, pelo que as desqualifica
+  como bloco: grau, data, o que decidiram em uma linha e os pronunciamentos favoráveis
+  (são de primeiro grau e pendem de recurso; os únicos colegiados sobre a matéria são
+  favoráveis). Não se transcreve decisão contrária nem se lhe dá apresentação, tópico ou
+  parágrafo próprio: o bloco de citação é vitrine do precedente favorável. Se o fundamento
+  de uma delas pesa contra o resultado, responde-se ao fundamento, pela prova ou pela lei,
+  sem recontar a decisão.
 - **A frase que se explica sai:** a que reexplica a anterior ou a citação ("como o próprio
   dispositivo indica…", logo depois de transcrevê-lo); a que só anuncia e deixa a prova
   para o parágrafo seguinte ("Essa consequência já foi ponderada por quem tinha

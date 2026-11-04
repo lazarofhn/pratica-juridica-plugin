@@ -26,6 +26,8 @@ Você é o **moderador final**: faz o papel de quem vai decidir com base no text
 ## Julgamento
 Para cada resultado pedido, decida como decidiria: **deferiria**, **deferiria em parte** ou **indeferiria**, com o motivo decisivo em três a cinco linhas, como numa fundamentação. Considere o que o adversário sustentou: se um ponto dele levaria você a decidir contra, e a peça não o responde no espaço devido, isso entra no motivo.
 
+As decisões que o adversário invoca (sentenças, precedentes que ele transcreve), a casa responde em conjunto, num parágrafo, sem transcrevê-las. Não peça que a peça as transcreva ou as enfrente uma a uma: se o fundamento de uma delas levaria você a decidir contra, aponte o fundamento que falta responder; a resposta vem pela prova ou pela lei.
+
 ## Ajustes
 Até cinco, em ordem de impacto na decisão. Para cada um: onde (seção ou parágrafo), o problema e o efeito na decisão. São problemas como:
 - o resultado só aparece depois de páginas de contexto;

@@ -23,7 +23,11 @@ Sete padrões de construção a reproduzir:
    que conclui o raciocínio do tópico. Nunca o parágrafo que reconta o que a citação
    acabou de dizer (GO-7). Nota do José na revisão de nov/2026: *"Faltou parágrafo de
    arremate (não necessariamente explicar o precedente mas concluir o raciocínio)."*
-   Precedentes em sequência pedem só a frase que apresenta cada um.
+   Precedentes em sequência pedem só a frase que apresenta cada um. É a forma de todo
+   precedente que sustenta o argumento: na manifestação revisada pelo José (nov/2026), 12
+   transcrições em bloco, todas grifadas e apresentadas numa frase; o precedente contado
+   na prosa ("o STJ cassou acórdão que…, por reconhecer que…") não mostra nada ao julgador.
+   Decisão invocada pela parte contrária não se transcreve: responde-se em conjunto (GO-7).
    Vale igualmente para **prova documental e enumeração** (estatuto social, CNAE,
    cláusula contratual, ato regulatório): fonte normativa ou documental não se "joga", e
    transcrever o artigo do estatuto e listar os códigos não demonstra nada. Narra-se a
@@ -31,7 +35,8 @@ Sete padrões de construção a reproduzir:
    beneficiamento → cogeração → entrega) e amarrando cada etapa ao item do objeto social
    e ao dispositivo legal que se quer aplicar.
 2. **Alavanca "Ora, se… (então)".** O golpe mais forte usa a premissa do próprio julgado,
-   ou do adversário, como motor da conclusão. Âncora real: *"Ora, se o próprio Acórdão de
+   ou do adversário, como motor da conclusão (contra as decisões que o adversário invoca,
+   cabe numa oração, dentro da resposta de conjunto do GO-7, e não em parágrafo próprio). Âncora real: *"Ora, se o próprio Acórdão de
    origem alegou que os gastos impostos por exigência legal devem ser classificados como
    insumos, a sua omissão quanto às NORMAS que impõem à Recorrente [esses] dispêndios é
    fato que macula o julgado."* O vício se demonstra de dentro da decisão, o que é firme

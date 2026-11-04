@@ -354,6 +354,50 @@ class DizerUmaVez(unittest.TestCase):
         self.assertEqual(self.regras7(duas), ["GO-7/reformulacao"])
 
 
+class PrecedenteEDecisaoContraria(unittest.TestCase):
+    def regras7(self, texto):
+        return [a.regra for a in lint.lint_texto(texto) if a.regra.startswith("GO-7")]
+
+    def test_precedente_narrado_na_prosa(self):
+        texto = corpo("Em causa com esse desenho, o Superior Tribunal de Justiça cassou acórdão que "
+                      "remetera o contribuinte à injunção, por reconhecer que a eficácia da lei é "
+                      "questão do próprio mandado de segurança (STJ, AgInt no RMS 53.659, "
+                      "Primeira Turma).")
+        self.assertEqual(self.regras7(texto), ["GO-7/precedente-narrado"])
+
+    def test_corroboracao_curta_e_trecho_literal_ficam(self):
+        curta = corpo("A vigência da lei basta para configurar o justo receio, como assentou o "
+                      "STJ (REsp 1.933.794).")
+        literal = corpo('O STJ afastou o óbice, por reconhecer que "o papel do regulamento é '
+                        'secundário" (STJ, REsp 1.046.475).')
+        self.assertEqual(self.regras7(curta), [])
+        self.assertEqual(self.regras7(literal), [])
+
+    def test_transcricao_de_decisao_da_parte_contraria(self):
+        texto = (corpo("A sentença invocada pela autoridade acolhe a premissa da Impetrante:")
+                 + "\n@citacao-ref\nfonte: autos\ndoc: 33\ntrecho: de \"A ausência\" ate "
+                 "\"realizada.\"\nref: Sentença no MS 1003688, transcrita nas informações\n\n")
+        self.assertIn("GO-7/decisao-contraria", self.regras7(texto))
+
+    def test_precedente_favoravel_em_bloco_nao_dispara(self):
+        texto = ("@citacao-ref\nfonte: STJ\nprocesso: EREsp 1770495\nitens: 2\n"
+                 "ref: STJ, EREsp 1.770.495, Primeira Seção\n\n"
+                 + corpo("O pedido d.2, portanto, não produz efeito patrimonial pretérito."))
+        self.assertEqual(self.regras7(texto), [])
+
+    def test_decisoes_contrarias_em_tres_paragrafos(self):
+        tres = corpo("Os precedentes invocados pela autoridade tratam de situação diversa.",
+                     "Ademais, a lei define o beneficiário.",
+                     "As sentenças transcritas nas informações são de primeiro grau.",
+                     "Assim, a ordem deve ser concedida.",
+                     "Ora, o precedente trazido pela própria autoridade acolhe a premissa.")
+        duas = corpo("Os precedentes trazidos nas informações estão ultrapassados.",
+                     "Ademais, a lei define o beneficiário.",
+                     "Assim, os precedentes das informações não se aplicam.")
+        self.assertEqual(self.regras7(tres), ["GO-7/decisao-contraria"])
+        self.assertEqual(self.regras7(duas), [])
+
+
 class Lexico(unittest.TestCase):
     def test_registro_ensaistico(self):
         r = regras(corpo("O segundo requisito é o que melhor revela o descompasso da apelação."))
