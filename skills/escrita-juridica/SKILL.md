@@ -15,7 +15,7 @@ externo.
 
 | Nível | O que muda aqui |
 |---|---|
-| N1 | GO-1 a GO-6 e o radar ao fechar; protocolar não infla, as `references/` ficam de fora (salvo revisão). |
+| N1 | GO-1 a GO-7 e o radar ao fechar; protocolar não infla, as `references/` ficam de fora (salvo revisão). |
 | N2 | Tudo o que segue, geração a geração, por você; na peça, os dois revisores ao fim (`plano-de-respostas`, Passo 5). |
 | N3 | Você redige a peça inteira a partir dos dossiês dos tópicos; na costura, radar e varreduras na peça inteira; depois, os dois revisores. |
 | N4 | O principal da equipe redige por esta skill, com os mesmos revisores do N3. |
@@ -67,31 +67,46 @@ Encadeie com conjunções e locuções, no período e entre parágrafos: sem ela
 fragmentado e robótico. Cada conectivo tem um valor lógico (adição, contraste, causa,
 consequência, concessão); use o da relação real, não o que só preenche a transição. No
 período: porque, embora, ainda que, de modo que, uma vez que, portanto, todavia, na
-medida em que, razão pela qual. Entre parágrafos: com efeito, além disso, por sua vez,
-nessa linha, desse modo, em consequência, diante disso, daí resulta.
+medida em que, razão pela qual. Entre parágrafos: ademais, além disso, portanto, assim,
+por isso, contudo, todavia, diante disso, em consequência, por sua vez, nessa linha.
 
 > ✗ "O contrato venceu em março. A ré continuou prestando o serviço. A cobrança é devida."
 > ✓ "Embora o contrato tenha vencido em março, a ré continuou prestando o serviço, de
 > modo que a cobrança é devida."
 
-- **A abertura do parágrafo faz a ligação.** Abra com o que amarra ao parágrafo anterior:
-  o conectivo da relação lógica ("Diante disso,", "Ainda que se admitisse,"), uma
-  circunstância ("Quanto ao dolo,", "Na premissa adotada pelo acórdão,") ou a retomada da
-  ideia anterior ("Essa omissão", "Tal registro"). Sujeito nominal seco abrindo o
-  parágrafo ("O MPF", "O acórdão", "A sentença") é exceção: no máximo cerca de 30% dos
-  parágrafos e nunca mais de dois seguidos. É vício recorrente do modelo, com ou sem esta
-  skill: confira no radar antes de entregar.
-- **O capítulo também se liga:** abre situando-se no argumento e retomando o anterior, e
-  fecha com a conclusão que conduz ao próximo (a micro-conclusão dos padrões da casa).
+- **A conjunção abre o parágrafo.** Na maioria das vezes, o parágrafo abre pela conjunção
+  ou locução da relação lógica com o anterior ("Ademais,", "Portanto,", "Todavia,",
+  "Diante disso,", "Ainda que se admitisse,"), anteposta ou logo depois do primeiro termo
+  ("A ordem postulada, contudo,"; "Impõe-se, assim,"); também serve uma circunstância
+  ("Quanto ao dolo,", "Na premissa adotada pelo acórdão,"). Sujeito nominal abrindo o
+  parágrafo cabe quando nomeia o passo novo do argumento ("O decreto confirmou…", "O art.
+  17 vincula…"); o vício é a série de atores sem ligação ("O MPF…" / "O acórdão…" / "A
+  sentença…"). No máximo cerca de metade dos parágrafos sem conectivo, nunca três
+  seguidos: confira no radar antes de entregar.
+- **A remissão fica à vista.** Remeter ao que acabou de ser dito é bem-vindo quando
+  constrói a lógica, fazendo disso a premissa do passo seguinte ("Nessa perspectiva, a
+  omissão dos Ministérios compõe a causa de pedir"; "O decreto confirmou esse quadro";
+  "o ato conjunto… Esse ato conjunto"). O vício é a remissão órfã: "este entendimento",
+  "essa lógica", "este tributo" apontando para o que ficou parágrafos atrás, do outro
+  lado de um título, ou para mais de um candidato. Aí, repita o termo exato ou nomeie o
+  referente na frase ("Essa ratio, que afastou o dano material e o moral, foi
+  aplicada…"). A remissão que só repete o que se disse é o vício do GO-7. Ligar é papel
+  da conjunção; trocar "O acórdão" por "Esse acórdão" não liga nada.
+- **O capítulo abre pela própria tese** (`references/persuasao.md`), não por parágrafo que
+  resume o anterior: a ligação entre capítulos vem do título e da conjunção. Fecha, quando
+  preciso, com o arremate (GO-7).
 - **Ligar não é metalinguagem.** A transição que diz a relação entre as ideias ("Diante
-  dessa omissão, a multa perde a base") é obrigatória, e o parágrafo de síntese que
-  costura capítulos fica. Corta-se só o texto comentando a si mesmo ("passa-se a
-  demonstrar", "como se verá") e a repetição pura.
+  dessa omissão, a multa perde a base") é obrigatória. Corta-se o texto comentando a si
+  mesmo ("passa-se a demonstrar", "como se verá") e a repetição (GO-7).
 
 > ✗ Três parágrafos seguidos: "O MPF imputou dolo…" / "O acórdão manteve…" / "A
 > sindicância não apurou…"
-> ✓ "Na denúncia, o MPF imputou dolo…" / "Ainda assim, o acórdão manteve…" / "Essa
-> conclusão ignora a sindicância, que não apurou…"
+> ✓ "Na denúncia, o MPF imputou dolo…" / "Ainda assim, o acórdão manteve…" / "Todavia,
+> a sindicância não apurou…"
+
+> ✗ "Este tributo, contudo, não alcança a receita…" (o IRPJ foi nomeado três parágrafos
+> antes, e no meio vieram a CSLL e a COFINS)
+> ✓ "O IRPJ, contudo, não alcança a receita…"
 
 ### GO-2 — Proibição do traço aditivo (inviolável)
 Travessão, meia-risca ou hífen nunca introduzem ideia apositiva ou intercalada no
@@ -116,13 +131,16 @@ afirmação com conjunção.
 Assessores, juízes e as ferramentas de IA dos tribunais param de ler no meio de bloco
 denso: o argumento morre pela forma, não pelo mérito.
 - **Um parágrafo, uma ideia:** normalmente um ou dois períodos curtos. A régua é a ideia,
-  não o número; os números só apontam onde olhar: média de 70 a 90 palavras por parágrafo
-  na peça e 120 como referência de teto (125 ou 130 cabem se a ideia pede). Duas ideias
-  no mesmo bloco: ache a costura lógica e quebre.
-- **Quebrar não é resumir nem picotar (inviolável):** nada se corta; o desenvolvimento
-  inteiro fica, distribuído em parágrafos encadeados pelo GO-1, como escada de degraus
-  curtos. Parágrafos de uma frase em série, sem ligação, são o vício oposto ao bloco
-  denso, e a média abaixo de 70 palavras costuma denunciá-lo.
+  não o número; os números só apontam onde olhar: média de 45 a 65 palavras por parágrafo
+  na peça (as versões definitivas do José de out. e nov./2026 dão 49 e 51) e 120 como
+  referência de teto (125 ou 130 cabem se a ideia pede). A média é consequência, nunca
+  meta: não se alonga parágrafo para chegar a ela. Duas ideias no mesmo bloco: ache a
+  costura lógica e quebre.
+- **Quebrar não é resumir nem picotar (inviolável):** ao quebrar um bloco, nenhum
+  argumento se perde; o desenvolvimento inteiro fica, distribuído em parágrafos
+  encadeados pelo GO-1, como escada de degraus curtos (o que sai é só a repetição, pelo
+  GO-7). Parágrafos de uma frase em série, sem conjunção que os ligue, são o vício oposto
+  ao bloco denso.
 - **Costuras naturais:** premissa normativa ¦ aplicação aos fatos ¦ consequência
   jurídica; cada fundamento autônomo, seu parágrafo.
 - **Anti-mecanicidade:** varie o comprimento (um período curto depois de dois longos dá
@@ -175,6 +193,45 @@ legítima (refutar tese da parte contrária, afastar precedente invocado, respon
 fundamento da decisão recorrida): fica. **Não** → converta em afirmação direta. A regra
 não proíbe negar; sem o teste, a réplica e as contrarrazões morrem.
 
+### GO-7 — Dizer uma vez (a citação fala por si)
+O que a citação, o grifo ou a frase anterior já disseram não volta com outras palavras. É
+o que mais engorda a peça: na manifestação revisada pelo José (nov./2026), a prosa caiu
+42% (de 57 para 38 parágrafos) e as citações ficaram quase todas.
+- **Em volta da citação, só o que ela não mostra.** Antes, uma frase: o ponto que ela
+  prova ou o que ela não traz, como quem decidiu e por que o caso é igual ("O STJ já
+  enfrentou a questão em caso oriundo deste eg. TRF-5: réus condenados solidariamente,
+  parte deles sem apelar:"). Dentro, o grifo no trecho decisivo, que é a leitura
+  dirigida. Depois, a aplicação ao caso ("Esse é o caso dos autos, uma vez que…") ou o
+  arremate que conclui o raciocínio, sem explicar o precedente; ou nada. Nunca o
+  parágrafo que reconta o julgado ("No REsp X, o STJ decidiu que…, porque entendeu…").
+- **Transcrever ou parafrasear, não os dois.** Norma ou cláusula transcrita não ganha
+  parágrafo que a reexplica; se só um trecho decide, cite-o entre aspas na frase.
+- **Decisão contrária não se reconta uma por uma:** havendo resposta de conjunto (são de
+  primeiro grau; os únicos colegiados são favoráveis), uma oração basta.
+- **A frase que se explica sai:** a que reexplica a anterior ou a citação ("como o próprio
+  dispositivo indica…", logo depois de transcrevê-lo); a que só anuncia e deixa a prova
+  para o parágrafo seguinte ("Essa consequência já foi ponderada por quem tinha
+  competência para fazê-lo." / "Com efeito, …"); a conclusão anunciada na abertura e
+  repetida no fim; a que explica ao julgador o que a citação já carrega ("o decreto, cujo
+  alcance se restringe ao da lei que executa (CTN, art. 99)" → "(CTN, art. 99)"). "Ou
+  seja" só quando acrescenta a consequência (padrão 4).
+- **Fato primeiro, fonte no parêntese:** "O voto que instruiu a resolução aprovou a
+  outorga da usina…" → "A usina foi outorgada… (Doc. 15, id …)".
+- **Segundo precedente para o mesmo ponto** só se acrescenta (outro tribunal que pesa,
+  decisão mais recente, o órgão que vai julgar); em ponto de apoio, um basta.
+
+**Teste:** apague a frase ou o parágrafo. O julgador perde algo que a citação, o grifo e
+o texto vizinho não lhe dão? Se não perde, sai.
+
+> ✗ [transcrição do art. 18, §§ 1º e 2º, do decreto] + "Disciplinados a política e o
+> programa, o regulamento deixou para depois apenas o cadastro… Mais do que isso, o § 1º
+> só admite a edição do ato do cadastro depois do ato conjunto do § 2º. Por desenho do
+> próprio regulamento, portanto, …"
+> ✓ "Ao regulamentar a lei, o decreto deixou para depois apenas o cadastro (art. 18, §
+> 1º) e o incentivo tributário (art. 18, § 2º), e subordinou o ato do cadastro, "a ser
+> editado após a vigência do ato de que trata o § 2º", a ato conjunto do qual participa o
+> Ministério da Fazenda."
+
 ## Latim e cortesia forense — calibragem, não proibição
 O problema é o excesso e a repetição. Um "Exmo.", um "egrégio" ou um "data venia" de vez
 em quando, sem repetição, é natural no registro forense; latim técnico insubstituível
@@ -184,7 +241,8 @@ decisão") e latim ornamental constante ("in casu", "a priori" o tempo todo).
 
 ## Precisão e ancoragem
 - **Termo exato, sem variação elegante:** repita o termo técnico; sinônimo usado só para
-  não repetir gera ambiguidade. Nunca "o mesmo"/"a mesma" como pronome ("o contrato foi
+  não repetir gera ambiguidade. Referente distante também se repete, em vez de retomado
+  por demonstrativo (GO-1). Nunca "o mesmo"/"a mesma" como pronome ("o contrato foi
   assinado e o mesmo previa multa" → "o contrato foi assinado e previa multa").
 - **O léxico não concede a premissa adversária.** Ao relatar ato, decisão ou tese
   contrária, verbo e substantivo não podem admitir por descuido a premissa que se
@@ -200,8 +258,10 @@ decisão") e latim ornamental constante ("in casu", "a priori" o tempo todo).
   parágrafo coubesse em qualquer processo sobre o tema, falta ancoragem.
 - **Procedência dos autos:** cite tipo do documento, NUM (id ou evento) e páginas, como
   o workspace entrega: "(Certidão de intimação, id 12345678, p. 3)".
-- **Nenhuma transcrição órfã:** ementa, artigo, cláusula ou documento transcrito recebe
-  leitura dirigida (padrão 1 de `references/padroes-da-casa.md`).
+- **Toda transcrição tem função:** a frase que a apresenta diz por que ela importa, o
+  grifo marca o trecho decisivo e o que vem depois aplica ao caso ou conclui (padrão 1 de
+  `references/padroes-da-casa.md`); recontar o que se acabou de transcrever é o vício do
+  GO-7.
 
 ## Persuasão e padrões da casa (registro peça)
 - **Antes de redigir os fundamentos**, leia `references/persuasao.md`: o peso de cada

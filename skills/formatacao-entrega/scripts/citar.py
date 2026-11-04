@@ -458,7 +458,7 @@ def _checar(texto: str, rotulo: str) -> None:
 
 
 # --------------------------------------------------------------- recorte / grifo
-_ITEM_RE = re.compile(r"(?:(?<=^)|(?<=\s))(\d{1,3})\s*[.)\-–]\s+(?=[\"“'(]?[A-ZÁÉÍÓÚÂÊÔÃÕÇ])", re.M)
+_ITEM_RE = re.compile(r"(?:(?<=^)|(?<=\s))(\d{1,3})\s*[.)\-–]\s*(?=[\"“'(]?[A-ZÁÉÍÓÚÂÊÔÃÕÇ])", re.M)
 _ROMANO_RE = re.compile(r"(?:(?<=^)|(?<=\s))([IVXL]{1,6})\s*[.)\-–]\s+(?=[\"“'(]?[A-ZÁÉÍÓÚÂÊÔÃÕÇ])", re.M)
 _TITULO_ROMANO_FINAL = re.compile(r"\s+[IVX]{1,4}\.\s+(?:CASO EM EXAME|QUEST[ÃA]O EM DISCUSS[ÃA]O|"
                                   r"RAZ[ÕO]ES DE DECIDIR|DISPOSITIVO(?: E TESE)?)\s*$", re.IGNORECASE)
