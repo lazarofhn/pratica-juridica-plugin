@@ -40,6 +40,7 @@ de aberturas por sujeito nominal; ou JSON com `alertas`, `resumo` e `paragrafos`
 | `GO-7/parafrase` | parágrafo vizinho de citação que reconta o julgado ("Nesse julgado, o STJ entendeu…") ou repete metade ou mais do vocabulário dela | fica só o que a citação não mostra: a aplicação ao caso ou o arremate |
 | `GO-7/repeticao` | parágrafo com 75% ou mais do vocabulário de outro, não vizinho (conclusão anunciada e repetida) | diga uma vez, no fim do tópico |
 | `GO-7/precedente-narrado` | frase que conta o que o tribunal fez e por quê ("o STJ cassou…, por reconhecer que…"), com a referência do julgado e sem trecho entre aspas | mostre: frase de apresentação e trecho em bloco, com grifo; na prosa, só a corroboração curta |
+| `GO-7/remissoes` | três ou mais remissões a precedentes (classe e número, súmula, tema) no mesmo parágrafo de texto corrido | o que sustenta o ponto vai em bloco, com grifo; os demais, na linha de referência do bloco ("No mesmo sentido: …"); a quantidade de precedentes da peça não se limita |
 | `GO-7/decisao-contraria` | decisão invocada pela parte contrária transcrita em bloco, ou decisões contrárias tratadas em três ou mais parágrafos | um parágrafo de conjunto: grau, data, o que decidiram em uma linha, os pronunciamentos favoráveis |
 | `GO-7/reformulacao` | "ou seja", "vale dizer", "em outras palavras" mais de uma vez | fica a que acrescenta a consequência; a que repete sai |
 | `precisao/o-mesmo` | "o mesmo" seguido de verbo ou pontuação | repita o termo ou reorganize |

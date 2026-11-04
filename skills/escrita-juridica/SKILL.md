@@ -229,8 +229,12 @@ o que mais engorda a peça: na manifestação revisada pelo José (nov./2026), a
   seja" só quando acrescenta a consequência (padrão 4).
 - **Fato primeiro, fonte no parêntese:** "O voto que instruiu a resolução aprovou a
   outorga da usina…" → "A usina foi outorgada… (Doc. 15, id …)".
-- **Segundo precedente para o mesmo ponto** só se acrescenta (outro tribunal que pesa,
-  decisão mais recente, o órgão que vai julgar); em ponto de apoio, um basta.
+- **O parágrafo não carrega a lista de precedentes.** Quantos citar varia com a
+  importância da questão: na mais importante, cabe mais de um, inclusive do mesmo
+  tribunal. O que não cabe é o texto corrido cheio de remissões (número, órgão, relator e
+  data em série no meio do argumento): o que sustenta o ponto vai em bloco, com grifo, e
+  os demais do mesmo ponto na linha de referência do bloco ("No mesmo sentido: TRF5, AC
+  …, 4ª Turma").
 
 **Teste:** apague a frase ou o parágrafo. O julgador perde algo que a citação, o grifo e
 o texto vizinho não lhe dão? Se não perde, sai.

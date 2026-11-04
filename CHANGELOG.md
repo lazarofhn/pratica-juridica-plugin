@@ -24,8 +24,13 @@ argumento continua sendo juízo do advogado.
 - **Radar:** `GO-7/precedente-narrado` e `GO-7/decisao-contraria` (bloco de decisão
   invocada pela parte contrária, ou decisões contrárias em três ou mais parágrafos). Na
   peça do agente, apontam os dois precedentes narrados, a transcrição da sentença
-  contrária e os três parágrafos sobre ela; nas versões definitivas do José, nada. São 5
-  testes novos.
+  contrária e os três parágrafos sobre ela; nas versões definitivas do José, nada.
+- **Quantidade de precedentes livre, texto corrido limpo:** sai a linha "em ponto de
+  apoio, um basta". Na questão mais importante cabe mais de um precedente, inclusive do
+  mesmo tribunal; o que não cabe é o parágrafo de texto corrido cheio de remissões. O que
+  sustenta o ponto vai em bloco, com grifo, e os demais na linha de referência do bloco
+  ("No mesmo sentido: …"). No radar, `GO-7/remissoes` dispara com três ou mais remissões
+  no mesmo parágrafo (nas versões do José, o máximo é duas). São 8 testes novos.
 
 ## v1.5.0 (2026-11-04)
 

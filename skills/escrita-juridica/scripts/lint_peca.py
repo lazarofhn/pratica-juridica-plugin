@@ -19,6 +19,8 @@ arquivo:linha + regra para os padrões que a casa manda varrer:
                       vez de mostrado: apresentação de uma frase e trecho em bloco, com grifo
   GO-7/decisao-contraria   decisão invocada pela parte contrária transcrita em bloco, ou
                       decisões contrárias tratadas em três ou mais parágrafos
+  GO-7/remissoes      três ou mais remissões a precedentes no mesmo parágrafo de texto
+                      corrido (a quantidade de precedentes da peça não é limitada)
   GO-7/reformulacao   "ou seja", "vale dizer", "em outras palavras" mais de uma vez
   GO-5/ensaio         fórmula de crônica ou ensaio: avaliação impressionista, imagem,
                       contraste em suspense, dramatização, narrador comentando a peça
@@ -84,6 +86,7 @@ class Config:
     max_reformulacao: int = 1   # "ou seja" e afins: a segunda ocorrência dispara
     parafrase_min: float = 0.5  # parte do vocabulário do parágrafo que já está na citação
     repeticao_min: float = 0.75  # parte do vocabulário em comum com outro parágrafo
+    max_remissoes: int = 2      # remissões a precedentes toleradas num parágrafo de prosa
     ignorar: tuple = ()
 
 
@@ -772,6 +775,32 @@ def checar_precedente_narrado(pars, cfg, arquivo):
                              _trecho(p.texto, ini, ini + 60, folga=0))
 
 
+RE_ID_PRECEDENTE = re.compile(
+    r"\b(?:REsp|AREsp|EREsp|AgInt|AgRg|EDcl|RE|ARE|AI|RMS|MS|MI|ADI|ADC|ADPF|AC|AMS|REOMS"
+    r"|Rcl|HC|[Ss]úmula|[Tt]ema)\s+(?:(?:no|na|nos|nas)\s+\w+\s+)?(?:n[º°o.]\s*)?\d[\d.\-/]*")
+
+
+def checar_remissoes(pars, cfg, arquivo):
+    """Texto corrido cheio de remissões a precedentes. A quantidade de precedentes da peça
+    não se limita: os que sustentam o ponto vão em bloco e os demais na linha de referência
+    do bloco ("No mesmo sentido: …")."""
+    for p in pars:
+        if p.tipo != "prosa":
+            continue
+        ids = []
+        for m in RE_ID_PRECEDENTE.finditer(mascarar(p.texto)):
+            k = re.sub(r"\s+", " ", m.group(0)).rstrip("./-")
+            if k not in ids:
+                ids.append(k)
+        if len(ids) > cfg.max_remissoes:
+            yield Alerta(arquivo, p.inicio, "GO-7/remissoes",
+                         f"{len(ids)} remissões a precedentes no mesmo parágrafo "
+                         f"({'; '.join(ids[:6])}): o texto corrido não carrega a lista; o que "
+                         f"sustenta o ponto vai em bloco, com grifo, e os demais na linha de "
+                         f"referência do bloco (\"No mesmo sentido: …\")",
+                         _trecho(p.texto, 0, 60, folga=0))
+
+
 def checar_decisao_contraria(pars, cfg, arquivo):
     """Decisões que a parte contrária invoca: a casa responde em conjunto, sem transcrevê-las."""
     for p in pars:
@@ -1010,6 +1039,7 @@ def lint_texto(texto, arquivo="<texto>", cfg=None, **kw):
     alertas.extend(checar_repeticao(pars, cfg, arquivo))
     alertas.extend(checar_precedente_narrado(pars, cfg, arquivo))
     alertas.extend(checar_decisao_contraria(pars, cfg, arquivo))
+    alertas.extend(checar_remissoes(pars, cfg, arquivo))
     alertas.extend(checar_media(pars, cfg, arquivo))
     alertas = [a for a in alertas if not _ignorada(a.regra, cfg)]
     alertas.sort(key=lambda a: (a.linha, a.regra))

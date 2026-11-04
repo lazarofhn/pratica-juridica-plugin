@@ -354,6 +354,28 @@ class DizerUmaVez(unittest.TestCase):
         self.assertEqual(self.regras7(duas), ["GO-7/reformulacao"])
 
 
+class RemissoesNoParagrafo(unittest.TestCase):
+    def regras(self, texto):
+        return [a.regra for a in lint.lint_texto(texto) if a.regra == "GO-7/remissoes"]
+
+    def test_tres_remissoes_no_texto_corrido(self):
+        texto = corpo("O mandado de segurança preventivo é cabível (STJ, REsp 1.933.794), o que se "
+                      "reafirmou no AgInt no REsp 2.245.419 e no RMS 44.021, à luz da Súmula 213.")
+        self.assertEqual(self.regras(texto), ["GO-7/remissoes"])
+
+    def test_duas_remissoes_e_trechos_entre_aspas_ficam(self):
+        duas = corpo("O mandado de segurança preventivo é cabível (STJ, REsp 1.933.794; AgInt "
+                     "no REsp 2.245.419).")
+        aspas = corpo('A autoridade transcreve "RE 631.641, AI 360.461 e MS 29.374" sem análise.')
+        self.assertEqual(self.regras(duas), [])
+        self.assertEqual(self.regras(aspas), [])
+
+    def test_mesmo_precedente_repetido_conta_uma_vez(self):
+        texto = corpo("Como decidiu o STJ no REsp 1.933.794, o receio é justo; o REsp 1.933.794 "
+                      "também afasta a Súmula 266.")
+        self.assertEqual(self.regras(texto), [])
+
+
 class PrecedenteEDecisaoContraria(unittest.TestCase):
     def regras7(self, texto):
         return [a.regra for a in lint.lint_texto(texto) if a.regra.startswith("GO-7")]
