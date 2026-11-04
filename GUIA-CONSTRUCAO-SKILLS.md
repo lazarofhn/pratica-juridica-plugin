@@ -212,7 +212,7 @@ ferramenta.
 
 ### escrita-juridica
 Dona única do estilo. O peso do argumento antes da forma; registros
-`peça|interno|externo`; GO-1 a GO-6; persuasão calibrada (com a régua do peso e a
+`peça|interno|externo`; GO-1 a GO-7; persuasão calibrada (com a régua do peso e a
 objeção já levantada) e padrões da casa em `references/`, lidos sob demanda; revisão de
 peça pronta; varredura automática de padrões por script.
 

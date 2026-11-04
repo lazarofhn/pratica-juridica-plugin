@@ -1,5 +1,66 @@
 # Changelog — pratica-juridica
 
+## v1.5.0 (2026-11-04)
+
+Calibração da escrita: o texto diz cada coisa uma vez. O José comparou a versão do Claude
+de uma manifestação em mandado de segurança com a dele: a prosa caiu 42% (de 57 para 38
+parágrafos) e as citações ficaram quase todas. O corte foi no texto em volta delas: o
+parágrafo que reconta o precedente ou a norma recém-transcrita, a frase que reexplica a
+anterior, a que anuncia o que o parágrafo seguinte prova e a conclusão anunciada na
+abertura do capítulo e repetida no fim. A nota dele na revisão resume o alvo: "Faltou
+parágrafo de arremate (não necessariamente explicar o precedente mas concluir o
+raciocínio)". Ele apontou também as remissões órfãs ("Este entendimento", "Essa
+lógica", "Este tributo" apontando para parágrafos distantes) e pediu que a abertura do
+parágrafo venha, na maioria das vezes, pela conjunção.
+
+Parte do vício vinha do próprio plugin: o padrão 1 ("sanduíche de citação") mandava
+escrever, depois de toda citação, um parágrafo de leitura dirigida, e a revisão cobrava
+"citação órfã"; o padrão 4 mandava reformular com "Ou seja"; a GO-1 da v1.3.1 mandava
+abrir o parágrafo retomando o anterior ("Essa omissão", "Tal registro"); e o radar, que
+contava "O acórdão" como abertura nominal mas não "Esse acórdão", tratava média abaixo de
+70 palavras como texto picotado. As duas versões definitivas do José têm média de 51 e 49.
+
+**Regras (`escrita-juridica`)**
+- **Nova GO-7, "Dizer uma vez":** em volta da citação, só o que ela não mostra (antes, a
+  frase que a apresenta; dentro, o grifo, que é a leitura dirigida; depois, a aplicação
+  ao caso ou o arremate); transcrever ou parafrasear, não os dois; decisão contrária não
+  se reconta uma por uma; sai a frase que se explica; "Ou seja" só se acrescenta; fato
+  primeiro, fonte no parêntese. Teste: apague; o julgador perde algo?
+- **GO-1 reescrita:** a conjunção abre o parágrafo na maioria das vezes, anteposta ou
+  logo depois do primeiro termo; sujeito nominal cabe quando nomeia o passo novo do
+  argumento. A remissão fica à vista: o demonstrativo retoma o termo da frase anterior,
+  de preferência repetido, e não o que ficou parágrafos atrás ou do outro lado de um
+  título; rótulo vago ("Nesse quadro") sai ou nomeia o referente na frase. O capítulo
+  abre pela própria tese, sem parágrafo que resuma o anterior.
+- **GO-4:** média de 45 a 65 palavras por parágrafo (era 70 a 90), consequência e nunca
+  meta; o vício oposto ao bloco denso é a série de frases soltas sem conjunção, não a
+  média baixa.
+- **Padrões da casa:** o padrão 1 passa a "citação apresentada, grifada e aplicada"; o
+  padrão 3 (micro-conclusão) diz-se uma vez, no fim, e é o arremate do tópico que termina
+  em citação; o padrão 4 ("Ou seja") fica raro e só quando acrescenta a consequência.
+- **Revisão:** nova varredura 1, "Dizer uma vez", antes das de forma; a de ligação ganha a
+  remissão; o "cuidado inverso" deixa de proteger o parágrafo de síntese que repete.
+  `persuasao.md`: decisões contrárias do adversário respondidas em conjunto.
+- **`sensibilidade-argumentativa`** corta o que a peça diz duas vezes.
+
+**Radar (`lint_peca.py`)**
+- `GO-1/abertura` (era `GO-1/abertura-nominal`): conta as aberturas sem conectivo,
+  nominais ou por demonstrativo, com teto de cerca de metade e nunca três seguidas;
+  conectivo posposto ("A ordem postulada, contudo,") conta como conectivo; a frase que
+  apresenta citação não conta, e título e citação reiniciam a sequência.
+- `GO-1/remissao`: rótulo vago na abertura, termo de dois ou mais parágrafos atrás e
+  abertura de capítulo apontando para o anterior. Locuções dêiticas ("nesta ação",
+  "deste writ") e rótulo nomeado na frase ("Essa ratio, que…") não disparam.
+- `GO-7/parafrase` (parágrafo vizinho de citação que reconta o julgado ou repete metade
+  do vocabulário dela; no `@citacao-ref`, compara com o grifo), `GO-7/repeticao`
+  (parágrafo com 75% do vocabulário de outro) e `GO-7/reformulacao` (o segundo "ou
+  seja").
+- Média-alvo 45–65; o alerta de média baixa não manda mais alongar.
+- Calibrado nas peças do José: nas duas versões definitivas, só restam dois alertas de
+  remissão, ambos para a decisão dele ("Nessa perspectiva" e "esse quadro"); na versão do
+  Claude, o radar aponta as três remissões e a conclusão repetida (92% do vocabulário).
+  São 17 testes novos no radar (de 50 para 67).
+
 ## v1.4.0 (2026-10-26)
 
 A construção do argumento passa à frente da forma. O José comparou a versão do Claude de

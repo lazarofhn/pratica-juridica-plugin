@@ -6,10 +6,17 @@ arquivo:linha + regra para os padrões que a casa manda varrer:
 
   GO-2                travessão, meia-risca ou hífen com espaços usado como traço aditivo
   GO-4/paragrafo      parágrafo que passa da referência de palavras ou junta períodos demais
-  GO-4/media          média de palavras por parágrafo fora da faixa-alvo (70 a 90)
+  GO-4/media          média de palavras por parágrafo fora da faixa-alvo (45 a 65)
   GO-4/aberturas      parágrafos seguidos com a mesma abertura (padrão: três)
-  GO-1/abertura-nominal  parágrafos demais abertos por sujeito nominal ("O MPF", "A
-                      sentença"): acima de 30% da peça ou três seguidos
+  GO-1/abertura       parágrafos demais abertos sem conectivo (sujeito nominal, "O MPF",
+                      ou demonstrativo, "Esse acórdão"): mais da metade ou três seguidos
+  GO-1/remissao       demonstrativo que remete ao que não está à vista: termo de dois ou
+                      mais parágrafos atrás, do outro lado de um título, ou rótulo vago
+                      sem antecedente na abertura ("Nesse quadro", "Essa lógica")
+  GO-7/parafrase      parágrafo vizinho de citação que reconta o julgado ou repete as
+                      palavras dela
+  GO-7/repeticao      parágrafo que repete outro (conclusão anunciada e repetida)
+  GO-7/reformulacao   "ou seja", "vale dizer", "em outras palavras" mais de uma vez
   GO-5/ensaio         fórmula de crônica ou ensaio: avaliação impressionista, imagem,
                       contraste em suspense, dramatização, narrador comentando a peça
   GO-5/metadiscurso   arquitetura da tese exposta ("apenas para argumentar")
@@ -28,14 +35,15 @@ código, tabelas e títulos.
 
 Uso:
     python lint_peca.py peca.md [outra.md | pasta ...] [--json]
-        [--max-palavras 120] [--limite-palavras 130] [--max-periodos 2] [--media 70-90]
+        [--max-palavras 120] [--limite-palavras 130] [--max-periodos 2] [--media 45-65]
         [--aberturas 3] [--max-abertura-nominal 30] [--max-nominais-seguidas 2]
         [--max-cortesia 2] [--ignorar GO-6,cortesia]
 
 A régua do parágrafo é de ideia, não de número: um parágrafo diz uma coisa só,
 normalmente em um ou dois períodos curtos. Os números só apontam onde olhar: média de
-70 a 90 palavras por parágrafo na peça; 120 é referência de teto (125 ou 130 cabem se a
-ideia pede); acima de 130, quase sempre há duas ideias.
+45 a 65 palavras por parágrafo na peça (consequência, nunca meta: não se alonga parágrafo
+para chegar à faixa); 120 é referência de teto (125 ou 130 cabem se a ideia pede); acima
+de 130, quase sempre há duas ideias.
 
 Saída: uma linha por alerta (arquivo:linha: [regra] mensagem | trecho), a média de
 palavras por parágrafo de cada arquivo e um resumo; com --json, um objeto
@@ -52,6 +60,7 @@ import json
 import os
 import re
 import sys
+import unicodedata
 from dataclasses import asdict, dataclass, field
 
 
@@ -61,13 +70,17 @@ class Config:
     max_palavras: int = 120     # referência de teto: acima, confira se é uma ideia só
     limite_palavras: int = 130  # acima, o parágrafo quase sempre junta ideias
     max_periodos: int = 2       # o padrão é um ou dois períodos curtos
-    media_min: int = 70         # faixa-alvo da média de palavras por parágrafo
-    media_max: int = 90
+    periodos_a_partir: int = 90  # só parágrafo acima disso é cobrado pelos períodos
+    media_min: int = 45         # faixa-alvo da média de palavras por parágrafo (versões
+    media_max: int = 65         # definitivas do José, out. e nov./2026: 49 e 51)
     min_pars_media: int = 6     # com menos parágrafos de prosa (peça protocolar), sem média
     aberturas: int = 3
-    max_abertura_nominal: int = 30   # % de parágrafos abertos por sujeito nominal
-    max_nominais_seguidas: int = 2   # a terceira abertura nominal seguida dispara
+    max_abertura_nominal: int = 50   # % de parágrafos abertos sem conectivo (nominal ou
+    max_nominais_seguidas: int = 2   # demonstrativo); a terceira seguida dispara
     max_cortesia: int = 2
+    max_reformulacao: int = 1   # "ou seja" e afins: a segunda ocorrência dispara
+    parafrase_min: float = 0.5  # parte do vocabulário do parágrafo que já está na citação
+    repeticao_min: float = 0.75  # parte do vocabulário em comum com outro parágrafo
     ignorar: tuple = ()
 
 
@@ -170,10 +183,16 @@ def segmentar(texto):
             saida.append(atual.montar())
         atual = None
 
-    def marco(tipo, n):
+    def marco(tipo, n, linha=""):
+        """Citação ou título: blocos seguidos do mesmo tipo viram um marco só, que guarda
+        o texto (a paráfrase e a remissão comparam com ele)."""
         fechar()
-        if not saida or saida[-1].tipo != tipo:
-            saida.append(Paragrafo(tipo, [(n, "")]).montar())
+        if saida and saida[-1].tipo == tipo:
+            if linha.strip():
+                saida[-1].linhas.append((n, linha))
+                saida[-1].montar()
+            return
+        saida.append(Paragrafo(tipo, [(n, linha)]).montar())
 
     for n, linha in enumerate(linhas, 1):
         if em_frontmatter:
@@ -197,16 +216,16 @@ def segmentar(texto):
                 continue
         cat = _categoria(tag) if modo_tag else "md"
         if cat in ("titulo", "citacao"):
-            marco(cat, n)
+            marco(cat, n, linha)
             continue
         if not linha.strip():
             fechar()
             continue
         if RE_CITACAO_MD.match(linha):
-            marco("citacao", n)
+            marco("citacao", n, re.sub(r"^\s*>\s?", "", linha))
             continue
         if RE_TITULO_MD.match(linha):
-            marco("titulo", n)
+            marco("titulo", n, re.sub(r"^\s{0,3}#{1,6}\s*", "", linha))
             continue
         if RE_TABELA.match(linha) or RE_REGUA.match(linha) or RE_COMENTARIO.match(linha):
             fechar()
@@ -257,8 +276,8 @@ def _trecho(texto, a, b, folga=30):
 
 
 RE_ABREV = re.compile(
-    r"\b(Rel|Min|Des|Dr|Dra|Sr|Sra|Exmos?|Exmas?|Exa|Ex|Ilmos?|Ilmas?|Profa?|Cf|cf|V|v|"
-    r"Id|id|Ib|ib|n|art|arts|inc|incs|fls?|pp?|ss|al|Ltda|S\.A)\."
+    r"\b(Rel|Min|Des|Dr|Dra|Sr|Sra|Exmos?|Exmas?|exmos?|exmas?|Exa|Ex|Ilmos?|Ilmas?|Profa?|Cf|cf|"
+    r"V|v|Id|id|Ib|ib|n|art|arts|inc|incs|fls?|pp?|ss|al|Ltda|S\.A|eg|Eg|Docs?|c)\."
 )
 
 
@@ -303,7 +322,7 @@ def checar_paragrafo(par, cfg):
         msg = (f"parágrafo de {palavras} palavras: acima da referência de {cfg.max_palavras}. "
                f"Mantenha se for uma ideia só que precisa desse espaço; se houver duas, quebre "
                f"na costura")
-    elif periodos > cfg.max_periodos and palavras > cfg.media_max:
+    elif periodos > cfg.max_periodos and palavras > cfg.periodos_a_partir:
         msg = (f"parágrafo de {palavras} palavras em {periodos} períodos: o padrão é uma ideia "
                f"em um ou dois períodos curtos; confira se não há duas ideias")
     else:
@@ -314,14 +333,20 @@ def checar_paragrafo(par, cfg):
 def estatisticas(pars):
     """Tamanho dos parágrafos de prosa (sem itens, títulos e citações)."""
     prosa = [p for p in pars if p.tipo == "prosa"]
+    sem_apresentacao = [p for i, p in enumerate(pars)
+                        if p.tipo == "prosa" and not apresenta_citacao(pars, i)]
     tamanhos = [len(p.texto.split()) for p in prosa]
     if not tamanhos:
-        return {"paragrafos": 0, "media_palavras": 0.0, "maior": 0, "aberturas_nominais_pct": 0}
+        return {"paragrafos": 0, "media_palavras": 0.0, "maior": 0, "aberturas_nominais_pct": 0,
+                "aberturas_sem_conectivo_pct": 0}
     nominais = sum(1 for p in prosa if abre_com_sujeito_nominal(p.texto))
+    sem_conectivo = sum(1 for p in sem_apresentacao if abertura_sem_conectivo(p.texto))
     return {"paragrafos": len(tamanhos),
             "media_palavras": round(sum(tamanhos) / len(tamanhos), 1),
             "maior": max(tamanhos),
-            "aberturas_nominais_pct": round(100 * nominais / len(prosa))}
+            "aberturas_nominais_pct": round(100 * nominais / len(prosa)),
+            "aberturas_sem_conectivo_pct": round(100 * sem_conectivo
+                                                 / max(len(sem_apresentacao), 1))}
 
 
 def checar_media(pars, cfg, arquivo):
@@ -341,8 +366,8 @@ def checar_media(pars, cfg, arquivo):
                f"começam nas linhas {onde})")
     else:
         msg = (f"média de {media:.0f} palavras por parágrafo em {est['paragrafos']} "
-               f"parágrafos, abaixo da {faixa}: confira se o raciocínio não ficou picotado "
-               f"(frase solta sem função de ênfase)")
+               f"parágrafos, abaixo da {faixa}: confira se há frases soltas em série, sem "
+               f"conjunção que as ligue; não alongue parágrafo para atingir a faixa")
     yield Alerta(arquivo, prosa[0].linha_de(0), "GO-4/media", msg,
                  _trecho(prosa[0].texto, 0, 60, folga=0))
 
@@ -420,18 +445,52 @@ def abre_com_sujeito_nominal(texto):
     return palavras[0].lower() in ARTIGOS and palavras[1].lower() not in LOCUCAO_APOS_ARTIGO
 
 
-def checar_abertura_nominal(pars, cfg, arquivo):
-    prosa = [p for p in pars if p.tipo == "prosa"]
+RE_ABRE_DEMONSTRATIVO = re.compile(r"^(?:est|ess|aquel)(?:e|a|es|as)\b|^(?:tal|tais)\b", re.I)
+POSPOSTOS = [
+    "contudo", "todavia", "portanto", "assim", "por isso", "pois", "entretanto", "no entanto",
+    "porém", "por sua vez", "aliás", "ademais", "de fato", "com efeito", "então", "logo",
+    "outrossim", "igualmente", "também", "ainda", "por conseguinte", "consequentemente",
+    "dessa forma", "desse modo", "nesse sentido", "por outro lado", "de outro lado",
+    "ao contrário", "inclusive", "sobretudo", "em consequência", "ademais disso",
+]
+RE_CONECTIVO_POSPOSTO = re.compile(
+    r"^[^.;:!?]{1,80}?,\s*(?:" + "|".join(re.escape(c) for c in POSPOSTOS) + r")\s*,", re.I)
+
+
+def abertura_sem_conectivo(texto):
+    """"nominal" ("O MPF imputou"), "demonstrativo" ("Esse acórdão", "Essa lógica") ou None
+    (abre pela conjunção, anteposta ou logo depois do primeiro termo, ou por circunstância)."""
+    t = re.sub(r"^[^\w]+", "", mascarar(texto).strip())
+    if RE_CONECTIVO_POSPOSTO.match(t):
+        return None
+    if RE_ABRE_DEMONSTRATIVO.match(t):
+        return "demonstrativo"
+    if abre_com_sujeito_nominal(texto):
+        return "nominal"
+    return None
+
+
+def apresenta_citacao(pars, i):
+    """A frase que apresenta a citação seguinte ("O STJ já enfrentou a questão…:")."""
+    p = pars[i]
+    return (p.tipo == "prosa" and i + 1 < len(pars) and pars[i + 1].tipo == "citacao"
+            and p.texto.rstrip().endswith(":") and contar_periodos(p.texto) <= 2)
+
+
+def checar_abertura(pars, cfg, arquivo):
+    """Aberturas sem conectivo. A frase que apresenta a citação não conta, e a citação
+    reinicia a sequência: o parágrafo seguinte a ela retoma a própria citação."""
+    prosa = [p for i, p in enumerate(pars) if p.tipo == "prosa" and not apresenta_citacao(pars, i)]
     if len(prosa) < cfg.min_pars_media:
         return
     sequencias, run = [], []
-    for p in pars:
-        if p.tipo == "titulo":
+    for i, p in enumerate(pars):
+        if p.tipo in ("titulo", "citacao"):
             run = []
             continue
-        if p.tipo != "prosa":
+        if p.tipo != "prosa" or apresenta_citacao(pars, i):
             continue
-        if abre_com_sujeito_nominal(p.texto):
+        if abertura_sem_conectivo(p.texto):
             run.append(p)
             if len(run) == cfg.max_nominais_seguidas + 1:
                 sequencias.append(run)
@@ -440,28 +499,254 @@ def checar_abertura_nominal(pars, cfg, arquivo):
     for run in sequencias[:MAX_ALERTAS_SEQUENCIA]:
         p = run[cfg.max_nominais_seguidas]
         linhas = ", ".join(str(x.inicio) for x in run)
-        yield Alerta(arquivo, p.inicio, "GO-1/abertura-nominal",
-                     f"{len(run)} parágrafos seguidos abertos por sujeito nominal (linhas "
-                     f"{linhas}): ligue cada um ao anterior pelo conectivo, por uma "
-                     f"circunstância ou retomando a ideia", _trecho(p.texto, 0, 50, folga=0))
-    nominais = [p for p in prosa if abre_com_sujeito_nominal(p.texto)]
+        yield Alerta(arquivo, p.inicio, "GO-1/abertura",
+                     f"{len(run)} parágrafos seguidos abrem sem conectivo (linhas {linhas}): "
+                     f"abra pela conjunção da relação lógica com o anterior (Ademais, Portanto, "
+                     f"Todavia…), anteposta ou logo depois do primeiro termo",
+                     _trecho(p.texto, 0, 50, folga=0))
+    sem = [p for p in prosa if abertura_sem_conectivo(p.texto)]
     teto = int(cfg.max_abertura_nominal * len(prosa) / 100 + 0.5)   # "cerca de": arredonda
-    if len(nominais) > teto:
+    if len(sem) > teto:
         contagem = {}
-        for p in nominais:
+        for p in sem:
             k = " ".join(re.findall(r"\w+(?:-\w+)*", p.texto.strip())[:2])
             contagem[k] = contagem.get(k, 0) + 1
         repetidas = sorted(contagem.items(), key=lambda kv: -kv[1])[:3]
         mais = ", ".join(f"\"{k}\" ({n})" for k, n in repetidas)
         extra = (f"; {len(sequencias)} sequência(s) de {cfg.max_nominais_seguidas + 1} ou mais"
                  if sequencias else "")
-        pct = 100 * len(nominais) / len(prosa)
-        yield Alerta(arquivo, nominais[0].inicio, "GO-1/abertura-nominal",
-                     f"{len(nominais)} de {len(prosa)} parágrafos ({pct:.0f}%) abrem com sujeito "
-                     f"nominal, acima do teto de cerca de {cfg.max_abertura_nominal}%{extra}: o "
-                     f"texto vira lista, sem ligação. Mais repetidas: {mais}. Reabra pelo "
-                     f"conectivo da relação lógica, por uma circunstância ou retomando a ideia "
-                     f"anterior", _trecho(nominais[0].texto, 0, 50, folga=0))
+        pct = 100 * len(sem) / len(prosa)
+        demonstrativos = sum(1 for p in sem if abertura_sem_conectivo(p.texto) == "demonstrativo")
+        yield Alerta(arquivo, sem[0].inicio, "GO-1/abertura",
+                     f"{len(sem)} de {len(prosa)} parágrafos ({pct:.0f}%) abrem sem conectivo "
+                     f"({demonstrativos} por demonstrativo), acima do teto de cerca de "
+                     f"{cfg.max_abertura_nominal}%{extra}: na maioria das vezes, a abertura vem "
+                     f"pela conjunção da relação lógica (Ademais, Portanto, Todavia…). Mais "
+                     f"repetidas: {mais}. Sujeito nominal fica quando nomeia o passo novo do "
+                     f"argumento; trocar o artigo por demonstrativo não liga nada",
+                     _trecho(sem[0].texto, 0, 50, folga=0))
+
+
+# ------------------------------------------------------------------ GO-1: remissão à vista
+def _sem_acento(s):
+    return "".join(c for c in unicodedata.normalize("NFD", s)
+                   if unicodedata.category(c) != "Mn").lower()
+
+
+RE_DEMONSTRATIVO = re.compile(
+    r"\b(?:n|d)?(?:est|ess|aquel)(?:e|a|es|as)\s+(?:mesm[oa]s?\s+)?(\w+(?:-\w+)?)"
+    r"|\bàquel(?:e|a|es|as)\s+(?:mesm[oa]s?\s+)?(\w+(?:-\w+)?)"
+    r"|\b(?:tal|tais)\s+(\w+(?:-\w+)?)", re.I)
+# remete à situação do próprio processo ou é locução fixa, não a um termo anterior
+DEITICOS = set(_sem_acento(w) for w in """
+processo processos acao acoes autos feito writ lide demanda peca peticao manifestacao memorial
+recurso agravo apelacao embargos mandado juizo tribunal corte turma camara secao plenario
+pleno instancia grau sede colegiado julgamento sessao pauta ano mes data momento oportunidade
+ocasiao ato caso ponto sentido modo forma maneira linha passo feita termos particular fase
+etapa eg egregio egregia colendo colenda excelencia excelentissimo excelentissimos relator
+relatora como qual quais sorte medida que quanto parte
+""".split())
+NAO_NOME = set(_sem_acento(w) for w in """
+e é foi era sao são sera seria seja sejam fosse estava esta está estao ultimo ultima ultimos
+ultimas primeiro primeira outro outra outros outras ja nao sim tambem ainda apenas so
+""".split())
+# rótulo que obriga o leitor a reconstruir o referente
+ROTULOS_VAGOS = set(_sem_acento(w) for w in """
+logica entendimento quadro perspectiva cenario panorama contexto raciocinio ideia premissa
+situacao circunstancia otica prisma visao compreensao diretriz orientacao toada diapasao
+esteira conjuntura realidade dinamica sistematica racional desenho
+""".split())
+# logo depois de uma citação, estes rótulos retomam a própria citação
+ROTULOS_DE_DECISAO = set(_sem_acento(w) for w in """
+entendimento orientacao compreensao diretriz raciocinio ratio tese conclusao premissa
+posicionamento jurisprudencia
+""".split())
+RE_NOMEIA = re.compile(r"^\s*,\s*(?:que|qual seja|quais sejam|isto é|ou seja|a saber"
+                       r"|segundo o qual|segundo a qual|pel[oa] qual|de que)\b", re.I)
+
+
+def _radical_nome(nome):
+    n = _sem_acento(nome)
+    return n[:6] if len(n) >= 7 else n[:-1] if len(n) >= 5 else n
+
+
+def _contem(radical, texto):
+    return re.search(r"\b" + re.escape(radical), _sem_acento(texto)) is not None
+
+
+def _fim_do_primeiro_periodo(texto):
+    t = RE_ABREV.sub(lambda m: m.group(0)[:-1] + "§", texto)
+    m = re.search(r"[.!?](?=\s+[A-ZÀ-Ý\"“(])", t)
+    return m.end() if m else len(texto)
+
+
+def checar_remissao(pars, cfg, arquivo):
+    prosa_idx = [i for i, p in enumerate(pars) if p.tipo in ("prosa", "item")]
+    for k, i in enumerate(prosa_idx):
+        p = pars[i]
+        if p.tipo != "prosa":
+            continue
+        anterior = prosa_idx[k - 1] if k > 0 else -1
+        entre = pars[anterior + 1:i]
+        titulos = [b for b in entre if b.tipo == "titulo"]
+        citacoes = [b for b in entre if b.tipo == "citacao"]
+        logo_apos_citacao = bool(entre) and entre[-1].tipo == "citacao"
+        masc = mascarar(p.texto)
+        abertura_fim = _fim_do_primeiro_periodo(masc)
+        for m in RE_DEMONSTRATIVO.finditer(masc):
+            nome = m.group(1) or m.group(2) or m.group(3) or ""
+            n = _sem_acento(nome)
+            if len(n) < 3 or n in DEITICOS or n in NAO_NOME:
+                continue
+            if RE_NOMEIA.match(masc[m.end():]):
+                continue
+            rad = _radical_nome(nome)
+            na_abertura = m.start() < abertura_fim
+            if _contem(rad, p.texto[:m.start()]):
+                continue
+            expr = re.sub(r"\s+", " ", p.texto[m.start():m.end()])
+            if titulos and na_abertura and not any(_contem(rad, t.texto) for t in titulos):
+                yield Alerta(arquivo, p.linha_de(m.start()), "GO-1/remissao",
+                             f"\"{expr}\" abre o capítulo apontando para o anterior: abra pela "
+                             f"própria tese e, se preciso, repita o termo exato",
+                             _trecho(p.texto, m.start(), m.end()))
+                continue
+            if (anterior >= 0 and _contem(rad, pars[anterior].texto)) \
+                    or any(_contem(rad, c.texto) for c in citacoes) \
+                    or any(_contem(rad, t.texto) for t in titulos):
+                continue
+            distancia = None
+            for d, j in enumerate(reversed(prosa_idx[:max(k - 1, 0)]), start=2):
+                if _contem(rad, pars[j].texto):
+                    distancia = d
+                    break
+            if distancia:
+                yield Alerta(arquivo, p.linha_de(m.start()), "GO-1/remissao",
+                             f"\"{expr}\" retoma termo que só aparece {distancia} parágrafos "
+                             f"atrás: repita o termo exato ou reformule; a remissão fica à vista",
+                             _trecho(p.texto, m.start(), m.end()))
+            elif na_abertura and n in ROTULOS_VAGOS \
+                    and not (logo_apos_citacao and n in ROTULOS_DE_DECISAO):
+                yield Alerta(arquivo, p.linha_de(m.start()), "GO-1/remissao",
+                             f"\"{expr}\" é rótulo sem antecedente à vista: nomeie o referente "
+                             f"(\"Essa ratio, que afastou…\") ou abra pela conjunção da relação "
+                             f"lógica", _trecho(p.texto, m.start(), m.end()))
+
+
+# ------------------------------------------------------------------ GO-7: dizer uma vez
+STOP_CONTEUDO = set(_sem_acento(w) for w in """
+sobre entre quando porque assim ainda tambem apenas mesmo mesma mesmos mesmas outro outra
+outros outras todos todas qualquer quaisquer sendo tendo havia houve forma modo termos sentido
+pelos pelas desse dessa deste desta nesse nessa neste nesta aquele aquela caput inciso incisos
+paragrafo unico alinea artigo artigos tribunal tribunais superior supremo federal justica
+turma secao camara relator relatora ministro ministra desembargador desembargadora recurso
+especial extraordinario agravo interno regimental embargos declaracao apelacao acordao
+acordaos julgamento julgado julgados regiao primeira segunda terceira quarta quinta sexta
+corte pleno plenario processo processos civil decisao decisoes
+""".split())
+RE_ABRE_PARAFRASE = re.compile(
+    r"^\W*(?:como se (?:vê|ve|observa|nota|percebe|depreende|extrai|verifica|infere|constata)"
+    r"|depreende-se|extrai-se|infere-se|vê-se|observa-se|percebe-se|nota-se|verifica-se"
+    r"|constata-se|nesse (?:julgado|precedente|acórdão|aresto|caso|feito)"
+    r"|neste (?:julgado|precedente|acórdão|aresto)"
+    r"|naquel[ea] (?:julgado|precedente|acórdão|aresto|caso|ocasião|feito|oportunidade)"
+    r"|na(?:quela)? ocasião|naquela oportunidade"
+    r"|n[oa] (?:referid|citad|mencionad|aludid|transcrit)[oa] (?:julgado|precedente|acórdão"
+    r"|aresto|caso|decisão|ementa)"
+    r"|n[oa] (?:julgado|precedente|acórdão|aresto|decisão|ementa) (?:acima|transcrit[oa]"
+    r"|citad[oa]|em destaque))\b", re.I)
+RE_SUJEITO_CORTE = re.compile(
+    r"^\W*(?:(?:o|a|os|as)\s+)?(?:(?:e?g\.|egr[eé]gi[oa]|colend[oa]|c\.)\s+)?(?:STJ|STF|TST|TSE"
+    r"|TCU|CARF|TRF\S*|TJ\w*|Superior Tribunal|Supremo Tribunal|Tribunal|Corte|Turma|Seção"
+    r"|Câmara|Plenário|Pleno|Órgão Especial|Primeira|Segunda|Terceira|Quarta|Quinta|Sexta"
+    r"|acórdão|julgado|precedente|aresto|relator|relatora|ministr[oa]|desembargador[a]?)\b",
+    re.I)
+RE_VERBO_DECISAO = re.compile(
+    r"\b(?:decidiu|decide|decidem|decidiram|entendeu|entende|entenderam|assentou|assenta"
+    r"|assentaram|reconheceu|reconhece|firmou|fixou|concluiu|afastou|consignou|registrou"
+    r"|rejeitou|acolheu|negou|manteve|aplicou|adotou|enfrentou|julgou|reafirmou|situou"
+    r"|resumiu|destacou|ressaltou|asseverou|pontuou|esclareceu|considerou|explicitou"
+    r"|deixou claro|foi claro)\b", re.I)
+RE_ANCORA_CASO = re.compile(
+    r"\b(?:Impetrante|Impetrad[oa]|Agravante|Agravad[oa]|Recorrente|Recorrid[oa]|Apelante"
+    r"|Apelad[oa]|Embargante|Embargad[oa]|Autora?|Réu|Ré|Requerente|Requerid[oa]|Executad[oa]"
+    r"|Exequente|Reclamante|Reclamad[oa]|Consulente|cliente|autos|Docs?\.|fls?\.|inicial"
+    r"|contrarrazões|informações|in casu|caso concreto|caso dos autos)\b|\bid\s*\d", re.I)
+RE_CHAVE_REF = re.compile(r"^\s*(fonte|processo|id|itens|trecho|grifo|ref|doc|arquivo)\s*:\s*(.*)$",
+                          re.I)
+
+
+def radicais(texto):
+    """Vocabulário de conteúdo: palavras de cinco letras ou mais, sem as de função e as de
+    tribunal, reduzidas a seis letras."""
+    out = set()
+    for w in re.findall(r"[^\W\d_]{5,}", texto):
+        n = _sem_acento(w)
+        if n not in STOP_CONTEUDO:
+            out.add(n[:6])
+    return out
+
+
+def texto_da_citacao(par):
+    """Texto visível da citação: o bloco transcrito ou, no @citacao-ref, o grifo e o trecho."""
+    linhas = [t for _, t in par.linhas if t.strip() and not RE_DIRETIVA_ARG.match(t)]
+    chaves = [RE_CHAVE_REF.match(t) for t in linhas]
+    if any(chaves):
+        return " ".join(m.group(2) for m in chaves
+                        if m and m.group(1).lower() in ("grifo", "trecho"))
+    return " ".join(linhas)
+
+
+def checar_parafrase(pars, cfg, arquivo):
+    for i, p in enumerate(pars):
+        if p.tipo != "prosa":
+            continue
+        vizinhas = [pars[j] for j in (i - 1, i + 1) if 0 <= j < len(pars)
+                    and pars[j].tipo == "citacao"]
+        if not vizinhas:
+            continue
+        texto = p.texto.strip()
+        antes_da_citacao = i + 1 < len(pars) and pars[i + 1].tipo == "citacao"
+        if antes_da_citacao and texto.endswith(":") and contar_periodos(texto) <= 2:
+            continue   # a frase que apresenta a citação fica
+        narra = bool(RE_ABRE_PARAFRASE.match(texto)
+                     or (RE_SUJEITO_CORTE.match(texto) and RE_VERBO_DECISAO.search(texto)))
+        narra = narra and not RE_ANCORA_CASO.search(texto)
+        P = radicais(texto)
+        Q = set().union(*(radicais(texto_da_citacao(v)) for v in vizinhas))
+        parte = len(P & Q) / len(P) if P else 0.0
+        repete = len(P) >= 8 and parte >= cfg.parafrase_min
+        if not (narra or repete):
+            continue
+        motivo = ("reconta o julgado" if narra else
+                  f"repete {parte:.0%} do vocabulário da citação vizinha")
+        yield Alerta(arquivo, p.inicio, "GO-7/parafrase",
+                     f"parágrafo vizinho de citação que {motivo}: em volta da citação fica só o "
+                     f"que ela não mostra (a aplicação ao caso ou o arremate); o grifo já faz a "
+                     f"leitura dirigida", _trecho(p.texto, 0, 60, folga=0))
+
+
+def checar_repeticao(pars, cfg, arquivo):
+    prosa = [p for p in pars if p.tipo == "prosa"]
+    rad = [radicais(p.texto) for p in prosa]
+    alertas = 0
+    for b in range(len(prosa)):
+        if len(rad[b]) < 10:
+            continue
+        for a in range(b - 1):   # só parágrafos não vizinhos
+            if len(rad[a]) < 10:
+                continue
+            comum = len(rad[a] & rad[b]) / min(len(rad[a]), len(rad[b]))
+            if comum >= cfg.repeticao_min:
+                yield Alerta(arquivo, prosa[b].inicio, "GO-7/repeticao",
+                             f"repete o parágrafo da linha {prosa[a].inicio} ({comum:.0%} do "
+                             f"vocabulário em comum): diga uma vez; a conclusão vem no fim do "
+                             f"tópico, sem anúncio na abertura nem reprise adiante",
+                             _trecho(prosa[b].texto, 0, 60, folga=0))
+                alertas += 1
+                break
+        if alertas >= MAX_ALERTAS_SEQUENCIA:
+            return
 
 
 # ------------------------------------------------------------------ léxico
@@ -520,6 +805,8 @@ SATURACAO = [
         r"\b[íi]nclit[oa]s?\b|\bpreclar[oa]s?\b|\binsignes?\b|\begr[ée]gi[oa]s?\b|\bcolend[oa]s?\b"
         r"|\bbrilhante (?:decisão|voto|sentença|acórdão)\b|\bdout[oa] (?:juízo|magistrad[oa]"
         r"|julgador[a]?)\b|\bvenerand[oa]\b", re.I)),
+    ("GO-7/reformulacao", "reformulação", re.compile(
+        r"\bou seja\b|\bem outras palavras\b|\bdito de outro modo\b|\bvale dizer\b", re.I)),
     ("padrao/vocativo", "vocativo", re.compile(
         r",\s+(?:Ex\.ª|Exa\.|Excelência|Exmos?\.\s+(?:Ministros?|Desembargador(?:es|as?)?)"
         r"|Nobres? Julgador(?:es|as?)?)\s*,", re.I)),
@@ -635,10 +922,15 @@ def lint_texto(texto, arquivo="<texto>", cfg=None, **kw):
                 contagem.setdefault((regra, familia), []).append(
                     (p.linha_de(m.start()), _trecho(p.texto, m.start(), m.end(), folga=15)))
     for (regra, familia), ocorrencias in contagem.items():
-        if len(ocorrencias) > cfg.max_cortesia:
-            linha, trecho = ocorrencias[cfg.max_cortesia]
+        dose = cfg.max_reformulacao if regra == "GO-7/reformulacao" else cfg.max_cortesia
+        if len(ocorrencias) > dose:
+            linha, trecho = ocorrencias[dose]
             linhas = ", ".join(str(l) for l, _ in ocorrencias[:10])
-            if regra == "padrao/vocativo":
+            if regra == "GO-7/reformulacao":
+                msg = (f"{familia} {len(ocorrencias)} vezes (linhas {linhas}): fica só a que "
+                       f"acrescenta a consequência prática; a que repete o ponto com outras "
+                       f"palavras sai")
+            elif regra == "padrao/vocativo":
                 msg = (f"{len(ocorrencias)} vocativos (linhas {linhas}): só nos 1 a 2 momentos "
                        f"decisivos (references/padroes-da-casa.md, padrão 6)")
             else:
@@ -646,7 +938,10 @@ def lint_texto(texto, arquivo="<texto>", cfg=None, **kw):
                        f"outra é natural; a saturação é vício")
             alertas.append(Alerta(arquivo, linha, regra, msg, trecho))
     alertas.extend(checar_aberturas(pars, cfg, arquivo))
-    alertas.extend(checar_abertura_nominal(pars, cfg, arquivo))
+    alertas.extend(checar_abertura(pars, cfg, arquivo))
+    alertas.extend(checar_remissao(pars, cfg, arquivo))
+    alertas.extend(checar_parafrase(pars, cfg, arquivo))
+    alertas.extend(checar_repeticao(pars, cfg, arquivo))
     alertas.extend(checar_media(pars, cfg, arquivo))
     alertas = [a for a in alertas if not _ignorada(a.regra, cfg)]
     alertas.sort(key=lambda a: (a.linha, a.regra))
@@ -697,12 +992,12 @@ def main(argv=None):
     ap.add_argument("--max-periodos", type=int, default=Config.max_periodos,
                     help="períodos por parágrafo antes do alerta (só em parágrafo acima da média-alvo)")
     ap.add_argument("--media", default=f"{Config.media_min}-{Config.media_max}",
-                    help="faixa-alvo da média de palavras por parágrafo (ex.: 70-90)")
+                    help="faixa-alvo da média de palavras por parágrafo (ex.: 45-65)")
     ap.add_argument("--max-abertura-nominal", type=int, default=Config.max_abertura_nominal,
-                    help="teto, em %%, de parágrafos abertos por sujeito nominal "
-                         "(\"O MPF\", \"A sentença\")")
+                    help="teto, em %%, de parágrafos abertos sem conectivo: sujeito nominal "
+                         "(\"O MPF\") ou demonstrativo (\"Esse acórdão\")")
     ap.add_argument("--max-nominais-seguidas", type=int, default=Config.max_nominais_seguidas,
-                    help="aberturas nominais seguidas toleradas antes do alerta")
+                    help="aberturas sem conectivo seguidas toleradas antes do alerta")
     ap.add_argument("--aberturas", type=int, default=Config.aberturas,
                     help="parágrafos seguidos com a mesma abertura que disparam o alerta")
     ap.add_argument("--max-cortesia", type=int, default=Config.max_cortesia,
@@ -713,7 +1008,7 @@ def main(argv=None):
     try:
         media_min, media_max = (int(x) for x in args.media.split("-", 1))
     except ValueError:
-        ap.error("--media deve ser uma faixa como 70-90")
+        ap.error("--media deve ser uma faixa como 45-65")
     cfg = Config(max_palavras=args.max_palavras, limite_palavras=args.limite_palavras,
                  max_periodos=args.max_periodos, media_min=media_min, media_max=media_max,
                  aberturas=args.aberturas, max_cortesia=args.max_cortesia,
@@ -743,8 +1038,8 @@ def main(argv=None):
             if est["paragrafos"]:
                 print(f"{caminho}: {est['paragrafos']} parágrafo(s) de prosa, média de "
                       f"{est['media_palavras']:.0f} palavras (faixa-alvo {cfg.media_min} a "
-                      f"{cfg.media_max}), o maior com {est['maior']}; aberturas por sujeito "
-                      f"nominal: {est['aberturas_nominais_pct']}% (teto "
+                      f"{cfg.media_max}), o maior com {est['maior']}; aberturas sem "
+                      f"conectivo: {est['aberturas_sem_conectivo_pct']}% (teto "
                       f"{cfg.max_abertura_nominal}%)")
         if alertas:
             partes = ", ".join(f"{k}: {v}" for k, v in resumo(alertas).items())

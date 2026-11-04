@@ -108,15 +108,17 @@ class MediaDosParagrafos(unittest.TestCase):
                        for w in self.ABERTURAS[:n]])
 
     def test_media_na_faixa_nao_dispara(self):
-        self.assertEqual(regras(self.peca(80)), [])
+        self.assertEqual(regras(self.peca(55)), [])
 
     def test_media_acima_da_faixa(self):
-        alertas = lint.lint_texto(self.peca(100))
+        alertas = lint.lint_texto(self.peca(80))
         self.assertEqual([a.regra for a in alertas], ["GO-4/media"])
-        self.assertIn("acima da faixa-alvo de 70 a 90", alertas[0].mensagem)
+        self.assertIn("acima da faixa-alvo de 45 a 65", alertas[0].mensagem)
 
-    def test_media_abaixo_da_faixa(self):
-        self.assertEqual(regras(self.peca(40)), ["GO-4/media"])
+    def test_media_abaixo_da_faixa_nao_manda_alongar(self):
+        alertas = lint.lint_texto(self.peca(30))
+        self.assertEqual([a.regra for a in alertas], ["GO-4/media"])
+        self.assertIn("não alongue parágrafo", alertas[0].mensagem)
 
     def test_peca_curta_nao_avalia_media(self):
         self.assertEqual(regras(self.peca(100, n=3)), [])
@@ -125,8 +127,8 @@ class MediaDosParagrafos(unittest.TestCase):
         self.assertEqual(regras(self.peca(100), media_min=90, media_max=110), [])
 
     def test_estatisticas(self):
-        est = lint.estatisticas(lint.segmentar(self.peca(80)))
-        self.assertEqual((est["paragrafos"], est["media_palavras"], est["maior"]), (6, 80.0, 80))
+        est = lint.estatisticas(lint.segmentar(self.peca(55)))
+        self.assertEqual((est["paragrafos"], est["media_palavras"], est["maior"]), (6, 55.0, 55))
 
 
 class AberturasIguais(unittest.TestCase):
@@ -154,50 +156,59 @@ class AberturasIguais(unittest.TestCase):
                                       "A decisão omitiu o terceiro.")), ["GO-4/aberturas"])
 
 
-class AberturaNominal(unittest.TestCase):
-    RESTO = " ".join(["prazo"] * 76) + "."   # cerca de 80 palavras: média na faixa
+class AberturaSemConectivo(unittest.TestCase):
+    RESTO = " ".join(["prazo"] * 51) + "."   # cerca de 55 palavras: média na faixa
 
     def par(self, abertura):
         return f"{abertura} {self.RESTO}"
 
     def test_sequencia_e_parcela_disparam(self):
         texto = corpo(self.par("O MPF imputou"), self.par("O acórdão manteve"),
-                      self.par("A sentença acolheu"), self.par("Diante disso, a defesa"),
-                      self.par("Ainda assim, o tribunal"), self.par("Essa conclusão ignora"))
+                      self.par("Essa conclusão ignora"), self.par("Diante disso, a defesa"),
+                      self.par("Ainda assim, o tribunal"), self.par("A sentença acolheu"))
         alertas = lint.lint_texto(texto)
         self.assertEqual([(a.regra, a.linha) for a in alertas],
-                         [("GO-1/abertura-nominal", 2), ("GO-1/abertura-nominal", 6)])
-        self.assertIn("3 de 6 parágrafos (50%)", alertas[0].mensagem)
+                         [("GO-1/abertura", 2), ("GO-1/abertura", 6)])
+        self.assertIn("4 de 6 parágrafos (67%) abrem sem conectivo (1 por demonstrativo)",
+                      alertas[0].mensagem)
         self.assertIn("linhas 2, 4, 6", alertas[1].mensagem)
 
     def test_texto_ligado_nao_dispara(self):
         texto = corpo(self.par("Na denúncia, o MPF imputou"), self.par("Ainda assim, o acórdão"),
-                      self.par("Essa conclusão ignora"), self.par("O tribunal, contudo,"),
+                      self.par("Todavia, a sindicância"), self.par("O tribunal, contudo,"),
                       self.par("Quanto ao dolo, a sentença"), self.par("Diante disso, a defesa"))
         self.assertEqual(regras(texto), [])
 
-    def test_parcela_tolera_arredondamento(self):
-        # 2 de 6 (33%) arredonda para o teto de cerca de 30%; 3 de 6 passa
-        ligadas = ["Diante disso, a defesa", "Ainda assim, o tribunal", "Essa conclusão",
-                   "Quanto ao dolo, a prova"]
-        texto = corpo(self.par("O MPF imputou"), *[self.par(a) for a in ligadas[:2]],
-                      self.par("A sentença acolheu"), *[self.par(a) for a in ligadas[2:]])
+    def test_metade_sem_conectivo_e_tolerada(self):
+        # 3 de 6 (50%) não passa do teto de cerca de metade; 4 de 6 passa (teste acima)
+        texto = corpo(self.par("O MPF imputou"), self.par("Diante disso, a defesa"),
+                      self.par("A sentença acolheu"), self.par("Ainda assim, o tribunal"),
+                      self.par("Esse acórdão manteve"), self.par("Portanto, a prova"))
         self.assertEqual(regras(texto), [])
 
-    def test_titulo_reinicia_a_sequencia(self):
+    def test_titulo_e_citacao_reiniciam_a_sequencia(self):
         texto = (corpo(self.par("Na denúncia, o MPF"), self.par("O acórdão manteve"),
                        self.par("A sentença acolheu"))
                  + "\n@secao\n2. DO MÉRITO\n\n"
-                 + corpo(self.par("O tribunal negou"), self.par("Diante disso, a parte"),
-                         self.par("Ainda assim, a defesa")))
+                 + corpo(self.par("O tribunal negou"), self.par("A parte recorreu"))
+                 + "\n@citacao\nEmenta qualquer.\n\n"
+                 + corpo(self.par("O caso dos autos"), self.par("Diante disso, a defesa")))
         self.assertEqual(regras(texto, max_abertura_nominal=100), [])
+
+    def test_apresentacao_de_citacao_nao_conta(self):
+        texto = corpo(self.par("A ação volta-se"),
+                      "O Superior Tribunal de Justiça já enfrentou a questão em caso idêntico:"
+                      ) + "\n@citacao\nEmenta qualquer.\n\n" + corpo(
+            self.par("Esse é o caso"), self.par("Ademais, a lei"), self.par("Por isso, o dever"),
+            self.par("Assim, a ameaça"), self.par("O lançamento é vinculado"))
+        self.assertEqual(regras(texto), [])
 
     def test_peca_curta_nao_avalia(self):
         texto = corpo(self.par("O MPF imputou"), self.par("O acórdão manteve"),
                       self.par("A sentença acolheu"))
         self.assertEqual(regras(texto), [])
 
-    def test_locucoes_e_retomadas_nao_contam(self):
+    def test_locucoes_e_retomadas_nao_contam_como_sujeito_nominal(self):
         for abertura in ("A partir disso, o acórdão", "Uma vez que a sentença", "A meu ver, o MPF",
                          "A despeito da prova", "O mesmo acórdão", "O que se discute",
                          "A essa altura, a defesa", "Diante disso, a sentença"):
@@ -206,10 +217,135 @@ class AberturaNominal(unittest.TestCase):
                          "Uma das premissas", "**O acórdão** manteve"):
             self.assertTrue(lint.abre_com_sujeito_nominal(abertura), abertura)
 
-    def test_estatisticas_trazem_a_parcela(self):
+    def test_demonstrativo_conta_e_conectivo_posposto_nao(self):
+        casos = {"Esse acórdão manteve": "demonstrativo", "Essa lógica impede": "demonstrativo",
+                 "Tal registro é": "demonstrativo", "O MPF imputou": "nominal",
+                 "A ordem postulada, contudo, dirige-se": None, "Impõe-se, assim, o": None,
+                 'O pedido "d.2" não atribui ao mandado, portanto, efeito': None,
+                 "Ademais, as receitas": None, "Nessa linha, o tribunal": None}
+        for abertura, esperado in casos.items():
+            self.assertEqual(lint.abertura_sem_conectivo(abertura), esperado, abertura)
+
+    def test_estatisticas_trazem_as_parcelas(self):
         texto = corpo(self.par("O MPF imputou"), self.par("Diante disso, a defesa"),
-                      self.par("A sentença acolheu"), self.par("Ainda assim, o tribunal"))
-        self.assertEqual(lint.estatisticas(lint.segmentar(texto))["aberturas_nominais_pct"], 50)
+                      self.par("Essa conclusão ignora"), self.par("Ainda assim, o tribunal"))
+        est = lint.estatisticas(lint.segmentar(texto))
+        self.assertEqual((est["aberturas_nominais_pct"], est["aberturas_sem_conectivo_pct"]),
+                         (25, 50))
+
+
+class Remissao(unittest.TestCase):
+    def alertas(self, texto):
+        return [a for a in lint.lint_texto(texto) if a.regra == "GO-1/remissao"]
+
+    def test_rotulo_vago_na_abertura(self):
+        texto = corpo("A autoridade sustenta que o cadastro é condição do benefício.",
+                      "Nesse quadro, a segurança aplica a lei a quem ela contemplou.")
+        alertas = self.alertas(texto)
+        self.assertEqual(len(alertas), 1)
+        self.assertIn('"Nesse quadro" é rótulo sem antecedente', alertas[0].mensagem)
+
+    def test_termo_repetido_da_frase_anterior_fica(self):
+        texto = corpo("O decreto subordinou o cadastro a um ato conjunto dos Ministérios.",
+                      "Esse ato conjunto não acrescenta condição ao benefício.")
+        self.assertEqual(self.alertas(texto), [])
+
+    def test_rotulo_nomeado_na_propria_frase_fica(self):
+        texto = corpo("O acórdão excluiu o ressarcimento dos dois apelantes.",
+                      "Essa ratio, que afastou o dano material e o moral, aproveita a todos.")
+        self.assertEqual(self.alertas(texto), [])
+
+    def test_termo_de_dois_paragrafos_atras(self):
+        texto = corpo("O IRPJ é o tributo que incide sobre o lucro apurado no período.",
+                      "A CSLL e a COFINS seguem a mesma apuração trimestral.",
+                      "Este tributo, contudo, não alcança a receita de serviços ambientais.")
+        alertas = self.alertas(texto)
+        self.assertEqual(len(alertas), 1)
+        self.assertIn("2 parágrafos atrás", alertas[0].mensagem)
+
+    def test_remissao_atravessa_o_titulo(self):
+        texto = (corpo("A sentença afastou o dano ao erário.")
+                 + "\n@secao\n2. DO MÉRITO\n\n"
+                 + corpo("Essa conclusão aproveita aos demais réus."))
+        self.assertIn("abre o capítulo", self.alertas(texto)[0].mensagem)
+        com_termo_no_titulo = (corpo("A sentença afastou o dano ao erário.")
+                               + "\n@secao\n2. O REGISTRO NO CADASTRO\n\n"
+                               + corpo("Esse registro é instrumento de fiscalização."))
+        self.assertEqual(self.alertas(com_termo_no_titulo), [])
+
+    def test_rotulo_de_decisao_logo_apos_a_citacao_fica(self):
+        texto = (corpo("O STJ já enfrentou a questão:") + "\n@citacao\nEmenta qualquer.\n\n"
+                 + corpo("Esse entendimento aplica-se aos autos, porque a exigência é a mesma."))
+        self.assertEqual(self.alertas(texto), [])
+
+    def test_deiticos_e_aspas_nao_disparam(self):
+        texto = corpo("A Impetrante juntou a decisão.",
+                      "Nesta ação, e neste ato, o pedido deste writ se limita ao ano corrente.",
+                      'A lei fala em "esse conceito" e "nesse quadro" sem disciplina própria.')
+        self.assertEqual(self.alertas(texto), [])
+
+
+class DizerUmaVez(unittest.TestCase):
+    CITACAO = ("@citacao\nEm matéria tributária, a vigência da lei instituidora do tributo, somada "
+               "à natureza vinculada do lançamento, configura o justo receio apto a autorizar a "
+               "impetração preventiva.\n\n")
+
+    def regras7(self, texto):
+        return [a.regra for a in lint.lint_texto(texto) if a.regra.startswith("GO-7")]
+
+    def test_paragrafo_que_reconta_o_julgado(self):
+        texto = (corpo("Por isso, a vigência da lei basta para o justo receio:") + self.CITACAO
+                 + corpo("Nesse julgado, a Primeira Turma entendeu que a vigência da lei basta. "
+                         "O Tribunal concluiu que não é preciso aguardar a autuação."))
+        self.assertEqual(self.regras7(texto), ["GO-7/parafrase"])
+
+    def test_corte_como_sujeito_que_decide(self):
+        texto = (self.CITACAO + corpo("O Superior Tribunal de Justiça decidiu, assim, que a "
+                                      "vigência da lei basta para o justo receio."))
+        self.assertEqual(self.regras7(texto), ["GO-7/parafrase"])
+
+    def test_aplicacao_ao_caso_fica(self):
+        texto = (self.CITACAO + corpo("Esse é o caso dos autos, uma vez que a exigência vem "
+                                      "declarada nas próprias informações (id 2294049828, p. 4)."))
+        self.assertEqual(self.regras7(texto), [])
+
+    def test_apresentacao_da_citacao_fica(self):
+        texto = (corpo("O Superior Tribunal de Justiça já reconheceu que a vigência da lei "
+                       "instituidora e o lançamento vinculado configuram o justo receio:")
+                 + self.CITACAO)
+        self.assertEqual(self.regras7(texto), [])
+
+    def test_paragrafo_que_repete_as_palavras_da_citacao(self):
+        texto = (self.CITACAO + corpo("A vigência da lei instituidora do tributo e a natureza "
+                                      "vinculada do lançamento configuram o justo receio que "
+                                      "autoriza a impetração preventiva."))
+        self.assertEqual(self.regras7(texto), ["GO-7/parafrase"])
+
+    def test_citacao_ref_compara_com_o_grifo(self):
+        texto = ("@citacao-ref\nfonte: STJ\nprocesso: AgInt no AREsp 2.386.728\n"
+                 "grifo: configura o justo receio do contribuinte apto a autorizar a impetração "
+                 "preventiva\nref: STJ, Primeira Turma\n\n"
+                 + corpo("O justo receio do contribuinte, portanto, está configurado, o que "
+                         "autoriza a impetração preventiva."))
+        self.assertEqual(self.regras7(texto), ["GO-7/parafrase"])
+
+    def test_conclusao_repetida(self):
+        conclusao = ("o art. 17 incide sobre os contratos da Impetrante nos termos em que foi "
+                     "editado, e o registro, instrumento de fiscalização, não lhe pode ser "
+                     "exigido enquanto não existir o meio de promovê-lo")
+        texto = corpo(f"No mérito, {conclusao}.", "Ademais, o decreto adiou o cadastro.",
+                      "Diante disso, a autoridade não pode lançar o tributo.",
+                      f"Portanto, {conclusao}.")
+        alertas = [a for a in lint.lint_texto(texto) if a.regra == "GO-7/repeticao"]
+        self.assertEqual(len(alertas), 1)
+        self.assertIn("repete o parágrafo da linha 2", alertas[0].mensagem)
+
+    def test_reformulacao_so_a_partir_da_segunda(self):
+        uma = corpo("O acórdão é genérico. Ou seja, serviria a qualquer processo.")
+        duas = corpo("O acórdão é genérico. Ou seja, serviria a qualquer processo.",
+                     "A omissão é relevante. Vale dizer, muda o resultado.")
+        self.assertEqual(self.regras7(uma), [])
+        self.assertEqual(self.regras7(duas), ["GO-7/reformulacao"])
 
 
 class Lexico(unittest.TestCase):
@@ -303,7 +439,7 @@ class LinhaDeComando(unittest.TestCase):
         saida = self.rodar(str(self.peca)).stdout.decode("utf-8")
         self.assertIn(f"{self.peca}:2: [GO-2]", saida)
         self.assertIn("2 alerta(s) em 1 arquivo(s)", saida)
-        self.assertIn("aberturas por sujeito nominal: 100% (teto 30%)", saida)
+        self.assertIn("aberturas sem conectivo: 100% (teto 50%)", saida)
 
     def test_pasta_e_ignorar(self):
         r = self.rodar(self.dir.name, "--ignorar", "GO-2", "--json")

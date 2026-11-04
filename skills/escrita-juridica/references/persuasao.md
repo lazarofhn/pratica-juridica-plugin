@@ -41,7 +41,10 @@ Passa pela mesma régua. Só a objeção que pode impedir o resultado recebe res
 desenvolvida; as demais, uma oração ou nada. Responder a todas, cada uma com a sua
 seção, copia o índice do adversário e promove os pontos fracos dele: a resposta extensa
 a uma objeção fraca transforma-a em questão a decidir. Elemento que o próprio adversário
-admitiu não provar o ponto não vai para o título de um tópico.
+admitiu não provar o ponto não vai para o título de um tópico. Decisões contrárias que ele
+invoca não se recontam uma por uma para distingui-las: havendo resposta de conjunto (são
+de primeiro grau e pendem de recurso; os únicos pronunciamentos colegiados são
+favoráveis), uma oração basta (GO-7).
 
 O peso, porém, mede-se do lado do julgador, e o julgador lê a peça adversária. O ponto
 em que o adversário apoia o resultado dele não fica sem nenhuma palavra, ainda que a
