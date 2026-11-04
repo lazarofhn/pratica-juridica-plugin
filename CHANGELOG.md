@@ -64,6 +64,14 @@ contava "O acórdão" como abertura nominal mas não "Esse acórdão", tratava m
   do outro lado de um título) e a conclusão do mérito repetida (92% do vocabulário).
   São 17 testes novos no radar (de 50 para 67).
 
+## v1.4.1 (2026-11-03)
+
+- **`pesquisa-juridica`:** qual chamada do Juris_br usar, e em que ordem, passa a ser o
+  que o próprio conector diz, no guia das instruções do servidor e em
+  `juris_como_pesquisar` (que também dá a data de cada base); sem as instruções no
+  contexto (subagente, outro cliente), chama-se `juris_como_pesquisar` uma vez antes da
+  primeira busca.
+
 ## v1.4.0 (2026-10-26)
 
 A construção do argumento passa à frente da forma. O José comparou a versão do Claude de
