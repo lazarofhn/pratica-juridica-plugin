@@ -1,5 +1,37 @@
 # Changelog — pratica-juridica
 
+## v1.5.1 (2026-11-04)
+
+Ajuste depois do tira-teima: um agente sem contexto, em Opus, redigiu com a 1.5.0 a
+manifestação do caso que serviu de calibração. A escrita saiu fluida e sem paráfrase de
+citação, mas com dois desvios que o José mandou corrigir: o agente contou precedentes na
+prosa em vez de mostrá-los (5 transcrições em bloco contra 12 na versão dele) e enfrentou,
+transcrevendo, a sentença contrária que as informações invocavam. O peso de cada
+argumento continua sendo juízo do advogado.
+
+- **GO-7, "o precedente se mostra, não se narra":** o que sustenta o argumento entra
+  apresentado numa frase e transcrito em bloco, com grifo; contar na prosa o que o
+  tribunal fez e por quê é paráfrase sem a prova. Na prosa, só a corroboração curta ou o
+  trecho literal entre aspas.
+- **GO-7, "decisões contrárias, em conjunto":** num só parágrafo, pelo que as desqualifica
+  como bloco (grau, data, o que decidiram em uma linha, os pronunciamentos favoráveis), sem
+  transcrevê-las nem lhes dar parágrafo próprio; o fundamento que pesa se responde pela
+  prova ou pela lei. Também no padrão 1, na `persuasao.md` e no mapa de peso do
+  `plano-de-respostas` (um item só).
+- **Revisores:** o `moderador-final` deixa de pedir que a peça enfrente uma a uma as
+  decisões invocadas pelo adversário; a `sensibilidade-argumentativa` junta as espalhadas
+  num parágrafo de conjunto e lista como lacuna o precedente contado sem transcrição.
+- **Radar:** `GO-7/precedente-narrado` e `GO-7/decisao-contraria` (bloco de decisão
+  invocada pela parte contrária, ou decisões contrárias em três ou mais parágrafos). Na
+  peça do agente, apontam os dois precedentes narrados, a transcrição da sentença
+  contrária e os três parágrafos sobre ela; nas versões definitivas do José, nada.
+- **Quantidade de precedentes livre, texto corrido limpo:** sai a linha "em ponto de
+  apoio, um basta". Na questão mais importante cabe mais de um precedente, inclusive do
+  mesmo tribunal; o que não cabe é o parágrafo de texto corrido cheio de remissões. O que
+  sustenta o ponto vai em bloco, com grifo, e os demais na linha de referência do bloco
+  ("No mesmo sentido: …"). No radar, `GO-7/remissoes` dispara com três ou mais remissões
+  no mesmo parágrafo (nas versões do José, o máximo é duas). São 8 testes novos.
+
 ## v1.5.0 (2026-11-04)
 
 Calibração da escrita: o texto diz cada coisa uma vez. O José comparou a versão do Claude

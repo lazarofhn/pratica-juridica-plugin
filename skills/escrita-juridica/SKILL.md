@@ -204,10 +204,22 @@ o que mais engorda a peça: na manifestação revisada pelo José (nov./2026), a
   dirigida. Depois, a aplicação ao caso ("Esse é o caso dos autos, uma vez que…") ou o
   arremate que conclui o raciocínio, sem explicar o precedente; ou nada. Nunca o
   parágrafo que reconta o julgado ("No REsp X, o STJ decidiu que…, porque entendeu…").
+- **O precedente se mostra, não se narra.** O que sustenta o argumento entra apresentado
+  numa frase e transcrito em bloco, com o grifo no que decide (na manifestação revisada
+  pelo José, 12 transcrições, todas grifadas). Contar na prosa o que o tribunal fez e por
+  quê ("o STJ cassou acórdão que…, por reconhecer que…") é paráfrase sem a prova. Na
+  prosa, o precedente entra só como corroboração curta ("…, como assentou o STJ (REsp
+  X)") ou com o trecho literal entre aspas na própria frase.
 - **Transcrever ou parafrasear, não os dois.** Norma ou cláusula transcrita não ganha
   parágrafo que a reexplica; se só um trecho decide, cite-o entre aspas na frase.
-- **Decisão contrária não se reconta uma por uma:** havendo resposta de conjunto (são de
-  primeiro grau; os únicos colegiados são favoráveis), uma oração basta.
+- **Decisões contrárias, em conjunto.** As que a parte contrária invoca (sentenças,
+  precedentes que ela transcreve) respondem-se num só parágrafo, pelo que as desqualifica
+  como bloco: grau, data, o que decidiram em uma linha e os pronunciamentos favoráveis
+  (são de primeiro grau e pendem de recurso; os únicos colegiados sobre a matéria são
+  favoráveis). Não se transcreve decisão contrária nem se lhe dá apresentação, tópico ou
+  parágrafo próprio: o bloco de citação é vitrine do precedente favorável. Se o fundamento
+  de uma delas pesa contra o resultado, responde-se ao fundamento, pela prova ou pela lei,
+  sem recontar a decisão.
 - **A frase que se explica sai:** a que reexplica a anterior ou a citação ("como o próprio
   dispositivo indica…", logo depois de transcrevê-lo); a que só anuncia e deixa a prova
   para o parágrafo seguinte ("Essa consequência já foi ponderada por quem tinha
@@ -217,8 +229,12 @@ o que mais engorda a peça: na manifestação revisada pelo José (nov./2026), a
   seja" só quando acrescenta a consequência (padrão 4).
 - **Fato primeiro, fonte no parêntese:** "O voto que instruiu a resolução aprovou a
   outorga da usina…" → "A usina foi outorgada… (Doc. 15, id …)".
-- **Segundo precedente para o mesmo ponto** só se acrescenta (outro tribunal que pesa,
-  decisão mais recente, o órgão que vai julgar); em ponto de apoio, um basta.
+- **O parágrafo não carrega a lista de precedentes.** Quantos citar varia com a
+  importância da questão: na mais importante, cabe mais de um, inclusive do mesmo
+  tribunal. O que não cabe é o texto corrido cheio de remissões (número, órgão, relator e
+  data em série no meio do argumento): o que sustenta o ponto vai em bloco, com grifo, e
+  os demais do mesmo ponto na linha de referência do bloco ("No mesmo sentido: TRF5, AC
+  …, 4ª Turma").
 
 **Teste:** apague a frase ou o parágrafo. O julgador perde algo que a citação, o grifo e
 o texto vizinho não lhe dão? Se não perde, sai.

@@ -39,6 +39,9 @@ de aberturas por sujeito nominal; ou JSON com `alertas`, `resumo` e `paragrafos`
 | `GO-6` | "não é X, mas Y", "não se trata de", "longe de ser" | teste de triagem do GO-6 |
 | `GO-7/parafrase` | parágrafo vizinho de citação que reconta o julgado ("Nesse julgado, o STJ entendeu…") ou repete metade ou mais do vocabulário dela | fica só o que a citação não mostra: a aplicação ao caso ou o arremate |
 | `GO-7/repeticao` | parágrafo com 75% ou mais do vocabulário de outro, não vizinho (conclusão anunciada e repetida) | diga uma vez, no fim do tópico |
+| `GO-7/precedente-narrado` | frase que conta o que o tribunal fez e por quê ("o STJ cassou…, por reconhecer que…"), com a referência do julgado e sem trecho entre aspas | mostre: frase de apresentação e trecho em bloco, com grifo; na prosa, só a corroboração curta |
+| `GO-7/remissoes` | três ou mais remissões a precedentes (classe e número, súmula, tema) no mesmo parágrafo de texto corrido | o que sustenta o ponto vai em bloco, com grifo; os demais, na linha de referência do bloco ("No mesmo sentido: …"); a quantidade de precedentes da peça não se limita |
+| `GO-7/decisao-contraria` | decisão invocada pela parte contrária transcrita em bloco, ou decisões contrárias tratadas em três ou mais parágrafos | um parágrafo de conjunto: grau, data, o que decidiram em uma linha, os pronunciamentos favoráveis |
 | `GO-7/reformulacao` | "ou seja", "vale dizer", "em outras palavras" mais de uma vez | fica a que acrescenta a consequência; a que repete sai |
 | `precisao/o-mesmo` | "o mesmo" seguido de verbo ou pontuação | repita o termo ou reorganize |
 | `persuasao/*` | adjetivo de indignação; julgador como sujeito do erro | `persuasao.md` |
@@ -59,9 +62,11 @@ revisão é da `sensibilidade-argumentativa`, seguida do `moderador-final`
    reconta o julgado ou reexplica a norma transcrita. Sai também a frase que reexplica a
    anterior, a que anuncia o que o parágrafo seguinte prova, a conclusão anunciada na
    abertura do capítulo e repetida no fim, a explicação ao julgador do que a citação do
-   dispositivo já carrega e o relato, uma por uma, de decisões contrárias que uma oração
-   de conjunto responde. Teste: apague a frase ou o parágrafo; o julgador perde algo que a
-   citação, o grifo e o texto vizinho não lhe dão?
+   dispositivo já carrega e o relato, uma por uma, de decisões contrárias, que se
+   respondem num parágrafo de conjunto e não se transcrevem. O precedente que sustenta o
+   argumento se mostra (apresentação e bloco com grifo), não se conta na prosa. Teste:
+   apague a frase ou o parágrafo; o julgador perde algo que a citação, o grifo e o texto
+   vizinho não lhe dão?
 2. **Traço aditivo (GO-2)** — *radar*. Primeira prioridade: todos os traços aditivos
    viram vírgula.
 3. **Uma ideia por parágrafo (GO-4)** — *radar e leitura*. A régua é a ideia, não o

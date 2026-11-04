@@ -15,6 +15,12 @@ arquivo:linha + regra para os padrões que a casa manda varrer:
   GO-7/parafrase      parágrafo vizinho de citação que reconta o julgado ou repete as
                       palavras dela
   GO-7/repeticao      parágrafo que repete outro (conclusão anunciada e repetida)
+  GO-7/precedente-narrado  precedente contado na prosa (o que o tribunal fez e por quê) em
+                      vez de mostrado: apresentação de uma frase e trecho em bloco, com grifo
+  GO-7/decisao-contraria   decisão invocada pela parte contrária transcrita em bloco, ou
+                      decisões contrárias tratadas em três ou mais parágrafos
+  GO-7/remissoes      três ou mais remissões a precedentes no mesmo parágrafo de texto
+                      corrido (a quantidade de precedentes da peça não é limitada)
   GO-7/reformulacao   "ou seja", "vale dizer", "em outras palavras" mais de uma vez
   GO-5/ensaio         fórmula de crônica ou ensaio: avaliação impressionista, imagem,
                       contraste em suspense, dramatização, narrador comentando a peça
@@ -80,6 +86,7 @@ class Config:
     max_reformulacao: int = 1   # "ou seja" e afins: a segunda ocorrência dispara
     parafrase_min: float = 0.5  # parte do vocabulário do parágrafo que já está na citação
     repeticao_min: float = 0.75  # parte do vocabulário em comum com outro parágrafo
+    max_remissoes: int = 2      # remissões a precedentes toleradas num parágrafo de prosa
     ignorar: tuple = ()
 
 
@@ -711,6 +718,109 @@ def checar_parafrase(pars, cfg, arquivo):
                      f"leitura dirigida", _trecho(p.texto, 0, 60, folga=0))
 
 
+RE_REF_PRECEDENTE = re.compile(
+    r"\((?:STJ|STF|TST|TSE|TCU|CARF|TRF-?\d|TJ[A-Z]{2})\b"
+    r"|\b(?:REsp|AREsp|EREsp|AgInt|AgRg|EDcl|RE|ARE|AI|RMS|MS|MI|ADI|ADC|ADPF|AMS|REOMS|Rcl)"
+    r"\s+(?:(?:no|na|nos|nas)\s+\w+\s+)?\d")
+RE_CORTE_DECIDE = re.compile(
+    r"\b(?:o|a)\s+(?:mesm[oa]\s+)?(?:STJ|STF|TST|TCU|CARF|TRF\S*|Superior Tribunal de Justiça"
+    r"|Supremo Tribunal Federal|Tribunal|Corte|(?:Primeira|Segunda|Terceira|Quarta|\d+ª)\s+"
+    r"(?:Turma|Seção)|Turma|Seção|Plenário|Pleno)\b[^.;]{0,120}?\b(?:decidiu|entendeu|assentou"
+    r"|reconheceu|firmou|fixou|concluiu|afastou|cassou|anulou|reformou|declarou|aplicou|admitiu"
+    r"|rejeitou|acolheu|negou|manteve|julgou)\b", re.I)
+RE_PORQUE_DO_JULGADO = re.compile(
+    r"\bpor (?:reconhecer|entender|considerar|concluir)\b|\bao (?:fundamento|argumento) de que\b"
+    r"|\bsob o fundamento\b|\bpel[oa] qual\b|\bporque (?:entendeu|reconheceu|considerou)\b"
+    r"|\bpor ter (?:reconhecido|entendido|considerado)\b", re.I)
+FONTE_ADVERSARIA = (
+    r"(?:transcrit[oa]s?|invocad[oa]s?|trazid[oa]s?|citad[oa]s?|colacionad[oa]s?)\s+"
+    r"(?:pel[oa]s?|n[oa]s?)\s+(?:própri[oa]s?\s+)?(?:informações|autoridade|União|Fazenda"
+    r"|contestação|contrarrazões|razões|ré\b|réu\b|recorrente|recorrid[oa]|agravad[oa]|apelad[oa]"
+    r"|parte contrária|adversári[oa])"
+    r"|que (?:as|a|o) (?:informações|contestação|contrarrazões|autoridade|ré|réu|recorrente"
+    r"|parte contrária) (?:transcrevem|transcreve|invocam|invoca|trazem|traz|cita|citam)"
+    r"|d[ao]s? (?:informações|contestação|contrarrazões)\b")
+RE_CITACAO_ADVERSARIA = re.compile(FONTE_ADVERSARIA, re.I)
+RE_DECISOES_ADVERSAS = re.compile(
+    r"\b(?:sentenças?|decisões|decisão|julgados?|precedentes?|acórdãos?|arestos?)\b[^.;]{0,60}?"
+    r"(?:" + FONTE_ADVERSARIA + r")", re.I)
+
+
+def _periodos_com_posicao(texto):
+    t = RE_ABREV.sub(lambda m: m.group(0)[:-1] + "§", texto)
+    ini = 0
+    for m in re.finditer(r"(?<=[.!?])\s+(?=[A-ZÀ-Ý\"“(])", t):
+        yield ini, texto[ini:m.start()]
+        ini = m.end()
+    if ini < len(texto):
+        yield ini, texto[ini:]
+
+
+def checar_precedente_narrado(pars, cfg, arquivo):
+    """Precedente contado na prosa ("o STJ cassou acórdão…, por reconhecer que…") em vez de
+    mostrado. A corroboração curta ("…, como assentou o STJ (REsp X)") e o trecho literal entre
+    aspas na própria frase ficam."""
+    for p in pars:
+        if p.tipo != "prosa":
+            continue
+        for ini, frase in _periodos_com_posicao(p.texto):
+            if any(c in frase for c in "\"“”"):
+                continue
+            if RE_REF_PRECEDENTE.search(frase) and RE_CORTE_DECIDE.search(frase) \
+                    and RE_PORQUE_DO_JULGADO.search(frase):
+                yield Alerta(arquivo, p.linha_de(ini), "GO-7/precedente-narrado",
+                             "precedente contado na prosa (o que o tribunal fez e por quê): "
+                             "mostre-o, com uma frase de apresentação e o trecho em bloco, com "
+                             "grifo no que decide; na prosa, só a corroboração curta",
+                             _trecho(p.texto, ini, ini + 60, folga=0))
+
+
+RE_ID_PRECEDENTE = re.compile(
+    r"\b(?:REsp|AREsp|EREsp|AgInt|AgRg|EDcl|RE|ARE|AI|RMS|MS|MI|ADI|ADC|ADPF|AC|AMS|REOMS"
+    r"|Rcl|HC|[Ss]úmula|[Tt]ema)\s+(?:(?:no|na|nos|nas)\s+\w+\s+)?(?:n[º°o.]\s*)?\d[\d.\-/]*")
+
+
+def checar_remissoes(pars, cfg, arquivo):
+    """Texto corrido cheio de remissões a precedentes. A quantidade de precedentes da peça
+    não se limita: os que sustentam o ponto vão em bloco e os demais na linha de referência
+    do bloco ("No mesmo sentido: …")."""
+    for p in pars:
+        if p.tipo != "prosa":
+            continue
+        ids = []
+        for m in RE_ID_PRECEDENTE.finditer(mascarar(p.texto)):
+            k = re.sub(r"\s+", " ", m.group(0)).rstrip("./-")
+            if k not in ids:
+                ids.append(k)
+        if len(ids) > cfg.max_remissoes:
+            yield Alerta(arquivo, p.inicio, "GO-7/remissoes",
+                         f"{len(ids)} remissões a precedentes no mesmo parágrafo "
+                         f"({'; '.join(ids[:6])}): o texto corrido não carrega a lista; o que "
+                         f"sustenta o ponto vai em bloco, com grifo, e os demais na linha de "
+                         f"referência do bloco (\"No mesmo sentido: …\")",
+                         _trecho(p.texto, 0, 60, folga=0))
+
+
+def checar_decisao_contraria(pars, cfg, arquivo):
+    """Decisões que a parte contrária invoca: a casa responde em conjunto, sem transcrevê-las."""
+    for p in pars:
+        if p.tipo == "citacao" and RE_CITACAO_ADVERSARIA.search(p.texto):
+            yield Alerta(arquivo, p.inicio, "GO-7/decisao-contraria",
+                         "transcrição de decisão invocada pela parte contrária: responda às "
+                         "decisões contrárias em conjunto, numa oração, sem transcrevê-las; o "
+                         "bloco de citação fica para o precedente favorável",
+                         _trecho(p.texto.strip(), 0, 60, folga=0))
+    adversas = [p for p in pars if p.tipo == "prosa" and RE_DECISOES_ADVERSAS.search(p.texto)]
+    if len(adversas) >= 3:
+        linhas = ", ".join(str(p.inicio) for p in adversas[:8])
+        yield Alerta(arquivo, adversas[2].inicio, "GO-7/decisao-contraria",
+                     f"decisões invocadas pela parte contrária tratadas em {len(adversas)} "
+                     f"parágrafos (linhas {linhas}): responda em conjunto, num parágrafo, pelo que "
+                     f"as desqualifica como bloco (grau, data, o que decidiram em uma linha) e "
+                     f"pelos pronunciamentos favoráveis",
+                     _trecho(adversas[2].texto, 0, 60, folga=0))
+
+
 def checar_repeticao(pars, cfg, arquivo):
     prosa = [p for p in pars if p.tipo == "prosa"]
     rad = [radicais(p.texto) for p in prosa]
@@ -927,6 +1037,9 @@ def lint_texto(texto, arquivo="<texto>", cfg=None, **kw):
     alertas.extend(checar_remissao(pars, cfg, arquivo))
     alertas.extend(checar_parafrase(pars, cfg, arquivo))
     alertas.extend(checar_repeticao(pars, cfg, arquivo))
+    alertas.extend(checar_precedente_narrado(pars, cfg, arquivo))
+    alertas.extend(checar_decisao_contraria(pars, cfg, arquivo))
+    alertas.extend(checar_remissoes(pars, cfg, arquivo))
     alertas.extend(checar_media(pars, cfg, arquivo))
     alertas = [a for a in alertas if not _ignorada(a.regra, cfg)]
     alertas.sort(key=lambda a: (a.linha, a.regra))

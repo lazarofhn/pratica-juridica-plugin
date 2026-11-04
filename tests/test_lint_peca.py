@@ -354,6 +354,72 @@ class DizerUmaVez(unittest.TestCase):
         self.assertEqual(self.regras7(duas), ["GO-7/reformulacao"])
 
 
+class RemissoesNoParagrafo(unittest.TestCase):
+    def regras(self, texto):
+        return [a.regra for a in lint.lint_texto(texto) if a.regra == "GO-7/remissoes"]
+
+    def test_tres_remissoes_no_texto_corrido(self):
+        texto = corpo("O mandado de segurança preventivo é cabível (STJ, REsp 1.933.794), o que se "
+                      "reafirmou no AgInt no REsp 2.245.419 e no RMS 44.021, à luz da Súmula 213.")
+        self.assertEqual(self.regras(texto), ["GO-7/remissoes"])
+
+    def test_duas_remissoes_e_trechos_entre_aspas_ficam(self):
+        duas = corpo("O mandado de segurança preventivo é cabível (STJ, REsp 1.933.794; AgInt "
+                     "no REsp 2.245.419).")
+        aspas = corpo('A autoridade transcreve "RE 631.641, AI 360.461 e MS 29.374" sem análise.')
+        self.assertEqual(self.regras(duas), [])
+        self.assertEqual(self.regras(aspas), [])
+
+    def test_mesmo_precedente_repetido_conta_uma_vez(self):
+        texto = corpo("Como decidiu o STJ no REsp 1.933.794, o receio é justo; o REsp 1.933.794 "
+                      "também afasta a Súmula 266.")
+        self.assertEqual(self.regras(texto), [])
+
+
+class PrecedenteEDecisaoContraria(unittest.TestCase):
+    def regras7(self, texto):
+        return [a.regra for a in lint.lint_texto(texto) if a.regra.startswith("GO-7")]
+
+    def test_precedente_narrado_na_prosa(self):
+        texto = corpo("Em causa com esse desenho, o Superior Tribunal de Justiça cassou acórdão que "
+                      "remetera o contribuinte à injunção, por reconhecer que a eficácia da lei é "
+                      "questão do próprio mandado de segurança (STJ, AgInt no RMS 53.659, "
+                      "Primeira Turma).")
+        self.assertEqual(self.regras7(texto), ["GO-7/precedente-narrado"])
+
+    def test_corroboracao_curta_e_trecho_literal_ficam(self):
+        curta = corpo("A vigência da lei basta para configurar o justo receio, como assentou o "
+                      "STJ (REsp 1.933.794).")
+        literal = corpo('O STJ afastou o óbice, por reconhecer que "o papel do regulamento é '
+                        'secundário" (STJ, REsp 1.046.475).')
+        self.assertEqual(self.regras7(curta), [])
+        self.assertEqual(self.regras7(literal), [])
+
+    def test_transcricao_de_decisao_da_parte_contraria(self):
+        texto = (corpo("A sentença invocada pela autoridade acolhe a premissa da Impetrante:")
+                 + "\n@citacao-ref\nfonte: autos\ndoc: 33\ntrecho: de \"A ausência\" ate "
+                 "\"realizada.\"\nref: Sentença no MS 1003688, transcrita nas informações\n\n")
+        self.assertIn("GO-7/decisao-contraria", self.regras7(texto))
+
+    def test_precedente_favoravel_em_bloco_nao_dispara(self):
+        texto = ("@citacao-ref\nfonte: STJ\nprocesso: EREsp 1770495\nitens: 2\n"
+                 "ref: STJ, EREsp 1.770.495, Primeira Seção\n\n"
+                 + corpo("O pedido d.2, portanto, não produz efeito patrimonial pretérito."))
+        self.assertEqual(self.regras7(texto), [])
+
+    def test_decisoes_contrarias_em_tres_paragrafos(self):
+        tres = corpo("Os precedentes invocados pela autoridade tratam de situação diversa.",
+                     "Ademais, a lei define o beneficiário.",
+                     "As sentenças transcritas nas informações são de primeiro grau.",
+                     "Assim, a ordem deve ser concedida.",
+                     "Ora, o precedente trazido pela própria autoridade acolhe a premissa.")
+        duas = corpo("Os precedentes trazidos nas informações estão ultrapassados.",
+                     "Ademais, a lei define o beneficiário.",
+                     "Assim, os precedentes das informações não se aplicam.")
+        self.assertEqual(self.regras7(tres), ["GO-7/decisao-contraria"])
+        self.assertEqual(self.regras7(duas), [])
+
+
 class Lexico(unittest.TestCase):
     def test_registro_ensaistico(self):
         r = regras(corpo("O segundo requisito é o que melhor revela o descompasso da apelação."))

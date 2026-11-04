@@ -22,9 +22,10 @@ teses (`escrita-juridica`, "Antes da forma: o peso decide"). Antes de numerar:
    acontece com o resultado se o julgador não o ler. Cai → **núcleo**; fica mais difícil
    → **apoio**; nada muda → **fora** (sai, ou vira uma oração dentro de outro parágrafo).
 3. **Objeção já levantada** pelo adversário passa pela mesma régua: só a que pode impedir
-   o resultado recebe resposta desenvolvida. O peso se mede do lado do julgador, que lê a
-   peça adversária: o ponto em que o adversário apoia o resultado dele recebe ao menos
-   uma oração.
+   o resultado recebe resposta desenvolvida. As decisões que ele invoca entram no mapa como
+   um item só, respondido em conjunto (`escrita-juridica`, GO-7). O peso se mede do lado
+   do julgador, que lê a peça adversária: o ponto em que o adversário apoia o resultado
+   dele recebe ao menos uma oração.
 4. **Tópico é o caminho até um resultado:** reúne tudo de que o julgador precisa para
    chegar àquele resultado, ainda que sejam matérias distintas. Não abra um tópico por
    tese nem uma seção por capítulo ou alínea da peça adversária.

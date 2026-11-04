@@ -42,9 +42,10 @@ desenvolvida; as demais, uma oração ou nada. Responder a todas, cada uma com a
 seção, copia o índice do adversário e promove os pontos fracos dele: a resposta extensa
 a uma objeção fraca transforma-a em questão a decidir. Elemento que o próprio adversário
 admitiu não provar o ponto não vai para o título de um tópico. Decisões contrárias que ele
-invoca não se recontam uma por uma para distingui-las: havendo resposta de conjunto (são
-de primeiro grau e pendem de recurso; os únicos pronunciamentos colegiados são
-favoráveis), uma oração basta (GO-7).
+invoca respondem-se em conjunto, num só parágrafo, pelo que as desqualifica como bloco
+(grau, data, o que decidiram em uma linha, os pronunciamentos favoráveis), sem
+transcrevê-las nem recontá-las uma a uma (GO-7). Se o fundamento de uma delas pode impedir
+o resultado, a resposta vai ao fundamento, pela prova ou pela lei.
 
 O peso, porém, mede-se do lado do julgador, e o julgador lê a peça adversária. O ponto
 em que o adversário apoia o resultado dele não fica sem nenhuma palavra, ainda que a
