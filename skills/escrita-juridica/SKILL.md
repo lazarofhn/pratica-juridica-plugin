@@ -83,13 +83,15 @@ por isso, contudo, todavia, diante disso, em consequência, por sua vez, nessa l
   17 vincula…"); o vício é a série de atores sem ligação ("O MPF…" / "O acórdão…" / "A
   sentença…"). No máximo cerca de metade dos parágrafos sem conectivo, nunca três
   seguidos: confira no radar antes de entregar.
-- **A remissão fica à vista.** O demonstrativo ("esse", "essa", "tal") retoma o termo da
-  frase anterior, de preferência repetido ("o ato conjunto… Esse ato conjunto"), nunca o
-  que ficou parágrafos atrás ou do outro lado de uma citação ou de um título. Rótulo que
-  obriga o leitor a reconstruir o referente ("Essa lógica", "Esse entendimento", "Nesse
-  quadro") sai: repita o termo exato ou nomeie o referente na frase ("Essa ratio, que
-  afastou o dano material e o moral, foi aplicada…"). Ligar é papel da conjunção; trocar
-  "O acórdão" por "Esse acórdão" não liga nada.
+- **A remissão fica à vista.** Remeter ao que acabou de ser dito é bem-vindo quando
+  constrói a lógica, fazendo disso a premissa do passo seguinte ("Nessa perspectiva, a
+  omissão dos Ministérios compõe a causa de pedir"; "O decreto confirmou esse quadro";
+  "o ato conjunto… Esse ato conjunto"). O vício é a remissão órfã: "este entendimento",
+  "essa lógica", "este tributo" apontando para o que ficou parágrafos atrás, do outro
+  lado de um título, ou para mais de um candidato. Aí, repita o termo exato ou nomeie o
+  referente na frase ("Essa ratio, que afastou o dano material e o moral, foi
+  aplicada…"). A remissão que só repete o que se disse é o vício do GO-7. Ligar é papel
+  da conjunção; trocar "O acórdão" por "Esse acórdão" não liga nada.
 - **O capítulo abre pela própria tese** (`references/persuasao.md`), não por parágrafo que
   resume o anterior: a ligação entre capítulos vem do título e da conjunção. Fecha, quando
   preciso, com o arremate (GO-7).

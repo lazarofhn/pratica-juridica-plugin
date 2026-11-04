@@ -238,12 +238,13 @@ class Remissao(unittest.TestCase):
     def alertas(self, texto):
         return [a for a in lint.lint_texto(texto) if a.regra == "GO-1/remissao"]
 
-    def test_rotulo_vago_na_abertura(self):
-        texto = corpo("A autoridade sustenta que o cadastro é condição do benefício.",
-                      "Nesse quadro, a segurança aplica a lei a quem ela contemplou.")
-        alertas = self.alertas(texto)
-        self.assertEqual(len(alertas), 1)
-        self.assertIn('"Nesse quadro" é rótulo sem antecedente', alertas[0].mensagem)
+    def test_remissao_que_constroi_o_passo_seguinte_fica(self):
+        # Decisão do José (nov/2026): remeter ao que acabou de ser dito, para construir a
+        # lógica, é legítimo; o vício é o referente longe da vista.
+        texto = corpo("A omissão dos Ministérios impede o registro no cadastro.",
+                      "Nessa perspectiva, a omissão compõe a causa de pedir.",
+                      "O decreto confirmou esse quadro ao adiar o cadastro.")
+        self.assertEqual(self.alertas(texto), [])
 
     def test_termo_repetido_da_frase_anterior_fica(self):
         texto = corpo("O decreto subordinou o cadastro a um ato conjunto dos Ministérios.",
@@ -262,6 +263,11 @@ class Remissao(unittest.TestCase):
         alertas = self.alertas(texto)
         self.assertEqual(len(alertas), 1)
         self.assertIn("2 parágrafos atrás", alertas[0].mensagem)
+        rotulo_distante = corpo("O STJ firmou entendimento sobre o justo receio.",
+                                "A autoridade defendeu a exigência nas informações.",
+                                "Ademais, a lei está em vigor.",
+                                "Este entendimento aplica-se aos autos.")
+        self.assertIn("3 parágrafos atrás", self.alertas(rotulo_distante)[0].mensagem)
 
     def test_remissao_atravessa_o_titulo(self):
         texto = (corpo("A sentença afastou o dano ao erário.")

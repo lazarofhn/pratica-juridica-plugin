@@ -11,7 +11,9 @@ abertura do capítulo e repetida no fim. A nota dele na revisão resume o alvo: 
 parágrafo de arremate (não necessariamente explicar o precedente mas concluir o
 raciocínio)". Ele apontou também as remissões órfãs ("Este entendimento", "Essa
 lógica", "Este tributo" apontando para parágrafos distantes) e pediu que a abertura do
-parágrafo venha, na maioria das vezes, pela conjunção.
+parágrafo venha, na maioria das vezes, pela conjunção. A remissão ao que acabou de ser
+dito, quando constrói o passo seguinte, continua bem-vinda (decisão dele sobre "Nessa
+perspectiva, …" e "O decreto confirmou esse quadro").
 
 Parte do vício vinha do próprio plugin: o padrão 1 ("sanduíche de citação") mandava
 escrever, depois de toda citação, um parágrafo de leitura dirigida, e a revisão cobrava
@@ -28,10 +30,10 @@ contava "O acórdão" como abertura nominal mas não "Esse acórdão", tratava m
   primeiro, fonte no parêntese. Teste: apague; o julgador perde algo?
 - **GO-1 reescrita:** a conjunção abre o parágrafo na maioria das vezes, anteposta ou
   logo depois do primeiro termo; sujeito nominal cabe quando nomeia o passo novo do
-  argumento. A remissão fica à vista: o demonstrativo retoma o termo da frase anterior,
-  de preferência repetido, e não o que ficou parágrafos atrás ou do outro lado de um
-  título; rótulo vago ("Nesse quadro") sai ou nomeia o referente na frase. O capítulo
-  abre pela própria tese, sem parágrafo que resuma o anterior.
+  argumento. A remissão fica à vista: retomar o que acabou de ser dito para construir o
+  passo seguinte é bem-vindo; a remissão órfã ("este entendimento" apontando para
+  parágrafos atrás ou para outro capítulo) repete o termo ou nomeia o referente na
+  frase. O capítulo abre pela própria tese, sem parágrafo que resuma o anterior.
 - **GO-4:** média de 45 a 65 palavras por parágrafo (era 70 a 90), consequência e nunca
   meta; o vício oposto ao bloco denso é a série de frases soltas sem conjunção, não a
   média baixa.
@@ -48,17 +50,18 @@ contava "O acórdão" como abertura nominal mas não "Esse acórdão", tratava m
   nominais ou por demonstrativo, com teto de cerca de metade e nunca três seguidas;
   conectivo posposto ("A ordem postulada, contudo,") conta como conectivo; a frase que
   apresenta citação não conta, e título e citação reiniciam a sequência.
-- `GO-1/remissao`: rótulo vago na abertura, termo de dois ou mais parágrafos atrás e
-  abertura de capítulo apontando para o anterior. Locuções dêiticas ("nesta ação",
-  "deste writ") e rótulo nomeado na frase ("Essa ratio, que…") não disparam.
+- `GO-1/remissao`: termo retomado que só aparece dois ou mais parágrafos atrás e
+  abertura de capítulo apontando para o anterior. A remissão ao parágrafo anterior,
+  locuções dêiticas ("nesta ação", "deste writ") e rótulo nomeado na frase ("Essa
+  ratio, que…") não disparam.
 - `GO-7/parafrase` (parágrafo vizinho de citação que reconta o julgado ou repete metade
   do vocabulário dela; no `@citacao-ref`, compara com o grifo), `GO-7/repeticao`
   (parágrafo com 75% do vocabulário de outro) e `GO-7/reformulacao` (o segundo "ou
   seja").
 - Média-alvo 45–65; o alerta de média baixa não manda mais alongar.
-- Calibrado nas peças do José: nas duas versões definitivas, só restam dois alertas de
-  remissão, ambos para a decisão dele ("Nessa perspectiva" e "esse quadro"); na versão do
-  Claude, o radar aponta as três remissões e a conclusão repetida (92% do vocabulário).
+- Calibrado nas peças do José: nas duas versões definitivas, nenhum alerta das regras
+  novas; na versão do Claude, a remissão a "esse enquadramento" (dois parágrafos atrás,
+  do outro lado de um título) e a conclusão do mérito repetida (92% do vocabulário).
   São 17 testes novos no radar (de 50 para 67).
 
 ## v1.4.0 (2026-10-26)

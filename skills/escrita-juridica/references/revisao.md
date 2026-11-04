@@ -34,7 +34,7 @@ de aberturas por sujeito nominal; ou JSON com `alertas`, `resumo` e `paragrafos`
 | `GO-4/media` | média de palavras por parágrafo fora de 45 a 65 (peça com seis ou mais parágrafos) | acima: parágrafos juntando ideias; abaixo: frases soltas em série? Nunca alongue parágrafo para chegar à faixa |
 | `GO-4/aberturas` | três parágrafos seguidos com a mesma abertura | varie conectivo ou estrutura |
 | `GO-1/abertura` | mais de cerca de metade dos parágrafos abrindo sem conectivo, por sujeito nominal ("O MPF") ou demonstrativo ("Esse acórdão"), ou três seguidos (peça com seis ou mais parágrafos); a frase que apresenta citação não conta, e título e citação reiniciam a sequência | abra pela conjunção da relação lógica (Ademais, Portanto, Todavia…); sujeito nominal fica se nomeia o passo novo do argumento |
-| `GO-1/remissao` | demonstrativo que remete ao que não está à vista: rótulo vago na abertura ("Nesse quadro", "Essa lógica"), termo que só aparece dois ou mais parágrafos atrás, abertura de capítulo apontando para o anterior | repita o termo exato ou nomeie o referente na frase ("Essa ratio, que afastou…"); rótulo de decisão logo depois da citação ("Esse entendimento") fica |
+| `GO-1/remissao` | remissão órfã: demonstrativo que retoma termo de dois ou mais parágrafos atrás, ou que abre o capítulo apontando para o anterior | repita o termo exato ou nomeie o referente na frase ("Essa ratio, que afastou…"); a remissão ao que acabou de ser dito, que constrói o passo seguinte ("Nessa perspectiva, …"), fica |
 | `GO-5/ensaio`, `GO-5/metadiscurso` | léxico da lista do GO-5 | regra de conversão do GO-5 |
 | `GO-6` | "não é X, mas Y", "não se trata de", "longe de ser" | teste de triagem do GO-6 |
 | `GO-7/parafrase` | parágrafo vizinho de citação que reconta o julgado ("Nesse julgado, o STJ entendeu…") ou repete metade ou mais do vocabulário dela | fica só o que a citação não mostra: a aplicação ao caso ou o arremate |
@@ -73,8 +73,8 @@ revisão é da `sensibilidade-argumentativa`, seguida do `moderador-final`
    **Ligação e remissão (GO-1)** — *radar e leitura*. O radar dá a parcela de parágrafos
    abertos sem conectivo (teto de cerca de metade, nunca três seguidos) e aponta as
    remissões que saem da vista do leitor; a leitura confere se cada parágrafo abre pela
-   conjunção da relação real com o anterior, se cada demonstrativo retoma o termo da
-   frase anterior e se o capítulo abre pela própria tese. Corrija com a conjunção ou
+   conjunção da relação real com o anterior, se cada demonstrativo retoma o que o leitor
+   acabou de ler, sem ambiguidade nem repetição, e se o capítulo abre pela própria tese. Corrija com a conjunção ou
    repetindo o termo exato; nunca com frase que resume o parágrafo anterior, nem trocando
    o artigo por demonstrativo ("Esse acórdão" no lugar de "O acórdão").
 4. **Dois pontos em série (GO-3)** — *leitura*. Conte, por seção, as frases "afirmação:

@@ -10,9 +10,8 @@ arquivo:linha + regra para os padrões que a casa manda varrer:
   GO-4/aberturas      parágrafos seguidos com a mesma abertura (padrão: três)
   GO-1/abertura       parágrafos demais abertos sem conectivo (sujeito nominal, "O MPF",
                       ou demonstrativo, "Esse acórdão"): mais da metade ou três seguidos
-  GO-1/remissao       demonstrativo que remete ao que não está à vista: termo de dois ou
-                      mais parágrafos atrás, do outro lado de um título, ou rótulo vago
-                      sem antecedente na abertura ("Nesse quadro", "Essa lógica")
+  GO-1/remissao       remissão órfã: demonstrativo que retoma termo de dois ou mais
+                      parágrafos atrás, ou que abre o capítulo apontando para o anterior
   GO-7/parafrase      parágrafo vizinho de citação que reconta o julgado ou repete as
                       palavras dela
   GO-7/repeticao      parágrafo que repete outro (conclusão anunciada e repetida)
@@ -550,17 +549,6 @@ NAO_NOME = set(_sem_acento(w) for w in """
 e é foi era sao são sera seria seja sejam fosse estava esta está estao ultimo ultima ultimos
 ultimas primeiro primeira outro outra outros outras ja nao sim tambem ainda apenas so
 """.split())
-# rótulo que obriga o leitor a reconstruir o referente
-ROTULOS_VAGOS = set(_sem_acento(w) for w in """
-logica entendimento quadro perspectiva cenario panorama contexto raciocinio ideia premissa
-situacao circunstancia otica prisma visao compreensao diretriz orientacao toada diapasao
-esteira conjuntura realidade dinamica sistematica racional desenho
-""".split())
-# logo depois de uma citação, estes rótulos retomam a própria citação
-ROTULOS_DE_DECISAO = set(_sem_acento(w) for w in """
-entendimento orientacao compreensao diretriz raciocinio ratio tese conclusao premissa
-posicionamento jurisprudencia
-""".split())
 RE_NOMEIA = re.compile(r"^\s*,\s*(?:que|qual seja|quais sejam|isto é|ou seja|a saber"
                        r"|segundo o qual|segundo a qual|pel[oa] qual|de que)\b", re.I)
 
@@ -581,6 +569,9 @@ def _fim_do_primeiro_periodo(texto):
 
 
 def checar_remissao(pars, cfg, arquivo):
+    """Remissão órfã. A que retoma o que acabou de ser dito, para construir o passo
+    seguinte ("Nessa perspectiva, …"; "O decreto confirmou esse quadro."), fica: o vício é
+    o referente longe da vista (parágrafos atrás, outro capítulo)."""
     prosa_idx = [i for i, p in enumerate(pars) if p.tipo in ("prosa", "item")]
     for k, i in enumerate(prosa_idx):
         p = pars[i]
@@ -590,7 +581,6 @@ def checar_remissao(pars, cfg, arquivo):
         entre = pars[anterior + 1:i]
         titulos = [b for b in entre if b.tipo == "titulo"]
         citacoes = [b for b in entre if b.tipo == "citacao"]
-        logo_apos_citacao = bool(entre) and entre[-1].tipo == "citacao"
         masc = mascarar(p.texto)
         abertura_fim = _fim_do_primeiro_periodo(masc)
         for m in RE_DEMONSTRATIVO.finditer(masc):
@@ -623,14 +613,9 @@ def checar_remissao(pars, cfg, arquivo):
             if distancia:
                 yield Alerta(arquivo, p.linha_de(m.start()), "GO-1/remissao",
                              f"\"{expr}\" retoma termo que só aparece {distancia} parágrafos "
-                             f"atrás: repita o termo exato ou reformule; a remissão fica à vista",
+                             f"atrás: repita o termo exato ou nomeie o referente na frase "
+                             f"(\"Essa ratio, que afastou…\")",
                              _trecho(p.texto, m.start(), m.end()))
-            elif na_abertura and n in ROTULOS_VAGOS \
-                    and not (logo_apos_citacao and n in ROTULOS_DE_DECISAO):
-                yield Alerta(arquivo, p.linha_de(m.start()), "GO-1/remissao",
-                             f"\"{expr}\" é rótulo sem antecedente à vista: nomeie o referente "
-                             f"(\"Essa ratio, que afastou…\") ou abra pela conjunção da relação "
-                             f"lógica", _trecho(p.texto, m.start(), m.end()))
 
 
 # ------------------------------------------------------------------ GO-7: dizer uma vez
