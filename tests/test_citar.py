@@ -341,6 +341,16 @@ class CitarTests(unittest.TestCase):
         self.assertEqual(self.resolve("AC 0000001-00.2020.4.01.3400", itens="3-4"),
                          "3. Terceiro item. 4. Recurso desprovido.")
 
+    def test_item_sem_espaco_depois_do_ponto(self):
+        # TRF-1 real (AG 1015324-18.2018.4.01.0000): "2.Não há…". Antes, o item 2 não era
+        # reconhecido e `itens: 1` devolvia a ementa inteira sem aviso.
+        ementa = ("TRIBUTÁRIO. EXECUÇÃO FISCAL. 1. Primeiro item, com o art. 1.022 e R$ 5.000,00. "
+                  "2.Não há comprometimento do título. 3. Agravo desprovido.")
+        itens = self.citar._split_itens(ementa)
+        self.assertEqual(sorted(itens), [1, 2, 3])
+        self.assertEqual(itens[1], "1. Primeiro item, com o art. 1.022 e R$ 5.000,00.")
+        self.assertEqual(itens[2], "2.Não há comprometimento do título.")
+
     def test_rfb_citacao_em_bloco(self):
         texto = self.resolve("Solução de Consulta Cosit nº 999/2019",
                              trecho='de "Texto da solução" ate "verificável."')
