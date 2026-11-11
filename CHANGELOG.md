@@ -1,5 +1,41 @@
 # Changelog — pratica-juridica
 
+## v1.6.0 (2026-11-11)
+
+Coesão dentro do período. O José apontou dois vícios que as regras ainda não cobriam: o
+numeral ou o pronome no lugar do nome, sem o substantivo ("As duas primeiras", quando o
+certo é "As duas decisões mais antigas"), e o período longo em que, logo depois da
+conjunção adversativa, se empilham adjuntos adverbiais intercalados, com as orações
+seguintes dependendo de sujeito oculto e de vários pronomes oblíquos (-lo, -la) que
+retomam referentes distintos. A ordem direta é a regra; sair dela é exceção, com objetivo
+claro de comunicação. Parte do segundo vício vinha da GO-1, que manda abrir o parágrafo
+pela conjunção e aceita a circunstância na abertura: as duas, juntas, viravam fila.
+
+- **Nova GO-8, "Ordem direta e referente nomeado":** conjunção, sujeito, verbo, objeto e,
+  por último, o adjunto; depois da conjunção vem a oração. O deslocamento é um por
+  período, curto e com função (ligação, ênfase, evitar ambiguidade). Numeral, ordinal e
+  pronome levam o substantivo e, no lugar da posição no texto, o atributo que identifica
+  a coisa (data, grau, órgão, parte). Sujeito oculto só o da oração anterior; oblíquo
+  retoma um referente só, e próximo; o período que não cabe na ordem direta se divide.
+- **GO-1:** conjunção e circunstâncias não se empilham na abertura do parágrafo.
+- **Revisão:** varredura de ordem direta e referente, período a período, e três linhas
+  novas na tabela do radar. O subagente Sonnet de estilo ganha o uso em que mais rende: a
+  leitura a frio, marcando o período que precisou reler e o referente que precisou
+  procurar.
+- **Radar (`lint_peca.py`):** `GO-8/intercalacao` (duas ou mais circunstâncias entre a
+  conjunção e a oração, somando dez palavras, ou três), `GO-8/obliquos` (dois oblíquos
+  enclíticos de gênero ou número diferentes no período, ou três) e `GO-8/referente`
+  (numeral, ordinal, "este último", "ambos", "os demais", "nenhuma delas" sem o
+  substantivo, abrindo o período). O oblíquo antes do verbo, o sujeito oculto que mudou
+  e o que aparece no meio do período ficam para a leitura. São 14 testes novos (de 75
+  para 89). **Sem calibração nas peças do José:** as versões definitivas dele não estão
+  no repositório; nas 450 passagens de prosa dos dois plugins, as regras novas só
+  disparam nos exemplos da própria regra e numa lista de conectivos. Vale rodar o radar nas duas versões definitivas e
+  ajustar os limiares se algo disparar.
+- **`sensibilidade-argumentativa`:** o parágrafo movido leva o referente nomeado.
+- Correção: o cabeçalho do `lint_peca.py` dizia `--max-abertura-nominal 30`; o padrão é 50
+  desde a v1.5.0.
+
 ## v1.5.1 (2026-11-04)
 
 Ajuste depois do tira-teima: um agente sem contexto, em Opus, redigiu com a 1.5.0 a
