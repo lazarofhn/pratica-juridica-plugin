@@ -27,13 +27,14 @@ Fica em `<workspace>/redacao/esqueleto.md` (na equipe, `_equipe\produto\<nome>-e
 - **Registro:** peça
 
 ## Partes fixas
-<endereçamento, identificação, título, pedidos e fecho, já em @tag, na redação final>
+<endereçamento, identificação, título, o parágrafo de abertura, a linha que introduz os
+pedidos, os pedidos e o fecho, já em @tag, na redação final>
 
 ## Tópico 1 — <título, na redação final>
 Resultado: <o que o dispositivo deve dizer> | Peso: núcleo | Espaço: ~<n> parágrafos | Geração: 1
 1. [tese] "<frase literal, na redação final>"
 2. [fato] <o fato, em nota> — (<tipo do documento>, id <n>, p. <n>)
-3. [norma] <o dispositivo e o que dele se extrai> — transcrever: "<trecho literal>" | só citar
+3. [norma] <o dispositivo e o que dele se extrai> — transcrever na frase: "<trecho curto, literal>" | em bloco (o @citacao vem montado, como no item de citação) | só citar
 4. [citacao] apresenta: <o que ela prova, quem decidiu, por que o caso é igual> | aplica: <o passo seguinte, no caso>
    @citacao-ref
    fonte: …
@@ -53,6 +54,11 @@ Resultado: <o que o dispositivo deve dizer> | Peso: núcleo | Espaço: ~<n> par�
 - **Os itens estão na ordem em que o julgador deve lê-los.** É a ordem do mapa de peso:
   conclusão, fato decisivo com a prova, condição, objeção relevante, fecho. O redator
   não reordena.
+- **A densidade vem do esqueleto.** O redator articula o que o item diz e não inventa
+  desenvolvimento: no teste de nov./2026, um tópico de núcleo com um só item `[argumento]`
+  saiu fiel e raso. Tópico de núcleo pede cerca de um item por parágrafo previsto, e cada
+  `[argumento]` traz a premissa e a consequência.
+- **Todo tópico abre por um item `[tese]`,** inclusive o de apoio.
 - **Frase de tese, literal.** Toda afirmação em que a palavra decide (o que a decisão
   disse, o que a lei exige, o que se pede) vem escrita como deve sair. O redator a liga
   e a desenvolve; não a reformula.
