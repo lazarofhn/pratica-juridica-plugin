@@ -3,6 +3,23 @@
 Documento-mãe para construir e revisar as skills. Consolida a ideia bruta do José e as
 decisões de arquitetura já travadas. **Revisar antes de construir.**
 
+## Decisões em teste — v1.6 (nov/2026)
+Ainda não travadas: viram regra depois do tira-teima num caso real.
+
+1. **Redator no N3 e no N4.** A mão única pode ser a de um agente que só escreve: a
+   conversa principal monta o esqueleto (o que se quer com a peça e como, premissa e
+   termos proibidos, tópicos na ordem do peso, frases de tese literais, fatos com
+   documento e página, citações montadas, espaço) e o `redator` o põe em texto, geração a
+   geração, sem carregar a leitura, a pesquisa nem as respostas dos outros agentes. Um
+   redator para a peça inteira, nunca um por tópico (o erro da v1.3). Origem: o José
+   notou que a carga da apuração contamina o foco de quem escreve; o tira-teima da v1.5.1
+   já mostrara que um agente sem contexto escreve fluido e erra só nas decisões de
+   conteúdo, que agora vêm fechadas no esqueleto.
+2. **Com o redator, a sensibilidade revisa o esqueleto**, antes de existir prosa, e não
+   reescreve a peça pronta; o `moderador-final` continua lendo a peça.
+3. **Na peça, a palavra às vezes é o conteúdo.** Por isso a frase de tese vai literal no
+   esqueleto, e o Contexto diz o tom e o que a peça não concede.
+
 ## Decisões travadas — v1.4 (out/2026)
 Prevalecem sobre as da v1.3 onde divergem.
 
@@ -95,6 +112,8 @@ E · COMPARTILHADAS:
 F · AGENTES (agents/):
     sensibilidade-argumentativa (Opus: reorganiza a peça pronta pelo peso)
     moderador-final             (Fable no N3/N4, Opus no N2: lê como o julgador)
+    redator                     (Opus, em teste no N3/N4: escreve a peça a partir do
+                                 esqueleto)
 ```
 
 ## Fluxo do orquestrador (v1.4)
@@ -212,7 +231,7 @@ ferramenta.
 
 ### escrita-juridica
 Dona única do estilo. O peso do argumento antes da forma; registros
-`peça|interno|externo`; GO-1 a GO-7; persuasão calibrada (com a régua do peso e a
+`peça|interno|externo`; GO-1 a GO-8; persuasão calibrada (com a régua do peso e a
 objeção já levantada) e padrões da casa em `references/`, lidos sob demanda; revisão de
 peça pronta; varredura automática de padrões por script.
 
@@ -233,6 +252,13 @@ resultados e o plano; monta o mapa de peso e reescreve a peça inteira em arquiv
 reorganizada pelo peso. Nada novo (argumento, fato, citação, pedido); citações, folhas,
 pedidos, sentido das frases de tese e exigências legais intocados. Devolve mapa,
 mudanças, cortes para o veto e lacunas.
+
+### redator (em teste)
+Opus. Recebe só o esqueleto (`plano-de-respostas`, `references/esqueleto.md`) e a
+`escrita-juridica`; escreve a peça inteira, geração a geração, num arquivo, com o radar a
+cada geração. Frases de tese, blocos de citação, fatos, ordem e espaço chegam fechados;
+nada de fora entra, e o que falta volta como lacuna. Devolve a contagem por tópico, as
+lacunas, as observações de redação e o radar.
 
 ### moderador-final
 Fable no N3/N4; Opus no N2 (o chamador passa `model`). Lê a mesa e depois a peça, como o

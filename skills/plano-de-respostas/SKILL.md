@@ -114,6 +114,21 @@ um dossiê em `<workspace>/redacao/D{N}-<tema>.md`:
 Sem texto de peça e sem juízo de peso. Tópicos independentes rodam em paralelo. Com os
 dossiês, confira o mapa de peso e redija a peça inteira, geração a geração, como no N2.
 
+### N3 e N4 — com o redator (em teste)
+Outra mão única: em vez de você, quem escreve a peça inteira é o agente
+`pratica-juridica:redator`, que só recebe o **esqueleto** e a `escrita-juridica`. A
+leitura, a pesquisa e as respostas dos outros agentes ficam com você e não disputam a
+atenção de quem escreve. Ofereça-o em uma linha ao apresentar o plano (o N3 já para ali);
+use-o se o José aceitar ou pedir.
+- Você monta o esqueleto: o que se quer com a peça e como, a premissa nuclear e os termos
+  proibidos, e cada tópico na ordem do peso, com as frases de tese literais, os fatos com
+  documento e página, as citações já montadas e o espaço previsto. Formato, regras e a
+  sequência completa: `references/esqueleto.md`.
+- A `sensibilidade-argumentativa` revisa o **esqueleto**, antes da redação; o redator
+  escreve geração a geração num arquivo só; você confere a fidelidade (nada entrou nem
+  saiu); o `moderador-final` lê a peça pronta.
+- O que muda conteúdo, ordem ou espaço se corrige no esqueleto e volta ao redator.
+
 ## Passo 5 — Costura e revisão argumentativa
 1. **Costura**, sua: transições, termos uniformes, nenhuma contradição entre tópicos,
    coerência fatos → fundamentos → pedidos, cada pedido com fundamento.
@@ -131,6 +146,8 @@ dossiês, confira o mapa de peso e redija a peça inteira, geração a geração
      são o que estará na mesa do julgador.
    - Uma rodada de cada. O moderador volta uma segunda vez só se indeferir o pedido
      principal por defeito que a peça pode corrigir.
+   - Com o redator, a sensibilidade já rodou sobre o esqueleto e não reescreve a peça:
+     aqui roda só o moderador (`references/esqueleto.md`).
    - Se o tipo de agente não existir na sessão, abra um subagente comum com o modelo
      indicado e, como instrução, o corpo do arquivo do agente
      (`${CLAUDE_PLUGIN_ROOT}/agents/<nome>.md`).

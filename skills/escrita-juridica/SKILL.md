@@ -15,9 +15,9 @@ externo.
 
 | Nível | O que muda aqui |
 |---|---|
-| N1 | GO-1 a GO-7 e o radar ao fechar; protocolar não infla, as `references/` ficam de fora (salvo revisão). |
+| N1 | GO-1 a GO-8 e o radar ao fechar; protocolar não infla, as `references/` ficam de fora (salvo revisão). |
 | N2 | Tudo o que segue, geração a geração, por você; na peça, os dois revisores ao fim (`plano-de-respostas`, Passo 5). |
-| N3 | Você redige a peça inteira a partir dos dossiês dos tópicos; na costura, radar e varreduras na peça inteira; depois, os dois revisores. |
+| N3 | Você redige a peça inteira a partir dos dossiês dos tópicos; na costura, radar e varreduras na peça inteira; depois, os dois revisores. Em teste: o `redator` redige por esta skill, a partir do seu esqueleto (`plano-de-respostas`). |
 | N4 | O principal da equipe redige por esta skill, com os mesmos revisores do N3. |
 
 ## Registros
@@ -82,7 +82,8 @@ por isso, contudo, todavia, diante disso, em consequência, por sua vez, nessa l
   parágrafo cabe quando nomeia o passo novo do argumento ("O decreto confirmou…", "O art.
   17 vincula…"); o vício é a série de atores sem ligação ("O MPF…" / "O acórdão…" / "A
   sentença…"). No máximo cerca de metade dos parágrafos sem conectivo, nunca três
-  seguidos: confira no radar antes de entregar.
+  seguidos: confira no radar antes de entregar. Depois da conjunção vem a oração:
+  conjunção e circunstâncias não se empilham na abertura (GO-8).
 - **A remissão fica à vista.** Remeter ao que acabou de ser dito é bem-vindo quando
   constrói a lógica, fazendo disso a premissa do passo seguinte ("Nessa perspectiva, a
   omissão dos Ministérios compõe a causa de pedir"; "O decreto confirmou esse quadro";
@@ -119,7 +120,8 @@ deliberada e radical, rara em texto jurídico.
 ### GO-3 — Dois pontos não viram fórmula
 É proibida a repetição de "afirmação ampla + dois pontos + desdobramento": repetida,
 robotiza o texto. O uso pontual é legítimo e pode ser elegante; integre a explicação à
-afirmação com conjunção.
+afirmação com conjunção. Os dois pontos que anunciam enumeração ("três objeções: …") ou
+transcrição não são a fórmula. O radar aponta cada ocorrência para triagem.
 
 > ✗ "Essa distinção tem reflexo direto sobre quais regras se aplicam: as condições de
 > vigência, as hipóteses de alteração e os limites de acréscimo operam de forma diferente."
@@ -248,6 +250,49 @@ o texto vizinho não lhe dão? Se não perde, sai.
 > editado após a vigência do ato de que trata o § 2º", a ato conjunto do qual participa o
 > Ministério da Fazenda."
 
+### GO-8 — Ordem direta e referente nomeado (o período se lê de uma vez)
+O leitor não deve guardar nada na memória para chegar ao verbo, nem voltar ao parágrafo
+anterior para saber de quem ou de quê se fala.
+- **Ordem direta é a regra:** conjunção, sujeito, verbo, objeto e, por último, o adjunto
+  adverbial. Depois da conjunção vem a oração, não uma fila de circunstâncias
+  intercaladas. Sair da ordem direta é exceção e pede um objetivo que melhore a leitura:
+  a circunstância curta que liga o parágrafo ao anterior (GO-1), o termo levado ao começo
+  ou ao fim do período para receber a ênfase, a ambiguidade que a ordem direta criaria.
+  Um deslocamento por período, e curto; se você não sabe dizer para que serve, volte à
+  ordem direta.
+- **Numeral e pronome levam o substantivo.** Numeral, ordinal e pronome no lugar do nome
+  ("as duas primeiras", "a segunda", "este", "aquela", "ambos", "os demais", "a outra")
+  obrigam o leitor a voltar e contar. Escreva o substantivo e, no lugar da posição em que
+  a coisa apareceu no texto, o atributo que a identifica: a data, o grau, o órgão, a
+  parte. Sem o substantivo, só quando ele está no mesmo período ("Das três decisões, duas
+  são de primeiro grau").
+- **Órgão com o tribunal.** Turma, câmara e seção de outro tribunal se nomeiam com o
+  tribunal em cada parágrafo ("a 4ª Turma do mesmo Tribunal", "a Primeira Turma do
+  Superior Tribunal de Justiça"). Solta, "a 4ª Turma" parece ser do tribunal em que a
+  peça tramita. Depois de um bloco de citação, o referente recomeça.
+- **Sujeito oculto, só o da oração anterior.** Mudou o sujeito, nomeie o novo.
+- **Pronome oblíquo retoma um referente só, e próximo.** Dois oblíquos (-lo, -la, -os,
+  lhe) apontando para coisas diferentes no mesmo período travam a leitura: repita o
+  substantivo. Repetir o nome não é o vício do GO-7, que corta a ideia dita duas vezes.
+- **O período que não cabe na ordem direta se divide** em dois, cada um com o seu sujeito
+  e o seu objeto nomeados (GO-4), em vez de se equilibrar com vírgulas.
+
+**Teste:** em cada verbo, o leitor sabe quem pratica a ação e sobre o quê, sem voltar?
+Cada "-lo", "este" ou "a segunda" tem um só candidato, e à vista? Se não, nomeie ou
+divida.
+
+> ✗ "A autoridade reconheceu o crédito. Todavia, quase dois anos depois, sem nova
+> intimação da contribuinte, com fundamento em parecer que não juntou, glosou-o e,
+> apresentada a manifestação de inconformidade, deixou de apreciá-la."
+> ✓ "A autoridade reconheceu o crédito. Todavia, glosou esse crédito quase dois anos
+> depois, sem nova intimação da contribuinte e com fundamento em parecer que não juntou.
+> Tampouco apreciou a manifestação de inconformidade."
+
+> ✗ "As duas primeiras são de primeiro grau e pendem de recurso; a última, embora
+> colegiada, não examinou o decreto."
+> ✓ "As duas decisões mais antigas são de primeiro grau e pendem de recurso; o acórdão
+> do TRF-1, embora colegiado, não examinou o decreto."
+
 ## Latim e cortesia forense — calibragem, não proibição
 O problema é o excesso e a repetição. Um "Exmo.", um "egrégio" ou um "data venia" de vez
 em quando, sem repetição, é natural no registro forense; latim técnico insubstituível
@@ -258,7 +303,7 @@ decisão") e latim ornamental constante ("in casu", "a priori" o tempo todo).
 ## Precisão e ancoragem
 - **Termo exato, sem variação elegante:** repita o termo técnico; sinônimo usado só para
   não repetir gera ambiguidade. Referente distante também se repete, em vez de retomado
-  por demonstrativo (GO-1). Nunca "o mesmo"/"a mesma" como pronome ("o contrato foi
+  por demonstrativo (GO-1), por numeral ou por pronome solto (GO-8). Nunca "o mesmo"/"a mesma" como pronome ("o contrato foi
   assinado e o mesmo previa multa" → "o contrato foi assinado e previa multa").
 - **O léxico não concede a premissa adversária.** Ao relatar ato, decisão ou tese
   contrária, verbo e substantivo não podem admitir por descuido a premissa que se
@@ -309,9 +354,16 @@ construção do argumento vem antes da forma: a `sensibilidade-argumentativa` e 
 `moderador-final` (`plano-de-respostas`, Passo 5) rodam antes das varreduras de forma.
 
 ## Agentes
+No N3 e no N4, em teste, quem redige pode ser o agente `redator`: ele recebe só o
+esqueleto que você fecha e esta skill, e escreve a peça inteira (`plano-de-respostas`,
+`references/esqueleto.md`). As regras são as mesmas; o que muda é quem as aplica.
+
 A reescrita de estilo é de quem redige, com o texto à vista. Um subagente Sonnet pode
 servir de radar de estilo (opcional; em peça longa, uma seção por agente): localiza e
-devolve trecho e linha, nunca reescreve. A exceção é a `sensibilidade-argumentativa`,
+devolve trecho e linha, nunca reescreve. O melhor uso dele é a leitura a frio do GO-8 e
+da remissão do GO-1: sem ter visto os autos nem o plano, marca cada período que precisou
+reler e cada referente que precisou procurar atrás, o que quem redigiu não enxerga,
+porque já sabe a resposta. A exceção é a `sensibilidade-argumentativa`,
 que reorganiza a peça inteira pelo peso, em arquivo novo, e só é adotada depois da sua
 conferência: nenhum fato, citação, folha ou pedido perdido, e nenhuma frase de tese com
 o sentido mudado. Sugestão automática já inverteu o sentido de frase nuclear da tese

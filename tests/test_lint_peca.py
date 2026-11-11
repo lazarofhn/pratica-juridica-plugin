@@ -133,27 +133,27 @@ class MediaDosParagrafos(unittest.TestCase):
 
 class AberturasIguais(unittest.TestCase):
     def test_tres_aberturas_iguais(self):
-        alertas = lint.lint_texto(corpo("Com efeito, a primeira.", "Com efeito, a segunda.",
-                                        "Com efeito, a terceira."))
+        alertas = lint.lint_texto(corpo("Com efeito, a primeira tese.", "Com efeito, a segunda tese.",
+                                        "Com efeito, a terceira tese."))
         self.assertEqual([(a.regra, a.linha) for a in alertas], [("GO-4/aberturas", 6)])
 
     def test_duas_aberturas_iguais_nao_disparam(self):
-        self.assertEqual(regras(corpo("Com efeito, a primeira.", "Com efeito, a segunda.",
-                                      "Além disso, a terceira.")), [])
+        self.assertEqual(regras(corpo("Com efeito, a primeira tese.", "Com efeito, a segunda tese.",
+                                      "Além disso, a terceira tese.")), [])
 
     def test_titulo_reinicia_a_contagem(self):
-        texto = (corpo("Com efeito, a primeira.", "Com efeito, a segunda.")
-                 + "\n@secao\n2. DO MÉRITO\n\n" + corpo("Com efeito, a terceira."))
+        texto = (corpo("Com efeito, a primeira tese.", "Com efeito, a segunda tese.")
+                 + "\n@secao\n2. DO MÉRITO\n\n" + corpo("Com efeito, a terceira tese."))
         self.assertEqual(regras(texto), [])
 
     def test_citacao_entre_paragrafos_nao_reinicia(self):
-        texto = (corpo("Nesse sentido, a primeira.", "Nesse sentido, a segunda.")
-                 + "\n@citacao\nEmenta qualquer.\n\n" + corpo("Nesse sentido, a terceira."))
+        texto = (corpo("Nesse sentido, a primeira tese.", "Nesse sentido, a segunda tese.")
+                 + "\n@citacao\nEmenta qualquer.\n\n" + corpo("Nesse sentido, a terceira tese."))
         self.assertEqual(regras(texto), ["GO-4/aberturas"])
 
     def test_mesma_estrutura_sem_conectivo(self):
         self.assertEqual(regras(corpo("A decisão afirmou um ponto.", "A decisão negou outro.",
-                                      "A decisão omitiu o terceiro.")), ["GO-4/aberturas"])
+                                      "A decisão omitiu o terceiro ponto.")), ["GO-4/aberturas"])
 
 
 class AberturaSemConectivo(unittest.TestCase):
@@ -488,6 +488,141 @@ class OMesmo(unittest.TestCase):
         texto = corpo("O mesmo dispositivo e a mesma Turma, ao mesmo tempo e do mesmo modo, "
                       "decidiram. A petição é a mesma que foi juntada.")
         self.assertEqual(regras(texto), [])
+
+
+class OrdemDiretaEReferente(unittest.TestCase):
+    """GO-8: depois da conjunção vem a oração; numeral, pronome e oblíquo com o referente à vista."""
+
+    VICIO = ("A autoridade reconheceu o crédito. Todavia, quase dois anos depois, sem nova "
+             "intimação da contribuinte, com fundamento em parecer que não juntou, glosou-o e, "
+             "apresentada a manifestação de inconformidade, deixou de apreciá-la.")
+    DIRETA = ("A autoridade reconheceu o crédito. Todavia, glosou esse crédito quase dois anos "
+              "depois, sem nova intimação da contribuinte e com fundamento em parecer que não "
+              "juntou. Tampouco apreciou a manifestação de inconformidade.")
+
+    def go8(self, *paragrafos):
+        return [r for r in regras(corpo(*paragrafos)) if r.startswith("GO-8")]
+
+    def test_circunstancias_empilhadas_depois_da_adversativa(self):
+        alertas = [a for a in lint.lint_texto(corpo(self.VICIO)) if a.regra == "GO-8/intercalacao"]
+        self.assertEqual(len(alertas), 1)
+        self.assertIn("3 circunstâncias", alertas[0].mensagem)
+        self.assertIn("\"todavia\"", alertas[0].mensagem)
+
+    def test_ordem_direta_nao_dispara(self):
+        self.assertEqual(self.go8(self.DIRETA), [])
+
+    def test_conjuncao_posposta_com_fila_de_circunstancias(self):
+        texto = ("O acórdão, contudo, em sede de apelação, sem examinar a certidão de fl. 212, "
+                 "reformou a sentença.")
+        self.assertEqual(self.go8(texto), ["GO-8/intercalacao"])
+
+    def test_uma_circunstancia_curta_e_o_deslocamento_com_funcao(self):
+        self.assertEqual(self.go8("Contudo, no caso dos autos, a União não recorreu da sentença."), [])
+        self.assertEqual(self.go8("Todavia, no caso, em 2019, a União não recorreu."), [])
+        self.assertEqual(self.go8("Ademais, embora intimada por duas vezes para apresentar os "
+                                  "documentos, a autoridade nada juntou."), [])
+
+    def test_obliquos_de_referentes_distintos(self):
+        alertas = [a for a in lint.lint_texto(corpo(self.VICIO)) if a.regra == "GO-8/obliquos"]
+        self.assertEqual(len(alertas), 1)
+        self.assertIn("glosou-o, apreciá-la", alertas[0].mensagem)
+        self.assertIn("referentes distintos", alertas[0].mensagem)
+
+    def test_tres_obliquos_no_periodo(self):
+        texto = "A Turma recebeu a multa, manteve-a, majorou-a e impô-la também à recorrente."
+        self.assertEqual(self.go8(texto), ["GO-8/obliquos"])
+
+    def test_obliquo_unico_ou_repetido_do_mesmo_referente_nao_dispara(self):
+        self.assertEqual(self.go8("A Turma examinou a multa e manteve-a."), [])
+        self.assertEqual(self.go8("A Turma manteve a multa, impondo-a à recorrente e estendendo-a "
+                                  "à sucessora."), [])
+
+    def test_hifen_de_dispositivo_e_de_palavra_composta_nao_e_obliquo(self):
+        self.assertEqual(self.go8("O art. 170-A do CTN e o art. 22-A da Lei 8.212 regem o "
+                                  "decreto-lei, e o sócio-gerente responde."), [])
+
+    def test_numeral_sem_substantivo_na_abertura(self):
+        texto = ("As duas primeiras são de primeiro grau e pendem de recurso; a última, embora "
+                 "colegiada, não examinou o decreto.")
+        alertas = [a for a in lint.lint_texto(corpo(texto)) if a.regra == "GO-8/referente"]
+        self.assertEqual(len(alertas), 1)   # um alerta leva o revisor ao período inteiro
+        self.assertIn("\"As duas primeiras\"", alertas[0].mensagem)
+
+    def test_numeral_com_substantivo_nao_dispara(self):
+        self.assertEqual(self.go8("As duas decisões mais antigas são de primeiro grau; o acórdão "
+                                  "do TRF-1, embora colegiado, não examinou o decreto."), [])
+        self.assertEqual(self.go8("A Segunda Turma do STJ manteve a sentença. O primeiro requisito está "
+                                  "presente. Os demais réus não apelaram."), [])
+
+    def test_pronome_solto_na_abertura(self):
+        for texto, expr in (("Este último não foi conhecido.", "Este último"),
+                            ("Ambos foram providos pela Turma.", "Ambos"),
+                            ("Os demais, por sua vez, não apelaram.", "Os demais"),
+                            ("Nenhuma delas examinou o decreto.", "Nenhuma delas"),
+                            ("Todavia, aquela não transitou em julgado.", "aquela"),
+                            ("A segunda, de 2021, reconheceu o crédito.", "A segunda")):
+            alertas = [a for a in lint.lint_texto(corpo(texto)) if a.regra == "GO-8/referente"]
+            self.assertEqual(len(alertas), 1, texto)
+            self.assertIn(f"\"{expr}\"", alertas[0].mensagem)
+
+    def test_substantivo_no_mesmo_periodo_ou_no_predicativo_nao_dispara(self):
+        for texto in ("Das três decisões invocadas pela autoridade, duas são de primeiro grau.",
+                      "Esse é o caso dos autos, uma vez que a contribuinte recolheu o tributo.",
+                      "Esse não é o caso dos autos.",
+                      "Ambos os recursos foram providos.",
+                      "Aquele que causar dano a outrem fica obrigado a repará-lo.",
+                      "Nesse sentido, a Primeira Seção do STJ já decidiu a questão.",
+                      "Só a objeção que pode impedir o resultado recebe resposta desenvolvida; as "
+                      "demais, uma oração ou nada.",
+                      "Se o fundamento de uma delas pesa contra o resultado, responde-se a ele.",
+                      "A sentença examinou o laudo e o parecer, mas só este último foi acolhido."):
+            self.assertEqual(self.go8(texto), [], texto)
+
+    def test_citacao_e_aspas_nao_contam(self):
+        texto = ("O acórdão afirmou que \"as duas primeiras são nulas e, por isso, anulou-as, "
+                 "mantendo-o\".\n\n@citacao\nAs duas primeiras são nulas.\n")
+        self.assertEqual([r for r in regras("@corpo\n" + texto) if r.startswith("GO-8")], [])
+
+    def test_ignorar_go8(self):
+        self.assertEqual([r for r in regras(corpo(self.VICIO), ignorar=("GO-8",))
+                          if r.startswith("GO-8")], [])
+
+
+class OrgaoEDoisPontos(unittest.TestCase):
+    """Achados do José na leitura do teste da ERB (nov./2026)."""
+
+    def test_turma_sem_o_tribunal_no_paragrafo(self):
+        texto = ("A 4ª Turma adotou a mesma fundamentação (AC 0802738-31.2025.4.05.8000, Rel. Des. "
+                 "Federal Fulano; Doc. 12), e os dois acórdãos foram mantidos nos embargos.")
+        alertas = [a for a in lint.lint_texto(corpo(texto)) if a.regra == "GO-8/orgao"]
+        self.assertEqual(len(alertas), 1)
+        self.assertIn("\"4ª Turma\"", alertas[0].mensagem)
+
+    def test_turma_com_o_tribunal_ou_da_causa_nao_dispara(self):
+        for texto in ("A 4ª Turma do mesmo Tribunal adotou a mesma fundamentação.",
+                      "O TRF-5 já decidiu a questão. A 2ª e a 4ª Turmas afastaram a exigência.",
+                      "Como assentou a Primeira Turma do Superior Tribunal de Justiça, o receio basta.",
+                      "A matéria já foi decidida por esta 4ª Turma, e a eg. 2ª Turma a seguiu.",
+                      "O precedente basta (REsp 1.234.567, Segunda Turma, Rel. Min. Fulano).",
+                      "O feito tramita na 2ª Vara Federal da Seção Judiciária de Pernambuco."):
+            self.assertNotIn("GO-8/orgao", regras(corpo(texto)), texto)
+
+    def test_dois_pontos_explicativos(self):
+        for texto in ("A Impetrante não pede a criação de norma alguma: pede a declaração de que a "
+                      "lei já produz plenos efeitos.",
+                      "O pedido já observa esses limites: limita-se à declaração do direito."):
+            self.assertIn("GO-3", regras(corpo(texto)), texto)
+
+    def test_enumeracao_e_anuncio_de_citacao_nao_sao_o_vicio(self):
+        for texto in ("As informações opõem três objeções: o registro seria condição, a concessão "
+                      "criaria norma e o cadastro seria requisito.",
+                      "Das três sentenças, duas pendem de apelação: a da 1ª Vara Federal de Foz do "
+                      "Iguaçu e a da 6ª Vara Federal da Bahia.",
+                      "A autoridade opõe o registro: ele seria condição; a concessão criaria norma.",
+                      "É esse o critério do Superior Tribunal de Justiça:",
+                      "O art. 4º dispõe: \"A pessoa jurídica fará jus a crédito presumido.\""):
+            self.assertNotIn("GO-3", regras(corpo(texto)), texto)
 
 
 class LinhaDeComando(unittest.TestCase):

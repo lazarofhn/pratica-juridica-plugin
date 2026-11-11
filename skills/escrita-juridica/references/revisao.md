@@ -30,6 +30,7 @@ de aberturas por sujeito nominal; ou JSON com `alertas`, `resumo` e `paragrafos`
 | Regra | Aponta | Triagem |
 |---|---|---|
 | `GO-2` | travessão, meia-risca ou hífen com espaços | vira vírgula; só a ruptura sintática radical fica |
+| `GO-3` | dois pontos explicativos no meio do período ("afirmação: desdobramento"); a enumeração anunciada e o anúncio de citação não contam | integre com conjunção ("não pede X: pede Y" → "não pede X, mas Y"); o uso pontual e deliberado fica |
 | `GO-4/paragrafo` | acima de 120 palavras (referência), acima de 130 (quase sempre duas ideias), ou mais de dois períodos num parágrafo acima de 90 palavras | uma ideia só? mantenha; duas? quebre na costura, nunca resuma |
 | `GO-4/media` | média de palavras por parágrafo fora de 45 a 65 (peça com seis ou mais parágrafos) | acima: parágrafos juntando ideias; abaixo: frases soltas em série? Nunca alongue parágrafo para chegar à faixa |
 | `GO-4/aberturas` | três parágrafos seguidos com a mesma abertura | varie conectivo ou estrutura |
@@ -43,6 +44,10 @@ de aberturas por sujeito nominal; ou JSON com `alertas`, `resumo` e `paragrafos`
 | `GO-7/remissoes` | três ou mais remissões a precedentes (classe e número, súmula, tema) no mesmo parágrafo de texto corrido | o que sustenta o ponto vai em bloco, com grifo; os demais, na linha de referência do bloco ("No mesmo sentido: …"); a quantidade de precedentes da peça não se limita |
 | `GO-7/decisao-contraria` | decisão invocada pela parte contrária transcrita em bloco, ou decisões contrárias tratadas em três ou mais parágrafos | um parágrafo de conjunto: grau, data, o que decidiram em uma linha, os pronunciamentos favoráveis |
 | `GO-7/reformulacao` | "ou seja", "vale dizer", "em outras palavras" mais de uma vez | fica a que acrescenta a consequência; a que repete sai |
+| `GO-8/intercalacao` | duas ou mais circunstâncias intercaladas logo depois da conjunção, antes da oração ("Todavia, quase dois anos depois, sem nova intimação, …, glosou-o") | ordem direta: conjunção, sujeito, verbo, objeto, adjunto; ou divida o período. Fica o deslocamento único e curto que tem função (ligação, ênfase) |
+| `GO-8/obliquos` | período com dois oblíquos enclíticos de gênero ou número diferentes ("reformou-a… apreciá-los"), ou com três ou mais | cada oblíquo tem um só candidato, e próximo? Senão, repita o substantivo ou divida o período |
+| `GO-8/orgao` | turma, câmara ou seção sem o tribunal no parágrafo ("A 4ª Turma adotou a mesma fundamentação") | diga de que tribunal é ("a 4ª Turma do mesmo Tribunal"); fica se for o órgão a que a peça se dirige |
+| `GO-8/referente` | numeral, ordinal ou pronome sem o substantivo abrindo o período ("As duas primeiras são…", "A segunda, …", "Este último…", "Ambos…", "Os demais…", "Nenhuma delas…") | escreva o substantivo e o atributo que o identifica ("as duas decisões mais antigas"); fica se o substantivo está no mesmo período |
 | `precisao/o-mesmo` | "o mesmo" seguido de verbo ou pontuação | repita o termo ou reorganize |
 | `persuasao/*` | adjetivo de indignação; julgador como sujeito do erro | `persuasao.md` |
 | `revisao/metalinguagem`, `revisao/andaime` | as duas lentes abaixo | idem |
@@ -82,7 +87,17 @@ revisão é da `sensibilidade-argumentativa`, seguida do `moderador-final`
    acabou de ler, sem ambiguidade nem repetição, e se o capítulo abre pela própria tese. Corrija com a conjunção ou
    repetindo o termo exato; nunca com frase que resume o parágrafo anterior, nem trocando
    o artigo por demonstrativo ("Esse acórdão" no lugar de "O acórdão").
-4. **Dois pontos em série (GO-3)** — *leitura*. Conte, por seção, as frases "afirmação:
+   **Ordem direta e referente nomeado (GO-8)** — *radar e leitura*. Leia período a
+   período, como quem não conhece o caso. Em cada verbo, sabe-se quem pratica a ação e
+   sobre o quê, sem voltar? Depois da conjunção vem a oração, ou uma fila de
+   circunstâncias? Cada numeral, "este", "aquela", "os demais" ou "-lo" tem um só
+   candidato, no mesmo período? Cada turma ou câmara vem com o seu tribunal, no próprio
+   parágrafo? O radar aponta as circunstâncias empilhadas depois da
+   conjunção, os oblíquos em série e o numeral ou pronome sem substantivo na abertura do
+   período; o que aparece no meio do período, o oblíquo antes do verbo ("que o
+   rejeitou"), o sujeito oculto que mudou e a inversão sem função, só a leitura vê. Corrija pela ordem direta, pelo substantivo
+   repetido ou dividindo o período; nunca trocando um pronome por outro.
+4. **Dois pontos em série (GO-3)** — *radar e leitura*. Conte, por seção, as frases "afirmação:
    desdobramento"; repetidas, integre com conjunção. O anúncio de transcrição
    ("vejamos:", "in verbis:") não conta.
 5. **Registro (GO-5)** — *radar e leitura*. Varra a peça **inteira**, não só os casos
@@ -168,7 +183,7 @@ Mesmo roteiro, com foco em:
 - sinonímia e tautologia ("nulo e de nenhum efeito", "claro e evidente");
 - substantivo no lugar do verbo ("tomar a decisão de revisar" → "decidir revisar";
   "apresentou reclamação" → "reclamou");
-- ordem indireta e intercalação longa; voz passiva sem razão (só quando o agente é
+- ordem indireta e intercalação longa (GO-8); voz passiva sem razão (só quando o agente é
   irrelevante ou desconhecido); dupla negação ("não é impossível" → "é possível");
 - ênfase por negrito ou maiúsculas soltas no meio do texto, em vez da posição
   (palavra-chave no início ou no fim da frase); a formatação estrutural é da

@@ -22,6 +22,16 @@ arquivo:linha + regra para os padrões que a casa manda varrer:
   GO-7/remissoes      três ou mais remissões a precedentes no mesmo parágrafo de texto
                       corrido (a quantidade de precedentes da peça não é limitada)
   GO-7/reformulacao   "ou seja", "vale dizer", "em outras palavras" mais de uma vez
+  GO-8/intercalacao   circunstâncias empilhadas logo depois da conjunção, antes da oração
+                      ("Todavia, quase dois anos depois, sem nova intimação, …, glosou-o")
+  GO-8/obliquos       período com oblíquos enclíticos de referentes distintos ("reformou-a…
+                      apreciá-los"), ou com três ou mais
+  GO-8/referente      numeral, ordinal ou pronome sem o substantivo abrindo o período ("As
+                      duas primeiras são…", "Este último…", "Ambos…", "Os demais…")
+  GO-8/orgao          turma, câmara ou seção sem o tribunal no parágrafo ("A 4ª Turma adotou
+                      a mesma fundamentação"): o leitor a atribui ao tribunal da causa
+  GO-3                dois pontos explicativos no meio do período ("afirmação: desdobramento");
+                      a enumeração anunciada e o anúncio de citação não contam
   GO-5/ensaio         fórmula de crônica ou ensaio: avaliação impressionista, imagem,
                       contraste em suspense, dramatização, narrador comentando a peça
   GO-5/metadiscurso   arquitetura da tese exposta ("apenas para argumentar")
@@ -41,7 +51,7 @@ código, tabelas e títulos.
 Uso:
     python lint_peca.py peca.md [outra.md | pasta ...] [--json]
         [--max-palavras 120] [--limite-palavras 130] [--max-periodos 2] [--media 45-65]
-        [--aberturas 3] [--max-abertura-nominal 30] [--max-nominais-seguidas 2]
+        [--aberturas 3] [--max-abertura-nominal 50] [--max-nominais-seguidas 2]
         [--max-cortesia 2] [--ignorar GO-6,cortesia]
 
 A régua do parágrafo é de ideia, não de número: um parágrafo diz uma coisa só,
@@ -84,6 +94,11 @@ class Config:
     max_nominais_seguidas: int = 2   # demonstrativo); a terceira seguida dispara
     max_cortesia: int = 2
     max_reformulacao: int = 1   # "ou seja" e afins: a segunda ocorrência dispara
+    max_intercaladas: int = 1   # circunstâncias entre a conjunção e a oração: a segunda
+    min_palavras_intercaladas: int = 10   # dispara, se as duas somarem isso (três, sempre)
+    max_obliquos: int = 2       # oblíquos enclíticos no período: o terceiro dispara (o
+                                # segundo, se o gênero ou o número for outro)
+    abertura_referente: int = 4  # palavras antes do numeral ou pronome solto, no período
     parafrase_min: float = 0.5  # parte do vocabulário do parágrafo que já está na citação
     repeticao_min: float = 0.75  # parte do vocabulário em comum com outro parágrafo
     max_remissoes: int = 2      # remissões a precedentes toleradas num parágrafo de prosa
@@ -993,6 +1008,177 @@ def checar_mesmo(par, masc):
             yield m.start(), "precisao/o-mesmo", MSG_MESMO, _trecho(par.texto, m.start(), m.end())
 
 
+# ------------------------------------------------------------------ GO-8: ordem direta e referente
+# conjunção seguida de vírgula: o que vem depois deveria ser a oração
+CONJ_ORACAO = [
+    "no entanto", "não obstante", "além disso", "por conseguinte", "por isso", "com efeito",
+    "de fato", "todavia", "contudo", "entretanto", "porém", "mas", "ademais", "outrossim",
+    "portanto", "assim", "logo", "pois", "ora", "e",
+]
+RE_CONJ_VIRGULA = re.compile(
+    r"(?:^|(?<=[\s,;(]))(" + "|".join(re.escape(c) for c in CONJ_ORACAO) + r")\s*,\s*", re.I)
+_QUANTIDADE = (r"(?:\d+|um|uma|dois|duas|três|quatro|cinco|seis|sete|oito|nove|dez|poucos|poucas"
+               r"|alguns|algumas|vários|várias|muitos|muitas)")
+# começo de circunstância: preposição, conjunção subordinativa, gerúndio, particípio, tempo
+RE_ABRE_ADJUNTO = re.compile(
+    r"^(?:ao|aos|à|às|em|no|na|nos|nas|num|numa|por|pelo|pela|pelos|pelas|com|sem|sob|sobre"
+    r"|após|antes|depois|durante|desde|até|diante|perante|segundo|conforme|consoante|mediante"
+    r"|para|quando|enquanto|embora|conquanto|apesar|mesmo|ainda\s+que|se\s+bem\s+que"
+    r"|a\s+despeito|a\s+pretexto|a\s+título|nesse|nessa|neste|nesta|naquele|naquela|nesses"
+    r"|nessas|já|quase|cerca\s+de|mais\s+de|menos\s+de|há|tão\s+logo|uma\s+vez"
+    r"|" + _QUANTIDADE + r"\s+(?:dias?|mês|meses|anos?|semanas?|horas?)"
+    r"|\w{3,}ndo|\w{3,}(?:ad|id)[oa]s?)\b", re.I)
+RE_ENCLITICO = re.compile(r"\b[A-Za-zÀ-ÿ]{2,}-(l[oa]s?|n[oa]s?|[oa]s?)\b(?![-\w])")
+
+_ARTIGO = r"(?:[oa]s?|d[oa]s?|n[oa]s?|aos?|às?|pel[oa]s?)"
+_CARDINAL = r"(?:dois|duas|três|quatro|cinco|seis|sete|oito|nove|dez)"
+RE_NUMERAL_SOLTO = re.compile(
+    r"\b" + _ARTIGO + r"\s+(?:" + _CARDINAL + r"\s+)?(?:primeir[oa]s?|segund[oa]s?"
+    r"|terceir[oa]s?|quart[oa]s?|quint[oa]s?|últim[oa]s?|derradeir[oa]s?|demais|outr[oa]s?"
+    r"|restantes)\b", re.I)
+RE_PRONOME_SOLTO = re.compile(
+    r"\b(?:[nd]?(?:est|ess|aquel)(?:e|a|es|as)|àquel(?:e|a|es|as))\b(?:\s+últim[oa]s?\b)?", re.I)
+RE_AMBOS = re.compile(r"\bamb[oa]s\b(?!\s+(?:[oa]s|ess[ea]s|est[ea]s|aquel[ea]s)\b)", re.I)
+RE_PARTITIVO = re.compile(
+    r"\b(?:nenhum|nenhuma|cada\s+uma?|uma?|" + _CARDINAL + r"|algumas?|alguns|qualquer"
+    r"|a\s+maioria|a\s+maior\s+parte|vári[oa]s|muit[oa]s)\s+del[ea]s\b", re.I)
+# "Esse é o caso dos autos": o substantivo está no predicativo, à vista
+RE_PREDICATIVO = re.compile(
+    r"^\s+(?:não\s+)?(?:é|são|foi|foram|era|eram|será|seria|seriam)\s+"
+    r"(?:(?:justamente|precisamente|exatamente|também)\s+)?(?:o|a|os|as|um|uma)\b", re.I)
+MSG_REFERENTE = ("sem o substantivo: escreva o nome e, no lugar da posição no texto, o atributo "
+                 "que o identifica (\"as duas decisões mais antigas\"); fica se o substantivo "
+                 "está no mesmo período")
+
+
+def _sem_substantivo_depois(masc, fim):
+    """O que vem depois é verbo, preposição ou pontuação: o termo está no lugar do nome."""
+    if _mesmo_pronominal(masc, fim):
+        return True
+    m = re.match(r"\s*(\w+)", masc[fim:])
+    return bool(m) and len(m.group(1)) > 5 and m.group(1).lower().endswith(("eu", "iu"))
+
+
+def checar_intercalacao(par, masc, cfg):
+    """Circunstâncias empilhadas entre a conjunção e a oração. Uma só, curta, é o
+    deslocamento com função (GO-1); a fila adia o verbo e esconde o sujeito."""
+    for ini, frase in _periodos_com_posicao(masc):
+        for m in RE_CONJ_VIRGULA.finditer(frase):
+            resto = re.split(r"[;:]", frase[m.end():], maxsplit=1)[0]
+            segmentos = resto.split(",")
+            n = palavras = 0
+            for seg in segmentos[:-1]:   # o último não fecha em vírgula: é a oração
+                if not RE_ABRE_ADJUNTO.match(seg.strip()):
+                    break
+                n += 1
+                palavras += len(seg.split())
+            if n > 2 or (n > cfg.max_intercaladas and palavras >= cfg.min_palavras_intercaladas):
+                pos = ini + m.start(1)
+                yield (pos, "GO-8/intercalacao",
+                       f"{n} circunstâncias intercaladas ({palavras} palavras) entre "
+                       f"\"{m.group(1).lower()}\" e a oração: ordem direta (conjunção, sujeito, "
+                       f"verbo, objeto, adjunto) ou divida o período",
+                       _trecho(par.texto, pos, pos + 70, folga=0))
+                break
+
+
+def checar_obliquos(par, masc, cfg):
+    """Oblíquos enclíticos em série. Gênero ou número diferente prova referentes distintos;
+    o oblíquo antes do verbo ("que o rejeitou") o radar não vê."""
+    for ini, frase in _periodos_com_posicao(masc):
+        achados = list(RE_ENCLITICO.finditer(frase))
+        formas = [("a" if "a" in m.group(1) else "o") + ("s" if m.group(1).endswith("s") else "")
+                  for m in achados]
+        distintos = len(set(formas)) > 1
+        if len(achados) > cfg.max_obliquos or (len(achados) > 1 and distintos):
+            lista = ", ".join(m.group(0) for m in achados[:5])
+            pos = ini + achados[0].start()
+            yield (pos, "GO-8/obliquos",
+                   f"{len(achados)} oblíquos no mesmo período ({lista})"
+                   f"{', de referentes distintos' if distintos else ''}: repita o substantivo "
+                   f"ou divida o período",
+                   _trecho(par.texto, pos, achados[-1].end() + ini, folga=10))
+
+
+def checar_referente(par, masc, cfg):
+    """Numeral, ordinal ou pronome no lugar do nome, abrindo o período: o referente ficou
+    em período anterior, e o leitor volta para contar. No meio do período o substantivo
+    pode estar à vista ("…; as demais, uma oração"), e isso fica para a leitura."""
+    for ini, frase in _periodos_com_posicao(masc):
+        vistos = []
+        for rx, demonstrativo in ((RE_NUMERAL_SOLTO, False), (RE_PRONOME_SOLTO, True),
+                                  (RE_AMBOS, False), (RE_PARTITIVO, False)):
+            for m in rx.finditer(frase):
+                antes = len(re.findall(r"\w+", frase[:m.start()]))
+                if antes > (2 if rx is RE_PARTITIVO else cfg.abertura_referente):
+                    continue
+                if rx is not RE_PARTITIVO and not _sem_substantivo_depois(frase, m.end()):
+                    continue
+                if demonstrativo and RE_PREDICATIVO.match(frase[m.end():]):
+                    continue
+                if any(a <= m.start() < b for a, b in vistos):
+                    continue
+                vistos.append((m.start(), m.end()))
+                pos = ini + m.start()
+                expr = re.sub(r"\s+", " ", par.texto[pos:ini + m.end()])
+                yield (pos, "GO-8/referente", f"\"{expr}\" {MSG_REFERENTE}",
+                       _trecho(par.texto, pos, ini + m.end()))
+
+
+_ORDINAL_ORGAO = (r"(?:\d{1,2}ª|Primeira|Segunda|Terceira|Quarta|Quinta|Sexta|Sétima|Oitava"
+                  r"|Nona|Décima(?:\s+(?:Primeira|Segunda|Terceira|Quarta|Quinta))?)")
+RE_ORGAO = re.compile(
+    r"\b" + _ORDINAL_ORGAO + r"(?:\s+e\s+(?:a\s+)?" + _ORDINAL_ORGAO + r")?\s+"
+    r"(?:Turmas?|Câmaras?|Seç(?:ão|ões))\b(?!\s+Judiciária)")
+RE_TRIBUNAL = re.compile(
+    r"\bTribuna(?:l|is)\b|\bTRF-?\d?\b|\bST[JF]\b|\bTS[TE]\b|\bTRT\b|\bTJ[A-Z]{0,3}\b|\bCorte\b"
+    r"|\bSuperior\b|\bSupremo\b|\bCARF\b|\bTCU\b|\bConselho\b")
+# o órgão a que a peça se dirige ("esta 4ª Turma", "a eg. 2ª Turma")
+RE_ORGAO_DA_CAUSA = re.compile(r"(?:\b(?:[dn]?est[ae]|[dn]?ess[ae]|eg\.|egrégia|colenda|c\.)\s+)$", re.I)
+
+
+def _fora_de_parenteses(texto):
+    """Troca por espaços o que está entre parênteses (a referência do julgado)."""
+    return re.sub(r"\([^()]*\)", lambda m: " " * len(m.group(0)), texto)
+
+
+def checar_orgao(par, masc, cfg):
+    """Órgão fracionário sem o tribunal. Solto no parágrafo, "a 4ª Turma" parece ser do
+    tribunal em que a peça tramita."""
+    limpo = _fora_de_parenteses(masc)
+    if RE_TRIBUNAL.search(limpo):
+        return
+    for m in RE_ORGAO.finditer(limpo):
+        if RE_ORGAO_DA_CAUSA.search(limpo[:m.start()]):
+            continue
+        yield (m.start(), "GO-8/orgao",
+               f"\"{m.group(0)}\" sem o tribunal no parágrafo: diga de que tribunal é (\"a 4ª "
+               f"Turma do mesmo Tribunal\"); fica se for o órgão a que a peça se dirige",
+               _trecho(par.texto, m.start(), m.end()))
+        return
+
+
+RE_ENUMERA = re.compile(
+    r"\b(?:dois|duas|três|quatro|cinco|seis|sete|oito|nove|dez|seguintes?|a saber|quais sejam"
+    r"|ambos|ambas)\b", re.I)
+RE_DOIS_PONTOS = re.compile(r":\s+(?=[a-zà-ÿ])")
+
+
+def checar_dois_pontos(par, masc, cfg):
+    """GO-3: "afirmação: desdobramento" no meio do período. A enumeração anunciada ("três
+    objeções: …", itens separados por ponto e vírgula) e o anúncio de citação ficam."""
+    for ini, frase in _periodos_com_posicao(masc):
+        for m in RE_DOIS_PONTOS.finditer(frase):
+            antes, depois = frase[:m.start()], frase[m.end():]
+            if RE_ENUMERA.search(antes) or ";" in depois or not depois.strip():
+                continue
+            pos = ini + m.start()
+            yield (pos, "GO-3",
+                   "dois pontos explicativos (\"afirmação: desdobramento\"): integre a "
+                   "explicação com conjunção; ficam a enumeração e o anúncio de citação",
+                   _trecho(par.texto, pos, pos + 1))
+
+
 # ------------------------------------------------------------------ orquestração
 def _ignorada(regra, cfg):
     return any(regra.lower().startswith(p.lower()) for p in cfg.ignorar if p)
@@ -1009,7 +1195,10 @@ def lint_texto(texto, arquivo="<texto>", cfg=None, **kw):
             continue
         masc = mascarar(p.texto)
         for checagem in (checar_traco(p, masc), checar_paragrafo(p, cfg),
-                         checar_lexico(p, masc), checar_negacao(p, masc), checar_mesmo(p, masc)):
+                         checar_lexico(p, masc), checar_negacao(p, masc), checar_mesmo(p, masc),
+                         checar_intercalacao(p, masc, cfg), checar_obliquos(p, masc, cfg),
+                         checar_referente(p, masc, cfg), checar_orgao(p, masc, cfg),
+                         checar_dois_pontos(p, masc, cfg)):
             for pos, regra, msg, trecho in checagem:
                 alertas.append(Alerta(arquivo, p.linha_de(pos), regra, msg, trecho))
         for regra, familia, rx in SATURACAO:

@@ -29,7 +29,7 @@ O que cada nível aciona:
 | | N1 | N2 | N3 | N4 |
 |---|---|---|---|---|
 | Plano de respostas | não | curto, com o mapa de peso: mostra e segue | mapa de peso e plano aprovados pelo José antes de redigir | o seu, no protocolo da equipe |
-| Redação | você, de uma vez | você, geração a geração, sem paradas | você, a partir de um dossiê Opus por tópico | você, a partir do que o operacional da equipe apurou |
+| Redação | você, de uma vez | você, geração a geração, sem paradas | você, a partir de um dossiê Opus por tópico; ou o `redator`, a partir do seu esqueleto (em teste) | você, a partir do que o operacional da equipe apurou; ou o `redator` (em teste) |
 | Conselheiro Fable | — | — | nas decisões decisivas | nas decisões decisivas |
 | Revisão argumentativa | — | `sensibilidade-argumentativa` e `moderador-final`, este em Opus | os dois, com o moderador em Fable | os dois, com o moderador em Fable |
 | Verificação | referências aos autos | `verificacao-citacoes` completa | completa, com subagentes | verificador da equipe |
@@ -40,14 +40,15 @@ O que cada nível aciona:
 ## 2. Agentes e modelos
 Delegue triagem e volume; o juízo e a redação ficam com você: escolha de tese, mapa de
 peso, coerência final, veredito sobre a ratio de um precedente, o que dizer ao cliente.
-Uma só mão escreve a peça; os revisores opinam e você decide.
+Uma só mão escreve a peça, a sua ou a do `redator`; os revisores opinam e você decide.
 
 - **Haiku** — mecânico: localizar documentos no índice, inventário de citações, conferir
   números, datas, IDs e referências "id N / fls.", varreduras de padrão no texto.
 - **Sonnet** — ler e triar documentos extraídos; rodar buscas de jurisprudência e
   sintetizar; primeira revisão de estilo.
 - **Opus** — dossiê de tópico no N3, a `sensibilidade-argumentativa` (reorganiza a peça
-  pelo peso) e conferência de ratio.
+  pelo peso), o `redator` (escreve a peça a partir do esqueleto, em teste no N3 e no N4:
+  `plano-de-respostas`) e conferência de ratio.
 - **Fable** — conselheiro nas decisões decisivas de N3/N4 quando a sessão principal não
   for Fable: cabimento e eixo do recurso, escolha e ordem das teses, risco num relatório,
   conflito entre precedentes.
