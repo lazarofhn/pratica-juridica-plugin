@@ -120,7 +120,8 @@ deliberada e radical, rara em texto jurídico.
 ### GO-3 — Dois pontos não viram fórmula
 É proibida a repetição de "afirmação ampla + dois pontos + desdobramento": repetida,
 robotiza o texto. O uso pontual é legítimo e pode ser elegante; integre a explicação à
-afirmação com conjunção.
+afirmação com conjunção. Os dois pontos que anunciam enumeração ("três objeções: …") ou
+transcrição não são a fórmula. O radar aponta cada ocorrência para triagem.
 
 > ✗ "Essa distinção tem reflexo direto sobre quais regras se aplicam: as condições de
 > vigência, as hipóteses de alteração e os limites de acréscimo operam de forma diferente."
@@ -265,6 +266,10 @@ anterior para saber de quem ou de quê se fala.
   a coisa apareceu no texto, o atributo que a identifica: a data, o grau, o órgão, a
   parte. Sem o substantivo, só quando ele está no mesmo período ("Das três decisões, duas
   são de primeiro grau").
+- **Órgão com o tribunal.** Turma, câmara e seção de outro tribunal se nomeiam com o
+  tribunal em cada parágrafo ("a 4ª Turma do mesmo Tribunal", "a Primeira Turma do
+  Superior Tribunal de Justiça"). Solta, "a 4ª Turma" parece ser do tribunal em que a
+  peça tramita. Depois de um bloco de citação, o referente recomeça.
 - **Sujeito oculto, só o da oração anterior.** Mudou o sujeito, nomeie o novo.
 - **Pronome oblíquo retoma um referente só, e próximo.** Dois oblíquos (-lo, -la, -os,
   lhe) apontando para coisas diferentes no mesmo período travam a leitura: repita o

@@ -552,7 +552,7 @@ class OrdemDiretaEReferente(unittest.TestCase):
     def test_numeral_com_substantivo_nao_dispara(self):
         self.assertEqual(self.go8("As duas decisões mais antigas são de primeiro grau; o acórdão "
                                   "do TRF-1, embora colegiado, não examinou o decreto."), [])
-        self.assertEqual(self.go8("A Segunda Turma manteve a sentença. O primeiro requisito está "
+        self.assertEqual(self.go8("A Segunda Turma do STJ manteve a sentença. O primeiro requisito está "
                                   "presente. Os demais réus não apelaram."), [])
 
     def test_pronome_solto_na_abertura(self):
@@ -572,7 +572,7 @@ class OrdemDiretaEReferente(unittest.TestCase):
                       "Esse não é o caso dos autos.",
                       "Ambos os recursos foram providos.",
                       "Aquele que causar dano a outrem fica obrigado a repará-lo.",
-                      "Nesse sentido, a Primeira Seção já decidiu a questão.",
+                      "Nesse sentido, a Primeira Seção do STJ já decidiu a questão.",
                       "Só a objeção que pode impedir o resultado recebe resposta desenvolvida; as "
                       "demais, uma oração ou nada.",
                       "Se o fundamento de uma delas pesa contra o resultado, responde-se a ele.",
@@ -587,6 +587,42 @@ class OrdemDiretaEReferente(unittest.TestCase):
     def test_ignorar_go8(self):
         self.assertEqual([r for r in regras(corpo(self.VICIO), ignorar=("GO-8",))
                           if r.startswith("GO-8")], [])
+
+
+class OrgaoEDoisPontos(unittest.TestCase):
+    """Achados do José na leitura do teste da ERB (nov./2026)."""
+
+    def test_turma_sem_o_tribunal_no_paragrafo(self):
+        texto = ("A 4ª Turma adotou a mesma fundamentação (AC 0802738-31.2025.4.05.8000, Rel. Des. "
+                 "Federal Fulano; Doc. 12), e os dois acórdãos foram mantidos nos embargos.")
+        alertas = [a for a in lint.lint_texto(corpo(texto)) if a.regra == "GO-8/orgao"]
+        self.assertEqual(len(alertas), 1)
+        self.assertIn("\"4ª Turma\"", alertas[0].mensagem)
+
+    def test_turma_com_o_tribunal_ou_da_causa_nao_dispara(self):
+        for texto in ("A 4ª Turma do mesmo Tribunal adotou a mesma fundamentação.",
+                      "O TRF-5 já decidiu a questão. A 2ª e a 4ª Turmas afastaram a exigência.",
+                      "Como assentou a Primeira Turma do Superior Tribunal de Justiça, o receio basta.",
+                      "A matéria já foi decidida por esta 4ª Turma, e a eg. 2ª Turma a seguiu.",
+                      "O precedente basta (REsp 1.234.567, Segunda Turma, Rel. Min. Fulano).",
+                      "O feito tramita na 2ª Vara Federal da Seção Judiciária de Pernambuco."):
+            self.assertNotIn("GO-8/orgao", regras(corpo(texto)), texto)
+
+    def test_dois_pontos_explicativos(self):
+        for texto in ("A Impetrante não pede a criação de norma alguma: pede a declaração de que a "
+                      "lei já produz plenos efeitos.",
+                      "O pedido já observa esses limites: limita-se à declaração do direito."):
+            self.assertIn("GO-3", regras(corpo(texto)), texto)
+
+    def test_enumeracao_e_anuncio_de_citacao_nao_sao_o_vicio(self):
+        for texto in ("As informações opõem três objeções: o registro seria condição, a concessão "
+                      "criaria norma e o cadastro seria requisito.",
+                      "Das três sentenças, duas pendem de apelação: a da 1ª Vara Federal de Foz do "
+                      "Iguaçu e a da 6ª Vara Federal da Bahia.",
+                      "A autoridade opõe o registro: ele seria condição; a concessão criaria norma.",
+                      "É esse o critério do Superior Tribunal de Justiça:",
+                      "O art. 4º dispõe: \"A pessoa jurídica fará jus a crédito presumido.\""):
+            self.assertNotIn("GO-3", regras(corpo(texto)), texto)
 
 
 class LinhaDeComando(unittest.TestCase):

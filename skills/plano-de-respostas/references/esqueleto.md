@@ -60,6 +60,9 @@ Resultado: <o que o dispositivo deve dizer> | Peso: núcleo | Espaço: ~<n> par�
   `[argumento]` traz a premissa e a consequência. O custo é real: no teste com uma
   manifestação de 47 parágrafos, o esqueleto ficou do tamanho da peça.
 - **Todo tópico abre por um item `[tese]`,** inclusive o de apoio.
+- **A frase de tese passa pelas regras de ouro antes de travar.** O redator não a
+  conserta: no teste da ERB (nov./2026), uma tese com dois pontos explicativos ("não pede
+  X: pede Y") saiu assim nas duas versões, e o José a marcou como erro (GO-3).
 - **Frase de tese, literal.** Toda afirmação em que a palavra decide (o que a decisão
   disse, o que a lei exige, o que se pede) vem escrita como deve sair. O redator a liga
   e a desenvolve; não a reformula.

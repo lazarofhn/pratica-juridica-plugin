@@ -55,6 +55,25 @@ palavras, sabendo o que se quer com a peça e como.
   fora. Correção de conteúdo, ordem ou espaço se faz no esqueleto e volta ao redator.
 - Opcional: oferecido em uma linha junto com o plano. Vira padrão depois de comparado
   com uma versão definitiva do José num caso real.
+
+**Teste da ERB (manifestação em mandado de segurança)**
+
+O mesmo esqueleto foi escrito por um redator em Opus e por outro em Fable, e o José
+marcou os dois textos. Preferiu o Fable em sete trechos e o Opus em quatro, e achou dois
+erros nas duas versões. O padrão das preferências é o da GO-8: ganhou quem nomeou o
+referente e o tribunal e manteve a ordem direta; perdeu quem fundiu itens à custa de
+intercalação ou parênteses.
+
+- **GO-8, "órgão com o tribunal":** "A 4ª Turma adotou a mesma fundamentação", numa peça
+  dirigida a juízo de outra região, parece falar do tribunal da causa. Turma, câmara e
+  seção vêm com o tribunal em cada parágrafo. Radar: `GO-8/orgao`.
+- **GO-3 no radar:** `GO-3` aponta os dois pontos explicativos no meio do período; a
+  enumeração anunciada e o anúncio de citação não contam. O erro veio de uma frase de
+  tese do esqueleto, que o redator copia sem consertar: a tese passa pelas regras de ouro
+  antes de travar.
+- **Redator:** juntar itens só em ordem direta; a apresentação da citação começa por quem
+  decidiu; a nota abreviada do esqueleto sai com o nome inteiro; tese longa pode ficar
+  sozinha no parágrafo. São 4 testes novos no radar (93).
 - Correção: o cabeçalho do `lint_peca.py` dizia `--max-abertura-nominal 30`; o padrão é 50
   desde a v1.5.0.
 

@@ -28,6 +28,10 @@ arquivo:linha + regra para os padrões que a casa manda varrer:
                       apreciá-los"), ou com três ou mais
   GO-8/referente      numeral, ordinal ou pronome sem o substantivo abrindo o período ("As
                       duas primeiras são…", "Este último…", "Ambos…", "Os demais…")
+  GO-8/orgao          turma, câmara ou seção sem o tribunal no parágrafo ("A 4ª Turma adotou
+                      a mesma fundamentação"): o leitor a atribui ao tribunal da causa
+  GO-3                dois pontos explicativos no meio do período ("afirmação: desdobramento");
+                      a enumeração anunciada e o anúncio de citação não contam
   GO-5/ensaio         fórmula de crônica ou ensaio: avaliação impressionista, imagem,
                       contraste em suspense, dramatização, narrador comentando a peça
   GO-5/metadiscurso   arquitetura da tese exposta ("apenas para argumentar")
@@ -1121,6 +1125,60 @@ def checar_referente(par, masc, cfg):
                        _trecho(par.texto, pos, ini + m.end()))
 
 
+_ORDINAL_ORGAO = (r"(?:\d{1,2}ª|Primeira|Segunda|Terceira|Quarta|Quinta|Sexta|Sétima|Oitava"
+                  r"|Nona|Décima(?:\s+(?:Primeira|Segunda|Terceira|Quarta|Quinta))?)")
+RE_ORGAO = re.compile(
+    r"\b" + _ORDINAL_ORGAO + r"(?:\s+e\s+(?:a\s+)?" + _ORDINAL_ORGAO + r")?\s+"
+    r"(?:Turmas?|Câmaras?|Seç(?:ão|ões))\b(?!\s+Judiciária)")
+RE_TRIBUNAL = re.compile(
+    r"\bTribuna(?:l|is)\b|\bTRF-?\d?\b|\bST[JF]\b|\bTS[TE]\b|\bTRT\b|\bTJ[A-Z]{0,3}\b|\bCorte\b"
+    r"|\bSuperior\b|\bSupremo\b|\bCARF\b|\bTCU\b|\bConselho\b")
+# o órgão a que a peça se dirige ("esta 4ª Turma", "a eg. 2ª Turma")
+RE_ORGAO_DA_CAUSA = re.compile(r"(?:\b(?:[dn]?est[ae]|[dn]?ess[ae]|eg\.|egrégia|colenda|c\.)\s+)$", re.I)
+
+
+def _fora_de_parenteses(texto):
+    """Troca por espaços o que está entre parênteses (a referência do julgado)."""
+    return re.sub(r"\([^()]*\)", lambda m: " " * len(m.group(0)), texto)
+
+
+def checar_orgao(par, masc, cfg):
+    """Órgão fracionário sem o tribunal. Solto no parágrafo, "a 4ª Turma" parece ser do
+    tribunal em que a peça tramita."""
+    limpo = _fora_de_parenteses(masc)
+    if RE_TRIBUNAL.search(limpo):
+        return
+    for m in RE_ORGAO.finditer(limpo):
+        if RE_ORGAO_DA_CAUSA.search(limpo[:m.start()]):
+            continue
+        yield (m.start(), "GO-8/orgao",
+               f"\"{m.group(0)}\" sem o tribunal no parágrafo: diga de que tribunal é (\"a 4ª "
+               f"Turma do mesmo Tribunal\"); fica se for o órgão a que a peça se dirige",
+               _trecho(par.texto, m.start(), m.end()))
+        return
+
+
+RE_ENUMERA = re.compile(
+    r"\b(?:dois|duas|três|quatro|cinco|seis|sete|oito|nove|dez|seguintes?|a saber|quais sejam"
+    r"|ambos|ambas)\b", re.I)
+RE_DOIS_PONTOS = re.compile(r":\s+(?=[a-zà-ÿ])")
+
+
+def checar_dois_pontos(par, masc, cfg):
+    """GO-3: "afirmação: desdobramento" no meio do período. A enumeração anunciada ("três
+    objeções: …", itens separados por ponto e vírgula) e o anúncio de citação ficam."""
+    for ini, frase in _periodos_com_posicao(masc):
+        for m in RE_DOIS_PONTOS.finditer(frase):
+            antes, depois = frase[:m.start()], frase[m.end():]
+            if RE_ENUMERA.search(antes) or ";" in depois or not depois.strip():
+                continue
+            pos = ini + m.start()
+            yield (pos, "GO-3",
+                   "dois pontos explicativos (\"afirmação: desdobramento\"): integre a "
+                   "explicação com conjunção; ficam a enumeração e o anúncio de citação",
+                   _trecho(par.texto, pos, pos + 1))
+
+
 # ------------------------------------------------------------------ orquestração
 def _ignorada(regra, cfg):
     return any(regra.lower().startswith(p.lower()) for p in cfg.ignorar if p)
@@ -1139,7 +1197,8 @@ def lint_texto(texto, arquivo="<texto>", cfg=None, **kw):
         for checagem in (checar_traco(p, masc), checar_paragrafo(p, cfg),
                          checar_lexico(p, masc), checar_negacao(p, masc), checar_mesmo(p, masc),
                          checar_intercalacao(p, masc, cfg), checar_obliquos(p, masc, cfg),
-                         checar_referente(p, masc, cfg)):
+                         checar_referente(p, masc, cfg), checar_orgao(p, masc, cfg),
+                         checar_dois_pontos(p, masc, cfg)):
             for pos, regra, msg, trecho in checagem:
                 alertas.append(Alerta(arquivo, p.linha_de(pos), regra, msg, trecho))
         for regra, familia, rx in SATURACAO:
