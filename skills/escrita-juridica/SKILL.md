@@ -17,7 +17,7 @@ externo.
 |---|---|
 | N1 | GO-1 a GO-8 e o radar ao fechar; protocolar não infla, as `references/` ficam de fora (salvo revisão). |
 | N2 | Tudo o que segue, geração a geração, por você; na peça, os dois revisores ao fim (`plano-de-respostas`, Passo 5). |
-| N3 | Você redige a peça inteira a partir dos dossiês dos tópicos; na costura, radar e varreduras na peça inteira; depois, os dois revisores. |
+| N3 | Você redige a peça inteira a partir dos dossiês dos tópicos; na costura, radar e varreduras na peça inteira; depois, os dois revisores. Em teste: o `redator` redige por esta skill, a partir do seu esqueleto (`plano-de-respostas`). |
 | N4 | O principal da equipe redige por esta skill, com os mesmos revisores do N3. |
 
 ## Registros
@@ -349,6 +349,10 @@ construção do argumento vem antes da forma: a `sensibilidade-argumentativa` e 
 `moderador-final` (`plano-de-respostas`, Passo 5) rodam antes das varreduras de forma.
 
 ## Agentes
+No N3 e no N4, em teste, quem redige pode ser o agente `redator`: ele recebe só o
+esqueleto que você fecha e esta skill, e escreve a peça inteira (`plano-de-respostas`,
+`references/esqueleto.md`). As regras são as mesmas; o que muda é quem as aplica.
+
 A reescrita de estilo é de quem redige, com o texto à vista. Um subagente Sonnet pode
 servir de radar de estilo (opcional; em peça longa, uma seção por agente): localiza e
 devolve trecho e linha, nunca reescreve. O melhor uso dele é a leitura a frio do GO-8 e

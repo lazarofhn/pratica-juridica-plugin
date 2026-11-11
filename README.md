@@ -175,7 +175,7 @@ final, ratio de precedente, o que dizer ao cliente — fica com a sessão princi
 - **Sonnet** — ler e triar documentos extraídos, rodar buscas de jurisprudência e
   sintetizar, primeira revisão de estilo.
 - **Opus** — dossiê de tópico no N3, a `sensibilidade-argumentativa` (reorganiza a peça
-  pronta pelo peso) e conferência de ratio.
+  pronta pelo peso), o `redator` (em teste) e conferência de ratio.
 - **Fable** — conselheiro nas decisões decisivas de N3/N4 (cabimento e eixo do recurso,
   escolha e ordem das teses, risco num relatório, conflito entre precedentes), quando a
   sessão principal não é Fable. Com o advisor da aba Code ligado (`/advisor fable`,
@@ -196,8 +196,10 @@ E. COMPARTILHADAS  plano-de-respostas, pesquisa-juridica, escrita-juridica,
                    formatacao-entrega, verificacao-citacoes
 ```
 
-Dois agentes acompanham as skills (`agents/`): `sensibilidade-argumentativa` e
-`moderador-final`, os revisores da peça pronta, que a `equipe-juridica` também usa.
+Três agentes acompanham as skills (`agents/`): `sensibilidade-argumentativa` e
+`moderador-final`, os revisores da peça pronta, que a `equipe-juridica` também usa, e o
+`redator` (em teste no N3 e no N4), que escreve a peça inteira a partir do esqueleto
+montado pela conversa principal, sem carregar a leitura dos autos nem a pesquisa.
 
 Saíram na v1.3: `peca-processual-base` (esqueleto e coerência → `plano-de-respostas`;
 antecipação de objeção → `escrita-juridica`) e `analise-estrategia` (→ `relatorio`, modo

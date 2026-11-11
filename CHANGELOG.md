@@ -33,6 +33,28 @@ pela conjunção e aceita a circunstância na abertura: as duas, juntas, viravam
   disparam nos exemplos da própria regra e numa lista de conectivos. Vale rodar o radar nas duas versões definitivas e
   ajustar os limiares se algo disparar.
 - **`sensibilidade-argumentativa`:** o parágrafo movido leva o referente nomeado.
+
+**Redator (em teste, N3 e N4)**
+
+O José propôs separar a escrita da apuração: a conversa principal chega à redação
+carregada de autos, pesquisas e respostas de agentes, e isso contamina o foco de quem
+escreve. A lógica é a do escritor profissional, que recebe o conteúdo pronto e o põe em
+palavras, sabendo o que se quer com a peça e como.
+
+- **Agente `redator` (Opus):** recebe só o esqueleto e a `escrita-juridica` e escreve a
+  peça inteira, geração a geração, num arquivo, rodando o radar a cada geração. Continua
+  valendo "uma só mão": é um redator para a peça toda, nunca um por tópico.
+- **Esqueleto (`plano-de-respostas`, `references/esqueleto.md`):** o Contexto (o que a
+  peça quer, quem julga, o tom, a premissa nuclear, os termos da peça e os proibidos), as
+  partes fixas e, por tópico, os itens na ordem do peso: frase de tese literal, fato com
+  documento e página, norma, citação já montada com o que a apresenta e a aplica, objeção
+  com o espaço, fecho. O redator não acrescenta nada; o que falta volta como lacuna.
+- **A sensibilidade passa a revisar o esqueleto** quando há redator, antes de existir
+  prosa, em vez de reescrever a peça pronta. O `moderador-final` segue lendo a peça.
+- **Conferência de fidelidade** pela conversa principal: cada item entrou, nada entrou de
+  fora. Correção de conteúdo, ordem ou espaço se faz no esqueleto e volta ao redator.
+- Opcional: oferecido em uma linha junto com o plano. Vira padrão depois de comparado
+  com uma versão definitiva do José num caso real.
 - Correção: o cabeçalho do `lint_peca.py` dizia `--max-abertura-nominal 30`; o padrão é 50
   desde a v1.5.0.
 
