@@ -57,7 +57,8 @@ Resultado: <o que o dispositivo deve dizer> | Peso: núcleo | Espaço: ~<n> par�
 - **A densidade vem do esqueleto.** O redator articula o que o item diz e não inventa
   desenvolvimento: no teste de nov./2026, um tópico de núcleo com um só item `[argumento]`
   saiu fiel e raso. Tópico de núcleo pede cerca de um item por parágrafo previsto, e cada
-  `[argumento]` traz a premissa e a consequência.
+  `[argumento]` traz a premissa e a consequência. O custo é real: no teste com uma
+  manifestação de 47 parágrafos, o esqueleto ficou do tamanho da peça.
 - **Todo tópico abre por um item `[tese]`,** inclusive o de apoio.
 - **Frase de tese, literal.** Toda afirmação em que a palavra decide (o que a decisão
   disse, o que a lei exige, o que se pede) vem escrita como deve sair. O redator a liga
@@ -67,8 +68,13 @@ Resultado: <o que o dispositivo deve dizer> | Peso: núcleo | Espaço: ~<n> par�
   invocadas pelo adversário entram como um item `[objecao]` só, de conjunto (GO-7).
 - **Fato com a prova.** Documento, id e página em cada fato; fato sem referência volta do
   redator como lacuna.
-- **Espaço por tópico e por objeção.** É o do mapa de peso; "uma oração" quer dizer uma
-  oração.
+- **Espaço por tópico e por objeção.** É o do mapa de peso, em parágrafos de prosa, sem
+  contar a frase que só apresenta uma citação; "uma oração" quer dizer uma oração.
+- **O Contexto não contradiz os itens.** Se ele diz que todo capítulo abre pela tese, o
+  primeiro item de cada tópico é a tese; onde houver conflito, o redator segue os itens.
+- **Termo proibido é da voz da peça.** No item que relata a tese adversária, escreva o
+  termo do adversário como ele deve sair (atribuído ou entre aspas), para o redator não
+  ter de escolher entre a fidelidade e a proibição.
 - **O que a lei exige** (admissibilidade, impugnação especificada, fundamento autônomo)
   entra como item, no espaço que o peso pede.
 
