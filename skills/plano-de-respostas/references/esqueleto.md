@@ -22,7 +22,7 @@ Fica em `<workspace>/redacao/esqueleto.md` (na equipe, `_equipe\produto\<nome>-e
 - **Quem julga e em que momento:** <juízo ou relator; o que ele acabou de ler; o que já decidiu>
 - **Como quero que soe:** <firme, sóbrio, técnico…; o que a peça não faz: não ataca o juízo, não concede X, não soa defensiva em Y>
 - **Premissa nuclear:** <a tese em uma frase; vale para a peça inteira>
-- **Termos da peça:** <como chamar cada parte, ato e decisão, sempre do mesmo jeito>
+- **Termos da peça:** <como chamar cada parte, ato, decisão e tribunal, sempre do mesmo jeito; diga se a sigla vale na prosa>
 - **Termos proibidos:** <palavra ou expressão — por que trai a tese>
 - **Registro:** peça
 
@@ -64,7 +64,9 @@ Resultado: <o que o dispositivo deve dizer> | Peso: núcleo | Espaço: ~<n> par�
   disse, o que a lei exige, o que se pede) vem escrita como deve sair. O redator a liga
   e a desenvolve; não a reformula.
 - **Citação montada.** O bloco `@citacao-ref` (ou `@citacao`) vem pronto, com o grifo, e
-  o item diz o que a frase de apresentação afirma e qual é a aplicação ao caso. Decisões
+  o item diz o que a frase de apresentação afirma e qual é a aplicação ao caso. A
+  apresentação diz o que o bloco não mostra; se você repetir nela o trecho grifado, o
+  redator fica entre a sua instrução e o GO-7. Decisões
   invocadas pelo adversário entram como um item `[objecao]` só, de conjunto (GO-7).
 - **Fato com a prova.** Documento, id e página em cada fato; fato sem referência volta do
   redator como lacuna.
